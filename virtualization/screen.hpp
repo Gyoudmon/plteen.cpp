@@ -3,14 +3,14 @@
 #include "display.hpp"
 #include "../forward.hpp"
 
-namespace GYDM {
+namespace Plteen {
     class __lambda__ IScreen {
     public:
         IScreen() {}
         virtual ~IScreen() {}
 
     public:
-        virtual GYDM::IDisplay* display() = 0;
+        virtual Plteen::IDisplay* display() = 0;
     
     public:
         virtual void feed_extent(float* width, float* height) = 0;
@@ -26,7 +26,7 @@ namespace GYDM {
         virtual void notify_updated() = 0;
 
     public:
-        virtual void log_message(GYDM::Log level, const std::string& message) = 0;
+        virtual void log_message(Plteen::Log level, const std::string& message) = 0;
         virtual void start_input_text(const std::string& prompt) = 0;
     };
 }

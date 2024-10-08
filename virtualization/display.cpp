@@ -3,14 +3,14 @@
 #include "../graphics/image.hpp"
 #include "../datum/string.hpp"
 
-using namespace GYDM;
+using namespace Plteen;
 
 /*************************************************************************************************/
-bool GYDM::IDisplay::save_snapshot(const std::string& path) {
+bool Plteen::IDisplay::save_snapshot(const std::string& path) {
     return this->save_snapshot(path.c_str());
 }
 
-bool GYDM::IDisplay::save_snapshot(const char* pname) {
+bool Plteen::IDisplay::save_snapshot(const char* pname) {
     SDL_Surface* snapshot_png = this->snapshot();
     bool okay = game_save_image(snapshot_png, pname);
 
@@ -20,7 +20,7 @@ bool GYDM::IDisplay::save_snapshot(const char* pname) {
 }
 
 /*************************************************************************************************/
-void GYDM::IDisplay::notify_updated() {
+void Plteen::IDisplay::notify_updated() {
     if (this->is_in_update_sequence()) {
         this->update_is_needed = true;
     } else {
@@ -29,7 +29,7 @@ void GYDM::IDisplay::notify_updated() {
     }
 }
 
-void GYDM::IDisplay::end_update_sequence() {
+void Plteen::IDisplay::end_update_sequence() {
     this->update_sequence_depth -= 1;
 
     if (this->update_sequence_depth < 1) {

@@ -2,7 +2,7 @@
 
 #include <type_traits>
 
-namespace GYDM {
+namespace Plteen {
     template<typename T> struct SuperType { using type = long long; };
     template<> struct SuperType<double> { using type = double; };
     template<> struct SuperType<float> { using type = double; };

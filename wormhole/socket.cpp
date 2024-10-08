@@ -3,10 +3,10 @@
 #include "slang/datagram.hpp"
 #include "slang/network.hpp"
 
-using namespace GYDM;
+using namespace Plteen;
 
 /*************************************************************************************************/
-GYDM::SocketDaemon::SocketDaemon(int maxsockets) {
+Plteen::SocketDaemon::SocketDaemon(int maxsockets) {
     int msckt = (maxsockets <= 0) ? 1 : maxsockets;
 
     network_initialize();
@@ -14,7 +14,7 @@ GYDM::SocketDaemon::SocketDaemon(int maxsockets) {
     this->fallback_timeout = msckt;
 }
 
-GYDM::SocketDaemon::~SocketDaemon() noexcept {
+Plteen::SocketDaemon::~SocketDaemon() noexcept {
     SDLNet_SocketSet shadow = this->master;
 
     if (this->wrpl != nullptr) {
@@ -35,7 +35,7 @@ GYDM::SocketDaemon::~SocketDaemon() noexcept {
 }
 
 /*************************************************************************************************/
-bool GYDM::SocketDaemon::udp_listen(IUDPDaemon* daemon) {
+bool Plteen::SocketDaemon::udp_listen(IUDPDaemon* daemon) {
     uint16_t service = daemon->service();
 
     if (this->udp_deamons.find(service) == this->udp_deamons.end()) {
@@ -56,13 +56,13 @@ bool GYDM::SocketDaemon::udp_listen(IUDPDaemon* daemon) {
 }
 
 /*************************************************************************************************/
-void GYDM::SocketDaemon::start_wait_read_process_loop(int timeout_ms) {
+void Plteen::SocketDaemon::start_wait_read_process_loop(int timeout_ms) {
     if (this->wrpl == nullptr) {
         this->wrpl = new std::thread(&SocketDaemon::wait_read_process_loop, this, timeout_ms);
     }
 }
 
-void GYDM::SocketDaemon::wait_read_process_loop(int timeout_ms) {
+void Plteen::SocketDaemon::wait_read_process_loop(int timeout_ms) {
     int timeout = (timeout_ms <= 0) ? this->fallback_timeout : timeout_ms;
     int ready = 0;
     

@@ -5,10 +5,10 @@
 
 #include "../../../graphics/image.hpp"
 
-using namespace GYDM;
+using namespace Plteen;
 
 /*************************************************************************************************/
-GYDM::Historylet::Historylet(float width, float height, const RGBA& line_color)
+Plteen::Historylet::Historylet(float width, float height, const RGBA& line_color)
         : width(flabs(width)), height(flabs(height)) {
     if (this->height == 0.0F) {
         this->height = this->width;
@@ -19,18 +19,18 @@ GYDM::Historylet::Historylet(float width, float height, const RGBA& line_color)
     this->set_pen_color(line_color);
 }
 
-Box GYDM::Historylet::get_bounding_box() {
+Box Plteen::Historylet::get_bounding_box() {
     return { this->width, this->height };
 }
 
-void GYDM::Historylet::on_resize(float w, float h, float width, float height) {
+void Plteen::Historylet::on_resize(float w, float h, float width, float height) {
     ICanvaslet::on_resize(w, h, width, height);
 
     this->width = flabs(w);
     this->height = flabs(h);
 }
 
-void GYDM::Historylet::draw_on_canvas(GYDM::dc_t* dc, float flwidth, float flheight) {
+void Plteen::Historylet::draw_on_canvas(Plteen::dc_t* dc, float flwidth, float flheight) {
     size_t n = this->raw_dots.size();
     float xrange = flmax(this->xmax - this->xmin, flwidth);
     float yrange = flmax(this->ymax - this->ymin, flheight);
@@ -54,7 +54,7 @@ void GYDM::Historylet::draw_on_canvas(GYDM::dc_t* dc, float flwidth, float flhei
 }
 
 /*************************************************************************************************/
-void GYDM::Historylet::clear() {
+void Plteen::Historylet::clear() {
     this->xmax = this->ymax = -infinity;
     this->xmin = this->ymin = +infinity;
 
@@ -64,7 +64,7 @@ void GYDM::Historylet::clear() {
     }
 }
 
-void GYDM::Historylet::set_capacity(size_t n) {
+void Plteen::Historylet::set_capacity(size_t n) {
     if (this->capacity != n) {
         this->capacity = n;
 
@@ -76,7 +76,7 @@ void GYDM::Historylet::set_capacity(size_t n) {
     }
 }
 
-void GYDM::Historylet::push_back_datum(float x, float y) {
+void Plteen::Historylet::push_back_datum(float x, float y) {
     if (this->raw_dots.empty() || (this->raw_dots.back().first != x)) {
         this->raw_dots.push_back({ x , y });
 

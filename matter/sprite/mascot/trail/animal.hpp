@@ -7,10 +7,10 @@
 
 /* Protagonists in the RPG 空の軌跡 */
 
-namespace GYDM {
+namespace Plteen {
     #define TRAIL_ANIMALS_PATH "trail/Animals"
 
-    class __lambda__ Animal : public GYDM::Sprite, protected GYDM::I8WayMotion {
+    class __lambda__ Animal : public Plteen::Sprite, protected Plteen::I8WayMotion {
     public:
         Animal(const std::string& fullpath);
         virtual ~Animal() {}
@@ -37,7 +37,7 @@ namespace GYDM {
     };
 
     /*********************************************************************************************/
-    class __lambda__ Cat : public GYDM::Animal {
+    class __lambda__ Cat : public Plteen::Animal {
     public:
         Cat();
         virtual ~Cat() {}
@@ -46,7 +46,7 @@ namespace GYDM {
         Animal* asexually_reproduce() override { return new Cat(); }
     };
 
-    class __lambda__ Cow : public GYDM::Animal {
+    class __lambda__ Cow : public Plteen::Animal {
     public:
         Cow();
         virtual ~Cow() {}
@@ -55,7 +55,7 @@ namespace GYDM {
         Animal* asexually_reproduce() override { return new Cow(); }
     };
 
-    class __lambda__ Rooster : public GYDM::Animal {
+    class __lambda__ Rooster : public Plteen::Animal {
     public:
         Rooster();
         virtual ~Rooster() {}
@@ -64,7 +64,7 @@ namespace GYDM {
         Animal* asexually_reproduce() override { return new Rooster(); }
     };
 
-    class __lambda__ Pigeon : public GYDM::Animal {
+    class __lambda__ Pigeon : public Plteen::Animal {
     public:
         Pigeon();
         virtual ~Pigeon() {}

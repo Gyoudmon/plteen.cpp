@@ -7,10 +7,10 @@
 
 #include <typeinfo>
 
-using namespace GYDM;
+using namespace Plteen;
 
 /**************************************************************************************************/
-GYDM::IMatter::~IMatter() {
+Plteen::IMatter::~IMatter() {
     if (this->info != nullptr) {
         delete this->info;
         this->info = nullptr;
@@ -22,7 +22,7 @@ GYDM::IMatter::~IMatter() {
     }
 }
 
-IPlane* GYDM::IMatter::master() const {
+IPlane* Plteen::IMatter::master() const {
     IPlane* plane = nullptr;
 
     if (this->info != nullptr) {
@@ -32,7 +32,7 @@ IPlane* GYDM::IMatter::master() const {
     return plane;
 }
 
-dc_t* GYDM::IMatter::drawing_context() const {
+dc_t* Plteen::IMatter::drawing_context() const {
     IPlane* master = this->master();
     dc_t* device = nullptr;
 
@@ -43,7 +43,7 @@ dc_t* GYDM::IMatter::drawing_context() const {
     return device;
 }
 
-void GYDM::IMatter::attach_metadata(IMatterMetadata* metadata) {
+void Plteen::IMatter::attach_metadata(IMatterMetadata* metadata) {
     if (this->_metatdata != nullptr) {
         delete this->_metatdata;
     }
@@ -51,7 +51,7 @@ void GYDM::IMatter::attach_metadata(IMatterMetadata* metadata) {
     this->_metatdata = metadata;
 }
 
-bool GYDM::IMatter::is_colliding(const Dot& local_pt) {
+bool Plteen::IMatter::is_colliding(const Dot& local_pt) {
     Box box = this->get_bounding_box();
     Margin margin = this->get_margin();
     bool okay = true;
@@ -65,7 +65,7 @@ bool GYDM::IMatter::is_colliding(const Dot& local_pt) {
     return okay;
 }
 
-void GYDM::IMatter::scale(float x_ratio, float y_ratio, const Port& port) {
+void Plteen::IMatter::scale(float x_ratio, float y_ratio, const Port& port) {
     if (this->can_resize) {
         if ((x_ratio != 1.0F) || (y_ratio != 1.0F)) {
             Box box = this->get_bounding_box();
@@ -77,7 +77,7 @@ void GYDM::IMatter::scale(float x_ratio, float y_ratio, const Port& port) {
     }
 }
 
-void GYDM::IMatter::scale_to(float x_ratio, float y_ratio, const Port& port) {
+void Plteen::IMatter::scale_to(float x_ratio, float y_ratio, const Port& port) {
     if (this->can_resize) {
         float nwidth, nheight;
         Box cbox = this->get_bounding_box();
@@ -94,7 +94,7 @@ void GYDM::IMatter::scale_to(float x_ratio, float y_ratio, const Port& port) {
     }
 }
 
-void GYDM::IMatter::scale_by_size(float size, bool given_width, const Port& port) {
+void Plteen::IMatter::scale_by_size(float size, bool given_width, const Port& port) {
     if (this->can_resize) {
         float nwidth, nheight;
         Box box = this->get_bounding_box();
@@ -115,7 +115,7 @@ void GYDM::IMatter::scale_by_size(float size, bool given_width, const Port& port
     }
 }
 
-void GYDM::IMatter::resize(float nwidth, float nheight, const Port& port) {
+void Plteen::IMatter::resize(float nwidth, float nheight, const Port& port) {
     if (this->can_resize) {
         Box box = this->get_bounding_box();
 
@@ -135,7 +135,7 @@ void GYDM::IMatter::resize(float nwidth, float nheight, const Port& port) {
     }
 }
 
-void GYDM::IMatter::notify_updated() {
+void Plteen::IMatter::notify_updated() {
     if (this->info != nullptr) {
         if (!this->port.is_zero()) {
             Dot dot = this->info->master->get_matter_location(this, this->port);
@@ -157,13 +157,13 @@ void GYDM::IMatter::notify_updated() {
     }
 }
 
-void GYDM::IMatter::notify_timeline_restart(uint32_t count0, int duration) {
+void Plteen::IMatter::notify_timeline_restart(uint32_t count0, int duration) {
     if (this->info != nullptr) {
         this->info->master->notify_matter_timeline_restart(this, count0, duration);
     }
 }
 
-void GYDM::IMatter::moor(const Port& port) {
+void Plteen::IMatter::moor(const Port& port) {
     if (this->port != port) {
         if (this->info != nullptr) {
             this->port = port;
@@ -172,11 +172,11 @@ void GYDM::IMatter::moor(const Port& port) {
     }
 }
 
-void GYDM::IMatter::clear_moor() {
+void Plteen::IMatter::clear_moor() {
     this->port.reset();
 }
 
-bool GYDM::IMatter::has_caret() {
+bool Plteen::IMatter::has_caret() {
     bool careted = false;
 
     if (this->info != nullptr) {
@@ -186,14 +186,14 @@ bool GYDM::IMatter::has_caret() {
     return careted;
 }
 
-void GYDM::IMatter::show(bool yes_no) {
+void Plteen::IMatter::show(bool yes_no) {
     if (this->invisible == yes_no) {
         this->invisible = !yes_no;
         this->notify_updated();
     }
 }
 
-Dot GYDM::IMatter::get_location(const Port& p) {
+Dot Plteen::IMatter::get_location(const Port& p) {
     Dot dot(flnan_f, flnan_f);
 
     if (this->info != nullptr) {
@@ -203,12 +203,12 @@ Dot GYDM::IMatter::get_location(const Port& p) {
     return dot;
 }
 
-void GYDM::IMatter::log_message(Log level, const std::string& msg) {
+void Plteen::IMatter::log_message(Log level, const std::string& msg) {
     if (this->info != nullptr) {
         this->info->master->log_message(level, msg);
     }
 }
 
-const char* GYDM::IMatter::name() {
+const char* Plteen::IMatter::name() {
     return typeid(this).name();
 }

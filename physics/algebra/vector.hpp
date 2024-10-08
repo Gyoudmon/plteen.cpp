@@ -3,31 +3,31 @@
 #include "tuple.hpp"
 #include "point.hpp"
 
-namespace GYDM {
+namespace Plteen {
     template<typename T>
-    class __lambda__ EuclideanVector : public GYDM::Tuple<GYDM::EuclideanVector, T> {
+    class __lambda__ EuclideanVector : public Plteen::Tuple<Plteen::EuclideanVector, T> {
     public:
-        static const GYDM::EuclideanVector<T> O;
+        static const Plteen::EuclideanVector<T> O;
 
     public:
         EuclideanVector() = default;
-        EuclideanVector(T x, T y) noexcept : Tuple<GYDM::EuclideanVector, T>(x, y) {}
-        EuclideanVector(const GYDM::Point<T>& pt) noexcept : Tuple<GYDM::EuclideanVector, T>(pt.x, pt.y) {}
-        EuclideanVector(const GYDM::Point<T>& sp, const GYDM::Point<T>& ep) noexcept
-            : Tuple<GYDM::EuclideanVector, T>(ep.x - sp.x, ep.y - sp.y) {}
+        EuclideanVector(T x, T y) noexcept : Tuple<Plteen::EuclideanVector, T>(x, y) {}
+        EuclideanVector(const Plteen::Point<T>& pt) noexcept : Tuple<Plteen::EuclideanVector, T>(pt.x, pt.y) {}
+        EuclideanVector(const Plteen::Point<T>& sp, const Plteen::Point<T>& ep) noexcept
+            : Tuple<Plteen::EuclideanVector, T>(ep.x - sp.x, ep.y - sp.y) {}
 
         template <typename U>
-        explicit EuclideanVector(const GYDM::EuclideanVector<U>& v) noexcept
-            : GYDM::Tuple<GYDM::EuclideanVector, U>(T(v.x), T(v.y)) {}
+        explicit EuclideanVector(const Plteen::EuclideanVector<U>& v) noexcept
+            : Plteen::Tuple<Plteen::EuclideanVector, U>(T(v.x), T(v.y)) {}
 
         template<typename U>
-        explicit EuclideanVector(const GYDM::EuclideanVector<U>& v, T sx, T sy) noexcept
-            : GYDM::Tuple<GYDM::EuclideanVector, T>(T(v.x * sx), T(v.y * sy)) {}
+        explicit EuclideanVector(const Plteen::EuclideanVector<U>& v, T sx, T sy) noexcept
+            : Plteen::Tuple<Plteen::EuclideanVector, T>(T(v.x * sx), T(v.y * sy)) {}
 
         ~EuclideanVector() noexcept {}
     };
 
-    typedef GYDM::EuclideanVector<float> Vector;
+    typedef Plteen::EuclideanVector<float> Vector;
 
-    template<typename T> const GYDM::EuclideanVector<T> GYDM::EuclideanVector<T>::O = {};
+    template<typename T> const Plteen::EuclideanVector<T> Plteen::EuclideanVector<T>::O = {};
 }

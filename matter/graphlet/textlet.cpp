@@ -7,7 +7,7 @@
 
 #include <SDL2/SDL2_gfxPrimitives.h>
 
-using namespace GYDM;
+using namespace Plteen;
 
 /*************************************************************************************************/
 static Labellet* make_styled_label(shared_font_t font, const RGBA& bg_color, const RGBA& bd_color, const RGBA& fg_color, float cr) {
@@ -24,20 +24,20 @@ static Labellet* make_styled_label(shared_font_t font, const RGBA& bg_color, con
 }
 
 /*************************************************************************************************/
-Labellet* GYDM::make_label_for_tooltip(shared_font_t font, const RGBA& bg_color, const RGBA& bd_color, const RGBA& fg_color) {
+Labellet* Plteen::make_label_for_tooltip(shared_font_t font, const RGBA& bg_color, const RGBA& bd_color, const RGBA& fg_color) {
     return make_styled_label(font, bg_color, bd_color, fg_color, 0.0F);
 }
 
 /*************************************************************************************************/
-GYDM::ITextlet::ITextlet() {
+Plteen::ITextlet::ITextlet() {
     this->set_text_color();
 }
 
-void GYDM::ITextlet::construct(GYDM::dc_t* dcer) {
+void Plteen::ITextlet::construct(Plteen::dc_t* dcer) {
     this->update_texture();
 }
 
-void GYDM::ITextlet::set_text_color(const RGBA& fgc) {
+void Plteen::ITextlet::set_text_color(const RGBA& fgc) {
     if (this->foreground_color != fgc) {
         this->foreground_color = fgc;
         this->update_texture();
@@ -45,7 +45,7 @@ void GYDM::ITextlet::set_text_color(const RGBA& fgc) {
     }
 }
 
-void GYDM::ITextlet::set_text_alpha(double alpha) {
+void Plteen::ITextlet::set_text_alpha(double alpha) {
     if (this->foreground_color.alpha() != alpha) {
         this->foreground_color = RGBA(this->foreground_color, alpha);
         this->update_texture();
@@ -53,28 +53,28 @@ void GYDM::ITextlet::set_text_alpha(double alpha) {
     }
 }
 
-void GYDM::ITextlet::set_background_color(const RGBA& bgc) {
+void Plteen::ITextlet::set_background_color(const RGBA& bgc) {
     if (this->background_color != bgc) {
         this->background_color = bgc;
         this->notify_updated();
     }
 }
 
-void GYDM::ITextlet::set_border_color(const RGBA& bdc) {
+void Plteen::ITextlet::set_border_color(const RGBA& bdc) {
     if (this->border_color != bdc) {
         this->border_color = bdc;
         this->notify_updated();
     }
 }
 
-void GYDM::ITextlet::set_corner_radius(float radius) {
+void Plteen::ITextlet::set_corner_radius(float radius) {
     if (this->corner_radius != radius) {
         this->corner_radius = radius;
         this->notify_updated();
     }
 }
 
-void GYDM::ITextlet::set_font(shared_font_t font, MatterPort port) {
+void Plteen::ITextlet::set_font(shared_font_t font, MatterPort port) {
     this->moor(port);
 
     this->text_font = (((font.use_count() > 0) && (font->okay())) ? font : GameFont::Default());
@@ -84,7 +84,7 @@ void GYDM::ITextlet::set_font(shared_font_t font, MatterPort port) {
     this->notify_updated();
 }
 
-void GYDM::ITextlet::set_text(const std::string& content, MatterPort port) {
+void Plteen::ITextlet::set_text(const std::string& content, MatterPort port) {
     this->raw = content;
 
     this->moor(port);
@@ -98,23 +98,23 @@ void GYDM::ITextlet::set_text(const std::string& content, MatterPort port) {
     this->notify_updated();
 }
 
-void GYDM::ITextlet::set_text(const char* fmt, ...) {
+void Plteen::ITextlet::set_text(const char* fmt, ...) {
     VSNPRINT(content, fmt);
     this->set_text(content);
 }
 
-void GYDM::ITextlet::set_text(const RGBA& color, const char* fmt, ...) {
+void Plteen::ITextlet::set_text(const RGBA& color, const char* fmt, ...) {
     VSNPRINT(content, fmt);
     this->set_text(content);
     this->set_text_color(color);
 }
 
-void GYDM::ITextlet::set_text(MatterPort port, const char* fmt, ...) {
+void Plteen::ITextlet::set_text(MatterPort port, const char* fmt, ...) {
     VSNPRINT(content, fmt);
     this->set_text(content, port);
 }
 
-Box GYDM::ITextlet::get_bounding_box() {
+Box Plteen::ITextlet::get_bounding_box() {
     Box box;
 
     if ((this->texture.use_count() > 0) && (this->texture->okay())) {
@@ -129,7 +129,7 @@ Box GYDM::ITextlet::get_bounding_box() {
     return box;
 }
 
-void GYDM::ITextlet::draw(GYDM::dc_t* dc, float x, float y, float Width, float Height) {
+void Plteen::ITextlet::draw(Plteen::dc_t* dc, float x, float y, float Width, float Height) {
     if ((this->texture.use_count() > 0) && this->texture->okay()) {
         if (this->corner_radius == 0.0F) {
             float pos_off = 0.0F;
@@ -169,8 +169,8 @@ void GYDM::ITextlet::draw(GYDM::dc_t* dc, float x, float y, float Width, float H
     }
 }
 
-void GYDM::ITextlet::update_texture() {
-    GYDM::dc_t* dc = this->drawing_context();
+void Plteen::ITextlet::update_texture() {
+    Plteen::dc_t* dc = this->drawing_context();
 
     if ((this->raw.empty()) || (dc == nullptr)) {
         this->texture.reset();
@@ -180,18 +180,18 @@ void GYDM::ITextlet::update_texture() {
 }
 
 /*************************************************************************************************/
-GYDM::Labellet::Labellet(const char *fmt, ...) {
+Plteen::Labellet::Labellet(const char *fmt, ...) {
     VSNPRINT(caption, fmt);
     this->set_text(caption);
 }
 
-GYDM::Labellet::Labellet(shared_font_t font, const char* fmt, ...) {
+Plteen::Labellet::Labellet(shared_font_t font, const char* fmt, ...) {
     VSNPRINT(caption, fmt);
     this->set_font(font);
     this->set_text(caption);
 }
 
-GYDM::Labellet::Labellet(shared_font_t font, uint32_t hex, const char* fmt, ...) {
+Plteen::Labellet::Labellet(shared_font_t font, uint32_t hex, const char* fmt, ...) {
     VSNPRINT(caption, fmt);
 
     this->set_font(font);
@@ -199,7 +199,7 @@ GYDM::Labellet::Labellet(shared_font_t font, uint32_t hex, const char* fmt, ...)
     this->set_text(caption);
 }
 
-GYDM::Labellet::Labellet(shared_font_t font, const RGBA& rgb, const char* fmt, ...) {
+Plteen::Labellet::Labellet(shared_font_t font, const RGBA& rgb, const char* fmt, ...) {
     VSNPRINT(caption, fmt);
 
     this->set_font(font);
@@ -207,14 +207,14 @@ GYDM::Labellet::Labellet(shared_font_t font, const RGBA& rgb, const char* fmt, .
     this->set_text(caption);
 }
 
-GYDM::Labellet::Labellet(uint32_t hex, const char* fmt, ...) {
+Plteen::Labellet::Labellet(uint32_t hex, const char* fmt, ...) {
     VSNPRINT(caption, fmt);
 
     this->set_text_color(hex);
     this->set_text(caption);
 }
 
-GYDM::Labellet::Labellet(const RGBA& rgb, const char* fmt, ...) {
+Plteen::Labellet::Labellet(const RGBA& rgb, const char* fmt, ...) {
     VSNPRINT(caption, fmt);
 
     this->set_text_color(rgb);

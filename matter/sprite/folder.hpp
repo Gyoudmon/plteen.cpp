@@ -6,14 +6,14 @@
 #include <vector>
 #include <unordered_map>
 
-namespace GYDM {
-    class __lambda__ Sprite : public GYDM::ISprite {
+namespace Plteen {
+    class __lambda__ Sprite : public Plteen::ISprite {
     public:
         Sprite(const std::string& pathname);
         Sprite(const char* pathname_fmt, ...);
         virtual ~Sprite() {}
 
-        void construct(GYDM::dc_t* dc) override;
+        void construct(Plteen::dc_t* dc) override;
         const char* name() override;
     
     public:
@@ -29,14 +29,14 @@ namespace GYDM {
     protected:
         void feed_costume_extent(size_t idx, float* width, float* height) override;
         const char* costume_index_to_name(size_t idx) override;
-        void draw_costume(GYDM::dc_t* renderer, size_t idx, SDL_Rect* src, SpriteRenderArguments* argv) override;
+        void draw_costume(Plteen::dc_t* renderer, size_t idx, SDL_Rect* src, SpriteRenderArguments* argv) override;
     
     protected:
         virtual void on_costumes_load() {}
 
     private:
-        void load_costume(GYDM::dc_t* dc, const std::string& png);
-        void load_decorate(GYDM::dc_t* dc, const std::string& d_name, const std::string& png);
+        void load_costume(Plteen::dc_t* dc, const std::string& png);
+        void load_decorate(Plteen::dc_t* dc, const std::string& d_name, const std::string& png);
         
     private:
         std::vector<std::pair<std::string, shared_texture_t>> costumes;

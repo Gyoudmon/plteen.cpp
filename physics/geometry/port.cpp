@@ -1,13 +1,13 @@
 #include "port.hpp"
 
-using namespace GYDM;
+using namespace Plteen;
 
 /*************************************************************************************************/
-GYDM::Port::Port(const MatterPort& name) {
+Plteen::Port::Port(const MatterPort& name) {
     this->reset(name);
 }
 
-void GYDM::Port::reset(const MatterPort& name) {
+void Plteen::Port::reset(const MatterPort& name) {
     switch (name) {
     case MatterPort::LT: case MatterPort::NW: this->fx = 0.0F; this->fy = 0.0F; break;
     case MatterPort::LC: case MatterPort::W:  this->fx = 0.0F; this->fy = 0.5F; break;

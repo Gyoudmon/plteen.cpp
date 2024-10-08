@@ -2,13 +2,13 @@
 
 #include "../screen.hpp"
 
-namespace GYDM {
-    class __lambda__ OnionSkin : public GYDM::IScreen {
+namespace Plteen {
+    class __lambda__ OnionSkin : public Plteen::IScreen {
     public:
-        OnionSkin(GYDM::IDisplay* display) : _display(display) {}
+        OnionSkin(Plteen::IDisplay* display) : _display(display) {}
 
     public:
-        GYDM::IDisplay* display() override { return this->_display; }
+        Plteen::IDisplay* display() override { return this->_display; }
     
     public:
         void refresh() override { this->_display->refresh(); }
@@ -24,10 +24,10 @@ namespace GYDM {
         void notify_updated() override { this->_display->notify_updated(); }
 
     public:
-        void log_message(GYDM::Log level, const std::string& message) override { this->_display->log_message(level, message); }
+        void log_message(Plteen::Log level, const std::string& message) override { this->_display->log_message(level, message); }
         void start_input_text(const std::string& prompt) override { this->_display->start_input_text(prompt); }
 
     private:
-        GYDM::IDisplay* _display;
+        Plteen::IDisplay* _display;
     };
 }

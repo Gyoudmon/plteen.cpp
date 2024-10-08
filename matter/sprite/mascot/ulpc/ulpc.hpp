@@ -9,8 +9,8 @@
 /* https://sanderfrenken.github.io/Universal-LPC-Spritesheet-Character-Generator/index.html */
 /* https://lpc.opengameart.org/static/LPC-Style-Guide/build/index.html */
 
-namespace GYDM {
-    class SpriteULPCSheet : public GYDM::SpriteGridSheet, public GYDM::ICreature, protected GYDM::I4WayMotion {
+namespace Plteen {
+    class SpriteULPCSheet : public Plteen::SpriteGridSheet, public Plteen::ICreature, protected Plteen::I4WayMotion {
     public:
         SpriteULPCSheet(const std::string& pathname);
 

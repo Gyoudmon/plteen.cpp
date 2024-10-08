@@ -3,10 +3,10 @@
 #include "../../../datum/box.hpp"
 #include "../../../datum/flonum.hpp"
 
-using namespace GYDM;
+using namespace Plteen;
 
 /*************************************************************************************************/
-GYDM::Histogramlet::Histogramlet(float width, float height, uint32_t box_hex, uint32_t mark_hex)
+Plteen::Histogramlet::Histogramlet(float width, float height, uint32_t box_hex, uint32_t mark_hex)
         : width(flabs(width)), height(flabs(height)), color(box_hex), alpha(1.0) {
     if (this->height == 0.0F) {
         this->height = this->width;
@@ -17,17 +17,17 @@ GYDM::Histogramlet::Histogramlet(float width, float height, uint32_t box_hex, ui
     this->enable_resize(true);
 }
 
-Box GYDM::Histogramlet::get_bounding_box() {
+Box Plteen::Histogramlet::get_bounding_box() {
     return { this->width, this->height };
 }
 
-void GYDM::Histogramlet::on_resize(float w, float h, float width, float height) {
+void Plteen::Histogramlet::on_resize(float w, float h, float width, float height) {
     this->width = flabs(w);
     this->height = flabs(h);
     this->invalidate_geometry();
 }
 
-void GYDM::Histogramlet::draw(GYDM::dc_t* dc, float flx, float fly, float flwidth, float flheight) {
+void Plteen::Histogramlet::draw(Plteen::dc_t* dc, float flx, float fly, float flwidth, float flheight) {
     if (this->diagram.use_count() == 0) {
         this->diagram = std::make_shared<Texture>(dc->create_blank_image(fl2fxi(this->width) + 1, fl2fxi(this->height) + 1));
     }
@@ -68,18 +68,18 @@ void GYDM::Histogramlet::draw(GYDM::dc_t* dc, float flx, float fly, float flwidt
 }
 
 /*************************************************************************************************/
-void GYDM::Histogramlet::invalidate_geometry() {
+void Plteen::Histogramlet::invalidate_geometry() {
     if (this->diagram.use_count() > 0) {
         this->diagram.reset();
         this->clear_geometry();
     }
 }
 
-void GYDM::Histogramlet::clear_geometry() {
+void Plteen::Histogramlet::clear_geometry() {
     this->needs_refresh_diagram = true;
 }
 
-void GYDM::Histogramlet::clear() {
+void Plteen::Histogramlet::clear() {
     this->xmax = this->ymax = -infinity;
     this->xmin = this->ymin = +infinity;
 
@@ -91,7 +91,7 @@ void GYDM::Histogramlet::clear() {
     }
 }
 
-void GYDM::Histogramlet::set_color(uint32_t hex, double alpha) {
+void Plteen::Histogramlet::set_color(uint32_t hex, double alpha) {
     if ((this->color != hex) || (this->alpha != alpha)) {
         this->color = hex;
         this->alpha = alpha;
@@ -100,7 +100,7 @@ void GYDM::Histogramlet::set_color(uint32_t hex, double alpha) {
     }
 }
 
-void GYDM::Histogramlet::set_capacity(size_t n) {
+void Plteen::Histogramlet::set_capacity(size_t n) {
     if (this->capacity != n) {
         this->capacity = n;
 
@@ -113,7 +113,7 @@ void GYDM::Histogramlet::set_capacity(size_t n) {
     }
 }
 
-void GYDM::Histogramlet::push_back_datum(float x, float y) {
+void Plteen::Histogramlet::push_back_datum(float x, float y) {
     if (this->raw_dots.empty() || (this->raw_dots.back().first != x)) {
         this->raw_dots.push_back({ x , y });
 

@@ -2,28 +2,28 @@
 
 #include "tuple.hpp"
 
-namespace GYDM {
+namespace Plteen {
     template<typename T>
-    class __lambda__ Point : public GYDM::Tuple<GYDM::Point, T> {
+    class __lambda__ Point : public Plteen::Tuple<Plteen::Point, T> {
     public:
-        static const GYDM::Point<T> O;
+        static const Plteen::Point<T> O;
 
     public:
         Point() = default;
-        Point(T x, T y) noexcept : GYDM::Tuple<GYDM::Point, T>(x, y) {}
+        Point(T x, T y) noexcept : Plteen::Tuple<Plteen::Point, T>(x, y) {}
 
         template<typename U>
-        explicit Point(const GYDM::Point<U>& v) noexcept
-            : GYDM::Tuple<GYDM::Point, T>(T(v.x), T(v.y)) {}
+        explicit Point(const Plteen::Point<U>& v) noexcept
+            : Plteen::Tuple<Plteen::Point, T>(T(v.x), T(v.y)) {}
 
         template<typename U>
-        explicit Point(const GYDM::Point<U>& v, T sx, T sy) noexcept
-            : GYDM::Tuple<GYDM::Point, T>(T(v.x * sx), T(v.y * sy)) {}
+        explicit Point(const Plteen::Point<U>& v, T sx, T sy) noexcept
+            : Plteen::Tuple<Plteen::Point, T>(T(v.x * sx), T(v.y * sy)) {}
 
         ~Point() noexcept {}
     };
 
-    typedef GYDM::Point<float> Dot;
+    typedef Plteen::Point<float> Dot;
 
-    template<typename T> const GYDM::Point<T> GYDM::Point<T>::O = {};
+    template<typename T> const Plteen::Point<T> Plteen::Point<T>::O = {};
 }

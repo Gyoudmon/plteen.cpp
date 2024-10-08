@@ -7,13 +7,13 @@
 
 #include "../../forward.hpp"
 
-namespace GYDM {
+namespace Plteen {
     /** NOTE: the HSB and HSV are identical **/
     class __lambda__ RGBA {
     public:
-        static GYDM::RGBA HSV(double hue, double saturation = 1.0, double brightness = 1.0, double alpha = 1.0);
-        static GYDM::RGBA HSL(double hue, double saturation = 1.0, double lightness = 1.0, double alpha = 1.0);
-        static GYDM::RGBA HSI(double hue, double saturation = 1.0, double intensity = 1.0, double alpha = 1.0);
+        static Plteen::RGBA HSV(double hue, double saturation = 1.0, double brightness = 1.0, double alpha = 1.0);
+        static Plteen::RGBA HSL(double hue, double saturation = 1.0, double lightness = 1.0, double alpha = 1.0);
+        static Plteen::RGBA HSI(double hue, double saturation = 1.0, double intensity = 1.0, double alpha = 1.0);
 
     public:
         RGBA() : r(0.0), g(0.0), b(0.0), a(0.0) { /* transparent color */ }
@@ -33,17 +33,17 @@ namespace GYDM {
         ~RGBA() noexcept {}
 
     public:
-        GYDM::RGBA& operator=(const RGBA& c); // copy assignment
-        GYDM::RGBA& operator=(uint32_t hex);  // copy assignment
+        Plteen::RGBA& operator=(const RGBA& c); // copy assignment
+        Plteen::RGBA& operator=(uint32_t hex);  // copy assignment
         double operator[](size_t i) const;
         
-		friend inline GYDM::RGBA operator+(RGBA lhs, const RGBA& rhs) { return lhs += rhs; }
-        friend inline GYDM::RGBA operator+(RGBA lhs, uint32_t rhs) { return lhs += rhs; }
-		friend inline GYDM::RGBA operator+(uint32_t lhs, RGBA rhs) { return rhs += lhs; }
+		friend inline Plteen::RGBA operator+(RGBA lhs, const RGBA& rhs) { return lhs += rhs; }
+        friend inline Plteen::RGBA operator+(RGBA lhs, uint32_t rhs) { return lhs += rhs; }
+		friend inline Plteen::RGBA operator+(uint32_t lhs, RGBA rhs) { return rhs += lhs; }
 
-		friend inline GYDM::RGBA operator*(RGBA lhs, const RGBA& rhs) { return lhs *= rhs; }
-        friend inline GYDM::RGBA operator*(RGBA lhs, uint32_t rhs) { return lhs *= rhs; }
-		friend inline GYDM::RGBA operator*(uint32_t lhs, RGBA rhs) { return rhs *= lhs; }
+		friend inline Plteen::RGBA operator*(RGBA lhs, const RGBA& rhs) { return lhs *= rhs; }
+        friend inline Plteen::RGBA operator*(RGBA lhs, uint32_t rhs) { return lhs *= rhs; }
+		friend inline Plteen::RGBA operator*(uint32_t lhs, RGBA rhs) { return rhs *= lhs; }
 
         // C++20 has the `operator<=>`
         bool equal(const RGBA& rhs) const;
@@ -56,8 +56,8 @@ namespace GYDM {
         friend inline bool operator!=(uint32_t lhs, const RGBA& rhs) { return !rhs.equal(lhs); }
 
     public:
-        GYDM::RGBA contrast() const;
-        GYDM::RGBA contrast_for_background() const;
+        Plteen::RGBA contrast() const;
+        Plteen::RGBA contrast_for_background() const;
 
     public:
         void unbox(uint8_t* r = nullptr, uint8_t* g = nullptr, uint8_t* b = nullptr, uint8_t* a = nullptr) const;
@@ -93,11 +93,11 @@ namespace GYDM {
         std::string hexstring(const char* fmt, bool needs_alpha = true) const { return this->hexstring(needs_alpha, fmt); }
 
     private:
-        GYDM::RGBA& operator+=(const RGBA& rhs);
-		GYDM::RGBA& operator+=(uint32_t rhs);
+        Plteen::RGBA& operator+=(const RGBA& rhs);
+		Plteen::RGBA& operator+=(uint32_t rhs);
 
-        GYDM::RGBA& operator*=(const RGBA& rhs);
-		GYDM::RGBA& operator*=(uint32_t rhs);
+        Plteen::RGBA& operator*=(const RGBA& rhs);
+		Plteen::RGBA& operator*=(uint32_t rhs);
 
     private:
         double r;
@@ -107,5 +107,5 @@ namespace GYDM {
     };
 
     /*********************************************************************************************/
-    const GYDM::RGBA transparent;
+    const Plteen::RGBA transparent;
 }

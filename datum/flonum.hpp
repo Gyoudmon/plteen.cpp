@@ -9,7 +9,7 @@
 // check: https://www-pequan.lip6.fr/~graillat/papers/posterRNC7.pdf
 // check: https://www-pequan.lip6.fr/~graillat/papers/nolta07.pdf
 
-namespace GYDM {
+namespace Plteen {
     // for non-flonums
     template<typename T> bool inline flisnan(T fx) { return false; }
     template<typename T> bool inline flisinfinity(T fx) { return false; }
@@ -186,9 +186,9 @@ namespace GYDM {
     template<typename T> T inline fl2fx(double fl) { return T(std::round(fl)); }
     template<typename T> T inline fl2fx(long double fl) { return T(std::roundl(fl)); }
 
-    int inline fl2fxi(float f) { return GYDM::fl2fx<int>(f); }
-    int inline fl2fxi(double fl) { return GYDM::fl2fx<int>(fl); }
-    int inline fl2fxi(long double fl) { return GYDM::fl2fx<int>(fl); }
+    int inline fl2fxi(float f) { return Plteen::fl2fx<int>(f); }
+    int inline fl2fxi(double fl) { return Plteen::fl2fx<int>(fl); }
+    int inline fl2fxi(long double fl) { return Plteen::fl2fx<int>(fl); }
 
 /*************************************************************************************************/
     /**

@@ -10,15 +10,15 @@
 #include "../graphics/misc.hpp"
 #include "../physics/mathematics.hpp"
 
-using namespace GYDM;
+using namespace Plteen;
 
 /*************************************************************************************************/
-GYDM::IAtlas::IAtlas(const std::string& pathname) : _pathname(pathname) {
+Plteen::IAtlas::IAtlas(const std::string& pathname) : _pathname(pathname) {
     this->enable_resize(true);
     this->camouflage(true);
 }
 
-const char* GYDM::IAtlas::name() {
+const char* Plteen::IAtlas::name() {
     static std::string _name;
 
     _name = file_basename_from_path(this->_pathname.c_str());
@@ -26,7 +26,7 @@ const char* GYDM::IAtlas::name() {
     return _name.c_str();
 }
 
-void GYDM::IAtlas::construct(GYDM::dc_t* dc) {
+void Plteen::IAtlas::construct(Plteen::dc_t* dc) {
     this->atlas = imgdb_ref(this->_pathname, dc->self());
 
     if (this->atlas->okay()) {
@@ -34,7 +34,7 @@ void GYDM::IAtlas::construct(GYDM::dc_t* dc) {
     }
 }
 
-Box GYDM::IAtlas::get_original_bounding_box() {
+Box Plteen::IAtlas::get_original_bounding_box() {
     if (this->map_region.is_empty()) {
         this->map_region = this->get_map_region();
         this->on_map_resize(this->map_region.width(), this->map_region.height());
@@ -43,17 +43,17 @@ Box GYDM::IAtlas::get_original_bounding_box() {
     return this->map_region;
 }
 
-Box GYDM::IAtlas::get_bounding_box() {
+Box Plteen::IAtlas::get_bounding_box() {
     return Box(this->get_original_bounding_box(),
                 flabs(this->xscale), flabs(this->yscale));
 }
 
-Margin GYDM::IAtlas::get_margin() {
+Margin Plteen::IAtlas::get_margin() {
     return Margin(this->get_original_margin(),
                 flabs(this->xscale), flabs(this->yscale));
 }
 
-Box GYDM::IAtlas::get_map_region() {
+Box Plteen::IAtlas::get_map_region() {
     Box map_tile_region;
     
     for (size_t idx = 0U; idx < this->map_tile_count(); idx ++) {
@@ -63,23 +63,23 @@ Box GYDM::IAtlas::get_map_region() {
     return map_tile_region;
 }
 
-size_t GYDM::IAtlas::logic_tile_count() {
+size_t Plteen::IAtlas::logic_tile_count() {
     return this->logic_row * this->logic_col;
 }
 
-SDL_RendererFlip GYDM::IAtlas::current_flip_status() {
+SDL_RendererFlip Plteen::IAtlas::current_flip_status() {
     return game_scales_to_flip(this->xscale, this->yscale);
 }
 
-float GYDM::IAtlas::get_horizontal_scale() {
+float Plteen::IAtlas::get_horizontal_scale() {
     return flabs(this->xscale);
 }
 
-float GYDM::IAtlas::get_vertical_scale() {
+float Plteen::IAtlas::get_vertical_scale() {
     return flabs(this->yscale);
 }
 
-void GYDM::IAtlas::on_resize(float width, float height, float old_width, float old_height) {
+void Plteen::IAtlas::on_resize(float width, float height, float old_width, float old_height) {
     Box box = this->get_original_bounding_box();
 
     if (!box.is_empty()) {
@@ -88,7 +88,7 @@ void GYDM::IAtlas::on_resize(float width, float height, float old_width, float o
     }
 }
 
-void GYDM::IAtlas::draw(GYDM::dc_t* dc, float x, float y, float Width, float Height) {
+void Plteen::IAtlas::draw(Plteen::dc_t* dc, float x, float y, float Width, float Height) {
     SDL_Texture* tilemap = this->atlas->self();
     SDL_RendererFlip flip = this->current_flip_status();
     float sx = flabs(this->xscale);
@@ -147,7 +147,7 @@ void GYDM::IAtlas::draw(GYDM::dc_t* dc, float x, float y, float Width, float Hei
 }
 
 /*************************************************************************************************/
-void GYDM::IAtlas::create_logic_grid(int row, int col, const Margin& margin) {
+void Plteen::IAtlas::create_logic_grid(int row, int col, const Margin& margin) {
     Box map = this->get_map_region();
     
     this->logic_margin = margin;
@@ -156,11 +156,11 @@ void GYDM::IAtlas::create_logic_grid(int row, int col, const Margin& margin) {
     this->on_map_resize(map.width(), map.height());
 }
 
-int GYDM::IAtlas::logic_tile_index(int x, int y, int* r,  int* c, bool local) {
+int Plteen::IAtlas::logic_tile_index(int x, int y, int* r,  int* c, bool local) {
     return this->logic_tile_index(float(x), float(y), r, c, local);
 }
 
-int GYDM::IAtlas::logic_tile_index(float x, float y, int* r, int* c, bool local) {
+int Plteen::IAtlas::logic_tile_index(float x, float y, int* r, int* c, bool local) {
     int idx = -1;
 
     if (!local) {
@@ -187,7 +187,7 @@ int GYDM::IAtlas::logic_tile_index(float x, float y, int* r, int* c, bool local)
     return idx;
 }
 
-Dot GYDM::IAtlas::get_logic_tile_location(int idx, const Port& p, bool local) {
+Dot Plteen::IAtlas::get_logic_tile_location(int idx, const Port& p, bool local) {
     int total = this->logic_col * this->logic_row;
     Dot dot;
     
@@ -199,7 +199,7 @@ Dot GYDM::IAtlas::get_logic_tile_location(int idx, const Port& p, bool local) {
     return dot;
 }
 
-Dot GYDM::IAtlas::get_logic_tile_location(int row, int col, const Port& p, bool local) {
+Dot Plteen::IAtlas::get_logic_tile_location(int row, int col, const Port& p, bool local) {
     Dot dot;
     
     if (this->logic_row > 0) {
@@ -222,7 +222,7 @@ Dot GYDM::IAtlas::get_logic_tile_location(int row, int col, const Port& p, bool 
                      (this->logic_tile_height * (float(row) + p.fy) + this->logic_margin.top) * flabs(this->yscale));
 }
 
-Port GYDM::IAtlas::get_logic_tile_fraction(int idx, const Port& a) {
+Port Plteen::IAtlas::get_logic_tile_fraction(int idx, const Port& a) {
     int total = this->logic_col * this->logic_row;
     Port port;
     
@@ -234,7 +234,7 @@ Port GYDM::IAtlas::get_logic_tile_fraction(int idx, const Port& a) {
     return port;
 }
 
-Port GYDM::IAtlas::get_logic_tile_fraction(int row, int col, const Port& p) {
+Port Plteen::IAtlas::get_logic_tile_fraction(int row, int col, const Port& p) {
     Box box = this->get_bounding_box();
     Dot dot = this->get_logic_tile_location(row, col, p, true);
     
@@ -242,7 +242,7 @@ Port GYDM::IAtlas::get_logic_tile_fraction(int row, int col, const Port& p) {
              dot.y / box.height() };
 }
 
-void GYDM::IAtlas::move_to_logic_tile(IMatter* m, int idx, const Port& tp, const Port& p, const Vector& vec) {
+void Plteen::IAtlas::move_to_logic_tile(IMatter* m, int idx, const Port& tp, const Port& p, const Vector& vec) {
     int total = this->logic_col * this->logic_row;
     
     if (total > 0) {
@@ -251,7 +251,7 @@ void GYDM::IAtlas::move_to_logic_tile(IMatter* m, int idx, const Port& tp, const
     }
 }
 
-void GYDM::IAtlas::move_to_logic_tile(IMatter* m, int row, int col, const Port& tp, const Port& p, const Vector& vec) {
+void Plteen::IAtlas::move_to_logic_tile(IMatter* m, int row, int col, const Port& tp, const Port& p, const Vector& vec) {
     auto master = this->master();
     
     if (master != nullptr) {
@@ -259,7 +259,7 @@ void GYDM::IAtlas::move_to_logic_tile(IMatter* m, int row, int col, const Port& 
     }
 }
 
-void GYDM::IAtlas::glide_to_logic_tile(double sec, IMatter* m, int idx, const Port& tp, const Port& p, const Vector& vec) {
+void Plteen::IAtlas::glide_to_logic_tile(double sec, IMatter* m, int idx, const Port& tp, const Port& p, const Vector& vec) {
     int total = this->logic_col * this->logic_row;
     
     if (total > 0) {
@@ -268,7 +268,7 @@ void GYDM::IAtlas::glide_to_logic_tile(double sec, IMatter* m, int idx, const Po
     }
 }
 
-void GYDM::IAtlas::glide_to_logic_tile(double sec, IMatter* m, int row, int col, const Port& tp, const Port& p, const Vector& vec) {
+void Plteen::IAtlas::glide_to_logic_tile(double sec, IMatter* m, int row, int col, const Port& tp, const Port& p, const Vector& vec) {
     auto master = this->master();
     
     if (master != nullptr) {
@@ -276,7 +276,7 @@ void GYDM::IAtlas::glide_to_logic_tile(double sec, IMatter* m, int row, int col,
     }
 }
 
-Box GYDM::IAtlas::get_logic_tile_region() {
+Box Plteen::IAtlas::get_logic_tile_region() {
     Box box;
 
     if ((this->logic_col > 0) && (this->logic_row > 0)) {
@@ -287,7 +287,7 @@ Box GYDM::IAtlas::get_logic_tile_region() {
     return box;
 }
 
-void GYDM::IAtlas::on_map_resize(float map_width, float map_height) {
+void Plteen::IAtlas::on_map_resize(float map_width, float map_height) {
     if ((this->logic_row > 0) && (this->logic_col > 0)) {
         this->logic_tile_width  = (map_width  - this->logic_margin.horizon()) / float(this->logic_col);
         this->logic_tile_height = (map_height - this->logic_margin.vertical()) / float(this->logic_row);
@@ -298,14 +298,14 @@ void GYDM::IAtlas::on_map_resize(float map_width, float map_height) {
 }
 
 /*************************************************************************************************/
-GYDM::GridAtlas::GridAtlas(const char* pathname, int row, int col, int xgap, int ygap, bool inset)
+Plteen::GridAtlas::GridAtlas(const char* pathname, int row, int col, int xgap, int ygap, bool inset)
     : GridAtlas(std::string(pathname), row, col, xgap, ygap, inset) {}
 
-GYDM::GridAtlas::GridAtlas(const std::string& pathname, int row, int col, int xgap, int ygap, bool inset)
+Plteen::GridAtlas::GridAtlas(const std::string& pathname, int row, int col, int xgap, int ygap, bool inset)
     : IAtlas(pathname), atlas_row(fxmax(row, 1)), atlas_col(fxmax(col, 1))
     , atlas_inset(inset), atlas_tile_xgap(xgap), atlas_tile_ygap(ygap) {}
 
-void GYDM::GridAtlas::on_tilemap_load(shared_texture_t atlas) {
+void Plteen::GridAtlas::on_tilemap_load(shared_texture_t atlas) {
     int w, h;
 
     atlas->feed_extent(&w, &h);
@@ -337,7 +337,7 @@ void GYDM::GridAtlas::on_tilemap_load(shared_texture_t atlas) {
     this->create_logic_grid(this->map_row, this->map_col, this->get_original_map_overlay());
 }
 
-Box GYDM::GridAtlas::get_map_region() {
+Box Plteen::GridAtlas::get_map_region() {
     Margin margin = this->get_original_map_overlay();
     float hmargin = margin.horizon()  - this->map_tile_xgap;
     float vmargin = margin.vertical() - this->map_tile_ygap;
@@ -346,23 +346,23 @@ Box GYDM::GridAtlas::get_map_region() {
              float(this->map_row) * (this->map_tile_height - vmargin) + vmargin };
 }
 
-size_t GYDM::GridAtlas::atlas_tile_count() {
+size_t Plteen::GridAtlas::atlas_tile_count() {
     return (this->atlas_tile_width <= 0) ? 0 : (this->atlas_row * this->atlas_col);
 }
 
-float GYDM::GridAtlas::atlas_tile_size_ratio() {
+float Plteen::GridAtlas::atlas_tile_size_ratio() {
     return float(this->atlas_tile_width) / float(this->atlas_tile_height);   
 }
 
-size_t GYDM::GridAtlas::map_tile_count() {
+size_t Plteen::GridAtlas::map_tile_count() {
     return (this->map_tile_width <= 0.0F) ? 0 : (this->map_row * this->map_col);
 }
 
-float GYDM::GridAtlas::map_tile_size_ratio() {
+float Plteen::GridAtlas::map_tile_size_ratio() {
     return float(this->map_tile_width) / float(this->map_tile_height);   
 }
 
-AABox<int> GYDM::GridAtlas::get_atlas_tile_region(size_t idx) {
+AABox<int> Plteen::GridAtlas::get_atlas_tile_region(size_t idx) {
     int r = int(idx) / this->atlas_col;
     int c = int(idx) % this->atlas_col;
     int xoff = 0;
@@ -380,7 +380,7 @@ AABox<int> GYDM::GridAtlas::get_atlas_tile_region(size_t idx) {
     return AABox<int>(x, y, this->atlas_tile_width, this->atlas_tile_height);
 }
 
-Box GYDM::GridAtlas::get_map_tile_region(size_t idx) {
+Box Plteen::GridAtlas::get_map_tile_region(size_t idx) {
     Margin margin = this->get_original_map_overlay();
     size_t row = idx / this->map_col;
     size_t col = idx % this->map_col;
@@ -391,7 +391,7 @@ Box GYDM::GridAtlas::get_map_tile_region(size_t idx) {
 }
 
 /*************************************************************************************************/
-void GYDM::GridAtlas::create_map_grid(int row, int col, float tile_width, float tile_height, float xgap, float ygap) {
+void Plteen::GridAtlas::create_map_grid(int row, int col, float tile_width, float tile_height, float xgap, float ygap) {
     if (row > 0) {
         this->map_row = row;
     }
@@ -414,11 +414,11 @@ void GYDM::GridAtlas::create_map_grid(int row, int col, float tile_width, float 
     this->invalidate_map_size();
 }
 
-int GYDM::GridAtlas::map_tile_index(int x, int y, int* r, int* c, bool local) {
+int Plteen::GridAtlas::map_tile_index(int x, int y, int* r, int* c, bool local) {
     return this->map_tile_index(float(x), float(y), r, c, local);
 }
 
-int GYDM::GridAtlas::map_tile_index(float x, float y, int* r, int* c, bool local) {
+int Plteen::GridAtlas::map_tile_index(float x, float y, int* r, int* c, bool local) {
     float htile_step = (this->map_tile_width  + this->map_tile_xgap) * flabs(this->xscale);
     float vtile_step = (this->map_tile_height + this->map_tile_ygap) * flabs(this->yscale);
     Margin margin = this->get_map_overlay();
@@ -446,21 +446,21 @@ int GYDM::GridAtlas::map_tile_index(float x, float y, int* r, int* c, bool local
     return rw * this->map_col + cl;
 }
 
-Port GYDM::GridAtlas::get_map_tile_fraction(int idx, const Port& p) {
+Port Plteen::GridAtlas::get_map_tile_fraction(int idx, const Port& p) {
     Box box = this->get_bounding_box();
     Dot dot = this->get_map_tile_location(idx, p, true);
 
     return { dot.x / box.width(), dot.y / box.height() };
 }
 
-Port GYDM::GridAtlas::get_map_tile_fraction(int row, int col, const Port& a) {
+Port Plteen::GridAtlas::get_map_tile_fraction(int row, int col, const Port& a) {
     row = safe_index(row, this->map_row);
     col = safe_index(col, this->map_col);
     
     return this->get_map_tile_fraction(row * this->map_col + col, a);
 }
 
-Dot GYDM::GridAtlas::get_map_tile_location(int idx, const Port& p, bool local) {
+Dot Plteen::GridAtlas::get_map_tile_location(int idx, const Port& p, bool local) {
     int total = this->map_col * this->map_row;
     Box region;
     Dot dot;
@@ -480,14 +480,14 @@ Dot GYDM::GridAtlas::get_map_tile_location(int idx, const Port& p, bool local) {
              (region.y() + region.height() * p.fy + dot.y) * flabs(this->yscale) };
 }
 
-Dot GYDM::GridAtlas::get_map_tile_location(int row, int col, const Port& p, bool local) {
+Dot Plteen::GridAtlas::get_map_tile_location(int row, int col, const Port& p, bool local) {
     row = safe_index(row, this->map_row);
     col = safe_index(col, this->map_col);
 
     return this->get_map_tile_location(row * this->map_col + col, p, local);
 }
 
-void GYDM::GridAtlas::move_to_map_tile(IMatter* m, int idx, const Port& tp, const Port& p, const Vector& vec) {
+void Plteen::GridAtlas::move_to_map_tile(IMatter* m, int idx, const Port& tp, const Port& p, const Vector& vec) {
     auto master = this->master();
 
     if (master != nullptr) {
@@ -495,13 +495,13 @@ void GYDM::GridAtlas::move_to_map_tile(IMatter* m, int idx, const Port& tp, cons
     }
 }
 
-void GYDM::GridAtlas::move_to_map_tile(IMatter* m, int row, int col, const Port& tp, const Port& p, const Vector& vec) {
+void Plteen::GridAtlas::move_to_map_tile(IMatter* m, int row, int col, const Port& tp, const Port& p, const Vector& vec) {
     row = safe_index(row, this->map_row);
     col = safe_index(col, this->map_col);
     this->move_to_map_tile(m, row * this->map_col + col, tp, p, vec);
 }
 
-void GYDM::GridAtlas::glide_to_map_tile(double sec, IMatter* m, int idx, const Port& tp, const Port& p, const Vector& vec) {
+void Plteen::GridAtlas::glide_to_map_tile(double sec, IMatter* m, int idx, const Port& tp, const Port& p, const Vector& vec) {
     auto master = this->master();
 
     if (master != nullptr) {
@@ -509,12 +509,12 @@ void GYDM::GridAtlas::glide_to_map_tile(double sec, IMatter* m, int idx, const P
     }
 }
 
-void GYDM::GridAtlas::glide_to_map_tile(double sec, IMatter* m, int row, int col, const Port& tp, const Port& p, const Vector& vec) {
+void Plteen::GridAtlas::glide_to_map_tile(double sec, IMatter* m, int row, int col, const Port& tp, const Port& p, const Vector& vec) {
     row = safe_index(row, this->map_row);
     col = safe_index(col, this->map_col);
     this->glide_to_map_tile(sec, m, row * this->map_col + col, tp, p, vec);
 }
 
-GYDM::Margin GYDM::GridAtlas::get_map_overlay() {
+Plteen::Margin Plteen::GridAtlas::get_map_overlay() {
     return this->get_original_map_overlay().scale(this->xscale, this->yscale);
 }

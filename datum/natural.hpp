@@ -4,7 +4,7 @@
 
 #include <cstdint>
 
-namespace GYDM {
+namespace Plteen {
 	enum class Fixnum { Uint16, Uint32, Uint64 };
 
 	class __lambda__ Natural {
@@ -14,10 +14,10 @@ namespace GYDM {
 		Natural();
 		Natural(uint64_t n);
 
-		Natural(const GYDM::bytes& nstr, size_t nstart = 0, size_t nend = 0);
+		Natural(const Plteen::bytes& nstr, size_t nstart = 0, size_t nend = 0);
 		Natural(const std::string& nstr, size_t nstart = 0, size_t nend = 0);
 		Natural(const std::wstring& nstr, size_t nstart = 0, size_t nend = 0);
-		Natural(uintptr_t base, const GYDM::bytes& nstr, size_t nstart = 0, size_t nend = 0);
+		Natural(uintptr_t base, const Plteen::bytes& nstr, size_t nstart = 0, size_t nend = 0);
 		Natural(uintptr_t base, const std::string& nstr, size_t nstart = 0, size_t nend = 0);
 		Natural(uintptr_t base, const std::wstring& nstr, size_t nstart = 0, size_t nend = 0);
 		
@@ -44,125 +44,125 @@ namespace GYDM {
 		}
 
 	public:
-		Natural(const GYDM::Natural& n); // copy constructor
-		Natural(GYDM::Natural&& n);      // move constructor
+		Natural(const Plteen::Natural& n); // copy constructor
+		Natural(Plteen::Natural&& n);      // move constructor
 
-		GYDM::Natural& operator=(uint64_t n);
-		GYDM::Natural& operator=(const GYDM::Natural& n);     // copy assignment operator
-		GYDM::Natural& operator=(GYDM::Natural&& n) noexcept; // move assignment operator
+		Plteen::Natural& operator=(uint64_t n);
+		Plteen::Natural& operator=(const Plteen::Natural& n);     // copy assignment operator
+		Plteen::Natural& operator=(Plteen::Natural&& n) noexcept; // move assignment operator
 
 	public: // NOTE: C++20 has operator<=>
 		int compare(uint64_t rhs) const;
-		int compare(const GYDM::Natural& rhs) const;
+		int compare(const Plteen::Natural& rhs) const;
 
-		friend inline bool operator<(const GYDM::Natural& lhs, const GYDM::Natural& rhs) { return (lhs.compare(rhs) < 0); }
-		friend inline bool operator<(const GYDM::Natural& lhs, uint64_t rhs) { return (lhs.compare(rhs) < 0); }
-		friend inline bool operator<(uint64_t lhs, const GYDM::Natural& rhs) { return (rhs.compare(lhs) > 0); }
-		friend inline bool operator==(const GYDM::Natural& lhs, const GYDM::Natural& rhs) { return (lhs.compare(rhs) == 0); }
-		friend inline bool operator==(const GYDM::Natural& lhs, uint64_t rhs) { return (lhs.compare(rhs) == 0); }
-		friend inline bool operator==(uint64_t lhs, const GYDM::Natural& rhs) { return (rhs.compare(lhs) == 0); }
+		friend inline bool operator<(const Plteen::Natural& lhs, const Plteen::Natural& rhs) { return (lhs.compare(rhs) < 0); }
+		friend inline bool operator<(const Plteen::Natural& lhs, uint64_t rhs) { return (lhs.compare(rhs) < 0); }
+		friend inline bool operator<(uint64_t lhs, const Plteen::Natural& rhs) { return (rhs.compare(lhs) > 0); }
+		friend inline bool operator==(const Plteen::Natural& lhs, const Plteen::Natural& rhs) { return (lhs.compare(rhs) == 0); }
+		friend inline bool operator==(const Plteen::Natural& lhs, uint64_t rhs) { return (lhs.compare(rhs) == 0); }
+		friend inline bool operator==(uint64_t lhs, const Plteen::Natural& rhs) { return (rhs.compare(lhs) == 0); }
 
-		friend inline bool operator>(const GYDM::Natural& lhs, const GYDM::Natural& rhs) { return (lhs.compare(rhs) > 0); }
-		friend inline bool operator>(const GYDM::Natural& lhs, uint64_t rhs) { return (lhs.compare(rhs) > 0); }
-		friend inline bool operator>(uint64_t lhs, const GYDM::Natural& rhs) { return (rhs.compare(lhs) < 0); }
-		friend inline bool operator<=(const GYDM::Natural& lhs, const GYDM::Natural& rhs) { return (lhs.compare(rhs) <= 0); }
-		friend inline bool operator<=(const GYDM::Natural& lhs, uint64_t rhs) { return (lhs.compare(rhs) <= 0); }
-		friend inline bool operator<=(uint64_t lhs, const GYDM::Natural& rhs) { return (rhs.compare(lhs) >= 0); }
-		friend inline bool operator>=(const GYDM::Natural& lhs, const GYDM::Natural& rhs) { return (lhs.compare(rhs) >= 0); }
-		friend inline bool operator>=(const GYDM::Natural& lhs, uint64_t rhs) { return (lhs.compare(rhs) >= 0); }
-		friend inline bool operator>=(uint64_t lhs, const GYDM::Natural& rhs) { return (rhs.compare(lhs) <= 0); }
-		friend inline bool operator!=(const GYDM::Natural& lhs, const GYDM::Natural& rhs) { return (lhs.compare(rhs) != 0); }
-		friend inline bool operator!=(const GYDM::Natural& lhs, uint64_t rhs) { return (lhs.compare(rhs) != 0); }
-		friend inline bool operator!=(uint64_t lhs, const GYDM::Natural& rhs) { return (rhs.compare(lhs) != 0); }
+		friend inline bool operator>(const Plteen::Natural& lhs, const Plteen::Natural& rhs) { return (lhs.compare(rhs) > 0); }
+		friend inline bool operator>(const Plteen::Natural& lhs, uint64_t rhs) { return (lhs.compare(rhs) > 0); }
+		friend inline bool operator>(uint64_t lhs, const Plteen::Natural& rhs) { return (rhs.compare(lhs) < 0); }
+		friend inline bool operator<=(const Plteen::Natural& lhs, const Plteen::Natural& rhs) { return (lhs.compare(rhs) <= 0); }
+		friend inline bool operator<=(const Plteen::Natural& lhs, uint64_t rhs) { return (lhs.compare(rhs) <= 0); }
+		friend inline bool operator<=(uint64_t lhs, const Plteen::Natural& rhs) { return (rhs.compare(lhs) >= 0); }
+		friend inline bool operator>=(const Plteen::Natural& lhs, const Plteen::Natural& rhs) { return (lhs.compare(rhs) >= 0); }
+		friend inline bool operator>=(const Plteen::Natural& lhs, uint64_t rhs) { return (lhs.compare(rhs) >= 0); }
+		friend inline bool operator>=(uint64_t lhs, const Plteen::Natural& rhs) { return (rhs.compare(lhs) <= 0); }
+		friend inline bool operator!=(const Plteen::Natural& lhs, const Plteen::Natural& rhs) { return (lhs.compare(rhs) != 0); }
+		friend inline bool operator!=(const Plteen::Natural& lhs, uint64_t rhs) { return (lhs.compare(rhs) != 0); }
+		friend inline bool operator!=(uint64_t lhs, const Plteen::Natural& rhs) { return (rhs.compare(lhs) != 0); }
 
 	public:
-		GYDM::Natural& operator++();
-		inline GYDM::Natural operator++(int postfix) { Natural snapshot(*this); this->operator++(); return snapshot; }
+		Plteen::Natural& operator++();
+		inline Plteen::Natural operator++(int postfix) { Natural snapshot(*this); this->operator++(); return snapshot; }
 
-		GYDM::Natural& operator--();
-		inline GYDM::Natural operator--(int postfix) { Natural snapshot(*this); this->operator--(); return snapshot; }
+		Plteen::Natural& operator--();
+		inline Plteen::Natural operator--(int postfix) { Natural snapshot(*this); this->operator--(); return snapshot; }
 
-		GYDM::Natural& operator+=(uint64_t rhs);
-		GYDM::Natural& operator+=(const GYDM::Natural& rhs);
+		Plteen::Natural& operator+=(uint64_t rhs);
+		Plteen::Natural& operator+=(const Plteen::Natural& rhs);
 
-		GYDM::Natural& operator-=(uint64_t rhs);
-		GYDM::Natural& operator-=(const GYDM::Natural& rhs);
+		Plteen::Natural& operator-=(uint64_t rhs);
+		Plteen::Natural& operator-=(const Plteen::Natural& rhs);
 		
-		GYDM::Natural& operator*=(uint64_t rhs);
-		GYDM::Natural& operator*=(const GYDM::Natural& rhs);
+		Plteen::Natural& operator*=(uint64_t rhs);
+		Plteen::Natural& operator*=(const Plteen::Natural& rhs);
 
-		inline GYDM::Natural& operator/=(uint64_t rhs) { return this->quotient_remainder(rhs, nullptr); }
-		inline GYDM::Natural& operator/=(const GYDM::Natural& rhs) { return this->quotient_remainder(rhs, nullptr); }
-		inline GYDM::Natural& operator%=(uint64_t rhs) { return this->quotient_remainder(rhs, this); };
-		inline GYDM::Natural& operator%=(const GYDM::Natural& rhs) { return this->quotient_remainder(rhs, this); };
+		inline Plteen::Natural& operator/=(uint64_t rhs) { return this->quotient_remainder(rhs, nullptr); }
+		inline Plteen::Natural& operator/=(const Plteen::Natural& rhs) { return this->quotient_remainder(rhs, nullptr); }
+		inline Plteen::Natural& operator%=(uint64_t rhs) { return this->quotient_remainder(rhs, this); };
+		inline Plteen::Natural& operator%=(const Plteen::Natural& rhs) { return this->quotient_remainder(rhs, this); };
 
-		friend inline GYDM::Natural operator+(GYDM::Natural lhs, uint64_t rhs) { return lhs += rhs; }
-		friend inline GYDM::Natural operator+(uint64_t lhs, GYDM::Natural rhs) { return rhs += lhs; }
-		friend inline GYDM::Natural operator+(GYDM::Natural lhs, const GYDM::Natural& rhs) { return lhs += rhs; }
+		friend inline Plteen::Natural operator+(Plteen::Natural lhs, uint64_t rhs) { return lhs += rhs; }
+		friend inline Plteen::Natural operator+(uint64_t lhs, Plteen::Natural rhs) { return rhs += lhs; }
+		friend inline Plteen::Natural operator+(Plteen::Natural lhs, const Plteen::Natural& rhs) { return lhs += rhs; }
 
 		// NOTE: the compiler will cast the number into Natural when encountered `n - Natural`;
-		friend inline GYDM::Natural operator-(GYDM::Natural lhs, uint64_t rhs) { return lhs -= rhs; }
-		friend inline GYDM::Natural operator-(GYDM::Natural lhs, const GYDM::Natural& rhs) { return lhs -= rhs; }
+		friend inline Plteen::Natural operator-(Plteen::Natural lhs, uint64_t rhs) { return lhs -= rhs; }
+		friend inline Plteen::Natural operator-(Plteen::Natural lhs, const Plteen::Natural& rhs) { return lhs -= rhs; }
 
-		friend inline GYDM::Natural operator*(GYDM::Natural lhs, uint64_t rhs) { return lhs *= rhs; }
-		friend inline GYDM::Natural operator*(uint64_t lhs, GYDM::Natural rhs) { return rhs *= lhs; }
-		friend inline GYDM::Natural operator*(GYDM::Natural lhs, const GYDM::Natural& rhs) { return lhs *= rhs; }
+		friend inline Plteen::Natural operator*(Plteen::Natural lhs, uint64_t rhs) { return lhs *= rhs; }
+		friend inline Plteen::Natural operator*(uint64_t lhs, Plteen::Natural rhs) { return rhs *= lhs; }
+		friend inline Plteen::Natural operator*(Plteen::Natural lhs, const Plteen::Natural& rhs) { return lhs *= rhs; }
 
 		// NOTE: the compiler will cast the number into Natural when encountered `n / Natural` or `n % Natural`
-		friend inline GYDM::Natural operator/(GYDM::Natural lhs, uint64_t rhs) { return lhs /= rhs; }
-		friend inline GYDM::Natural operator/(GYDM::Natural lhs, const GYDM::Natural& rhs) { return lhs /= rhs; }
-		friend inline GYDM::Natural operator%(GYDM::Natural lhs, uint64_t rhs) { return lhs %= rhs; }
-		friend inline GYDM::Natural operator%(GYDM::Natural lhs, const GYDM::Natural& rhs) { return lhs %= rhs; }
+		friend inline Plteen::Natural operator/(Plteen::Natural lhs, uint64_t rhs) { return lhs /= rhs; }
+		friend inline Plteen::Natural operator/(Plteen::Natural lhs, const Plteen::Natural& rhs) { return lhs /= rhs; }
+		friend inline Plteen::Natural operator%(Plteen::Natural lhs, uint64_t rhs) { return lhs %= rhs; }
+		friend inline Plteen::Natural operator%(Plteen::Natural lhs, const Plteen::Natural& rhs) { return lhs %= rhs; }
 
 	public:
-		GYDM::Natural& expt(uint64_t e);
-		GYDM::Natural& expt(const GYDM::Natural& e);
+		Plteen::Natural& expt(uint64_t e);
+		Plteen::Natural& expt(const Plteen::Natural& e);
 
-		GYDM::Natural& modular_expt(uint64_t b, uint64_t n);
-		GYDM::Natural& modular_expt(uint64_t b, const GYDM::Natural& n);
-		GYDM::Natural& modular_expt(const GYDM::Natural& b, uint64_t n);
-		GYDM::Natural& modular_expt(const GYDM::Natural& b, const GYDM::Natural& n);
+		Plteen::Natural& modular_expt(uint64_t b, uint64_t n);
+		Plteen::Natural& modular_expt(uint64_t b, const Plteen::Natural& n);
+		Plteen::Natural& modular_expt(const Plteen::Natural& b, uint64_t n);
+		Plteen::Natural& modular_expt(const Plteen::Natural& b, const Plteen::Natural& n);
 
-		GYDM::Natural& quotient_remainder(uint64_t divisor, Natural* remainder = nullptr);
-		GYDM::Natural& quotient_remainder(const GYDM::Natural& divisor, Natural* remainder = nullptr);
+		Plteen::Natural& quotient_remainder(uint64_t divisor, Natural* remainder = nullptr);
+		Plteen::Natural& quotient_remainder(const Plteen::Natural& divisor, Natural* remainder = nullptr);
 
-		friend inline GYDM::Natural expt(GYDM::Natural b, uint64_t e) { return b.expt(e); }
-		friend inline GYDM::Natural expt(uint64_t b, GYDM::Natural e) { return Natural(b).expt(e); }
-		friend inline GYDM::Natural expt(GYDM::Natural b, const GYDM::Natural& e) { return b.expt(e); }
+		friend inline Plteen::Natural expt(Plteen::Natural b, uint64_t e) { return b.expt(e); }
+		friend inline Plteen::Natural expt(uint64_t b, Plteen::Natural e) { return Natural(b).expt(e); }
+		friend inline Plteen::Natural expt(Plteen::Natural b, const Plteen::Natural& e) { return b.expt(e); }
 
-		friend inline GYDM::Natural modular_expt(GYDM::Natural a, uint64_t b, uint64_t n) { return a.modular_expt(b, n); }
-		friend inline GYDM::Natural modular_expt(GYDM::Natural a, uint64_t b, const GYDM::Natural& n) { return a.modular_expt(b, n); }
-		friend inline GYDM::Natural modular_expt(GYDM::Natural a, const GYDM::Natural& b, uint64_t n) { return a.modular_expt(b, n); }
-		friend inline GYDM::Natural modular_expt(GYDM::Natural a, const GYDM::Natural& b, const GYDM::Natural& n) { return a.modular_expt(b, n); }
+		friend inline Plteen::Natural modular_expt(Plteen::Natural a, uint64_t b, uint64_t n) { return a.modular_expt(b, n); }
+		friend inline Plteen::Natural modular_expt(Plteen::Natural a, uint64_t b, const Plteen::Natural& n) { return a.modular_expt(b, n); }
+		friend inline Plteen::Natural modular_expt(Plteen::Natural a, const Plteen::Natural& b, uint64_t n) { return a.modular_expt(b, n); }
+		friend inline Plteen::Natural modular_expt(Plteen::Natural a, const Plteen::Natural& b, const Plteen::Natural& n) { return a.modular_expt(b, n); }
 
 	public:
-		GYDM::Natural operator~();
+		Plteen::Natural operator~();
 
-		GYDM::Natural& operator<<=(uint64_t rhs);
-		GYDM::Natural& operator>>=(uint64_t rhs);
+		Plteen::Natural& operator<<=(uint64_t rhs);
+		Plteen::Natural& operator>>=(uint64_t rhs);
 
-		GYDM::Natural& operator&=(uint64_t rhs);
-		GYDM::Natural& operator&=(const GYDM::Natural& rhs);
-		GYDM::Natural& operator|=(uint64_t rhs);
-		GYDM::Natural& operator|=(const GYDM::Natural& rhs);
-		GYDM::Natural& operator^=(uint64_t rhs);
-		GYDM::Natural& operator^=(const GYDM::Natural& rhs);
+		Plteen::Natural& operator&=(uint64_t rhs);
+		Plteen::Natural& operator&=(const Plteen::Natural& rhs);
+		Plteen::Natural& operator|=(uint64_t rhs);
+		Plteen::Natural& operator|=(const Plteen::Natural& rhs);
+		Plteen::Natural& operator^=(uint64_t rhs);
+		Plteen::Natural& operator^=(const Plteen::Natural& rhs);
 
-		friend inline GYDM::Natural operator<<(GYDM::Natural lhs, uint64_t rhs) { return lhs <<= rhs; }
-		friend inline GYDM::Natural operator>>(GYDM::Natural lhs, uint64_t rhs) { return lhs >>= rhs; }
+		friend inline Plteen::Natural operator<<(Plteen::Natural lhs, uint64_t rhs) { return lhs <<= rhs; }
+		friend inline Plteen::Natural operator>>(Plteen::Natural lhs, uint64_t rhs) { return lhs >>= rhs; }
 
-		friend inline GYDM::Natural operator&(GYDM::Natural lhs, uint64_t rhs) { return lhs &= rhs; }
-		friend inline GYDM::Natural operator&(uint64_t lhs, GYDM::Natural rhs) { return rhs &= lhs; }
-		friend inline GYDM::Natural operator&(GYDM::Natural lhs, const GYDM::Natural& rhs) { return lhs &= rhs; }
-		friend inline GYDM::Natural operator|(GYDM::Natural lhs, uint64_t rhs) { return lhs |= rhs; }
-		friend inline GYDM::Natural operator|(uint64_t lhs, GYDM::Natural rhs) { return rhs |= lhs; }
-		friend inline GYDM::Natural operator|(GYDM::Natural lhs, const GYDM::Natural& rhs) { return lhs |= rhs; }
-		friend inline GYDM::Natural operator^(GYDM::Natural lhs, uint64_t rhs) { return lhs ^= rhs; }
-		friend inline GYDM::Natural operator^(uint64_t lhs, GYDM::Natural rhs) { return rhs ^= lhs; }
-		friend inline GYDM::Natural operator^(GYDM::Natural lhs, const GYDM::Natural& rhs) { return lhs ^= rhs; }
+		friend inline Plteen::Natural operator&(Plteen::Natural lhs, uint64_t rhs) { return lhs &= rhs; }
+		friend inline Plteen::Natural operator&(uint64_t lhs, Plteen::Natural rhs) { return rhs &= lhs; }
+		friend inline Plteen::Natural operator&(Plteen::Natural lhs, const Plteen::Natural& rhs) { return lhs &= rhs; }
+		friend inline Plteen::Natural operator|(Plteen::Natural lhs, uint64_t rhs) { return lhs |= rhs; }
+		friend inline Plteen::Natural operator|(uint64_t lhs, Plteen::Natural rhs) { return rhs |= lhs; }
+		friend inline Plteen::Natural operator|(Plteen::Natural lhs, const Plteen::Natural& rhs) { return lhs |= rhs; }
+		friend inline Plteen::Natural operator^(Plteen::Natural lhs, uint64_t rhs) { return lhs ^= rhs; }
+		friend inline Plteen::Natural operator^(uint64_t lhs, Plteen::Natural rhs) { return rhs ^= lhs; }
+		friend inline Plteen::Natural operator^(Plteen::Natural lhs, const Plteen::Natural& rhs) { return lhs ^= rhs; }
 
 		bool is_bit_set(uint64_t m);
-		GYDM::Natural bit_field(uint64_t start, uint64_t endp1);
+		Plteen::Natural bit_field(uint64_t start, uint64_t endp1);
 		uint64_t bitfield(uint64_t start, uint64_t endp1);
 		int64_t signed_bitfield(uint64_t start, uint64_t endp1);
 
@@ -182,15 +182,15 @@ namespace GYDM {
 	public:
 		size_t length() const;
 		size_t integer_length(uint8_t alignment = 0U) const;
-		size_t fixnum_count(GYDM::Fixnum type = Fixnum::Uint64) const;
+		size_t fixnum_count(Plteen::Fixnum type = Fixnum::Uint64) const;
 
 	public:
 		size_t expand(size_t size);
 
 	public:
-		GYDM::bytes to_bytes() const;
-		GYDM::bytes to_hexstring(char ten = 'A') const;
-		GYDM::bytes to_binstring(uint8_t alignment = 0U) const;
+		Plteen::bytes to_bytes() const;
+		Plteen::bytes to_hexstring(char ten = 'A') const;
+		Plteen::bytes to_binstring(uint8_t alignment = 0U) const;
 
 	private:
 		Natural(void* null, int64_t capacity);
@@ -207,7 +207,7 @@ namespace GYDM {
 	private:
 		void add_digit(uint8_t digit);
 		void times_digit(uint8_t digit);
-		void divide_digit(uint8_t digit, GYDM::Natural* remainder);
+		void divide_digit(uint8_t digit, Plteen::Natural* remainder);
 		int compare_to_one() const;
 
 	private:

@@ -3,7 +3,7 @@
 #include "../../../../physics/mathematics.hpp"
 #include "../../../../physics/random.hpp"
 
-using namespace GYDM;
+using namespace Plteen;
 
 /*************************************************************************************************/
 static const char* ulpc_moves [] /* [13] */ = {
@@ -36,28 +36,28 @@ static const char* ulpc_moves [] /* [13] */ = {
 };
 
 /*************************************************************************************************/
-GYDM::SpriteULPCSheet::SpriteULPCSheet(const std::string& pathname) : SpriteGridSheet(pathname, 21, 13) {}
+Plteen::SpriteULPCSheet::SpriteULPCSheet(const std::string& pathname) : SpriteGridSheet(pathname, 21, 13) {}
 
-void GYDM::SpriteULPCSheet::on_heading_changed(double theta_rad, double vx, double vy, double prev_vr) {
+void Plteen::SpriteULPCSheet::on_heading_changed(double theta_rad, double vx, double vy, double prev_vr) {
     I4WayMotion::dispatch_heading_event(theta_rad, vx, vy, prev_vr);
 }
 
-void GYDM::SpriteULPCSheet::on_eward(double theta_rad, double vx, double vy) {
+void Plteen::SpriteULPCSheet::on_eward(double theta_rad, double vx, double vy) {
     this->play("rwalk");
 }
 
-void GYDM::SpriteULPCSheet::on_wward(double theta_rad, double vx, double vy) {
+void Plteen::SpriteULPCSheet::on_wward(double theta_rad, double vx, double vy) {
     this->play("lwalk");
 }
 
-void GYDM::SpriteULPCSheet::on_sward(double theta_rad, double vx, double vy) {
+void Plteen::SpriteULPCSheet::on_sward(double theta_rad, double vx, double vy) {
     this->play("dwalk");
 }
 
-void GYDM::SpriteULPCSheet::on_nward(double theta_rad, double vx, double vy) {
+void Plteen::SpriteULPCSheet::on_nward(double theta_rad, double vx, double vy) {
     this->play("uwalk");
 }
 
-const char* GYDM::SpriteULPCSheet::costume_index_to_name(size_t idx) {
+const char* Plteen::SpriteULPCSheet::costume_index_to_name(size_t idx) {
     return ulpc_moves[idx];
 }

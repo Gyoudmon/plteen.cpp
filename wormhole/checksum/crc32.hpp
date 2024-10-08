@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <cstddef>
 
-namespace GYDM {
+namespace Plteen {
 	__lambda__ uint32_t checksum_crc32(const uint8_t* message, size_t start, size_t end);
 	__lambda__ uint32_t checksum_crc32(uint32_t accumulated_crc, const uint8_t* message, size_t start, size_t end);
 	__lambda__ uint32_t checksum_crc32(uint32_t* accumulated_crc, const uint8_t* message, size_t start, size_t end);

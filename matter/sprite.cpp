@@ -12,10 +12,10 @@
 #include "../physics/random.hpp"
 #include "../physics/mathematics.hpp"
 
-using namespace GYDM;
+using namespace Plteen;
 
 /*************************************************************************************************/
-void GYDM::ISprite::construct(GYDM::dc_t* renderer) {
+void Plteen::ISprite::construct(Plteen::dc_t* renderer) {
     int idx = this->get_initial_costume_index();
 
     if (idx >= 0) {
@@ -25,7 +25,7 @@ void GYDM::ISprite::construct(GYDM::dc_t* renderer) {
     }
 }
 
-GYDM::Box GYDM::ISprite::get_original_bounding_box() {
+Plteen::Box Plteen::ISprite::get_original_bounding_box() {
     float width = 0.0F;
     float height = 0.0F;
 
@@ -49,17 +49,17 @@ GYDM::Box GYDM::ISprite::get_original_bounding_box() {
     return Box(width, height);
 }
 
-Box GYDM::ISprite::get_bounding_box() {
+Box Plteen::ISprite::get_bounding_box() {
     return Box(this->get_original_bounding_box(),
                 flabs(this->xscale), flabs(this->yscale));
 }
 
-Margin GYDM::ISprite::get_margin() {
+Margin Plteen::ISprite::get_margin() {
     return Margin(this->get_original_margin(),
                 flabs(this->xscale), flabs(this->yscale));
 }
 
-void GYDM::ISprite::on_resize(float width, float height, float old_width, float old_height) {
+void Plteen::ISprite::on_resize(float width, float height, float old_width, float old_height) {
     if (this->current_costume_idx < this->costume_count()) {
         float cwidth, cheight;
 
@@ -72,7 +72,7 @@ void GYDM::ISprite::on_resize(float width, float height, float old_width, float 
     }
 }
 
-void GYDM::ISprite::draw(GYDM::dc_t* dc, float x, float y, float Width, float Height) {
+void Plteen::ISprite::draw(Plteen::dc_t* dc, float x, float y, float Width, float Height) {
     if (this->current_costume_idx < this->costume_count()) {
         SpriteRenderArguments argv;
         
@@ -132,7 +132,7 @@ void GYDM::ISprite::draw(GYDM::dc_t* dc, float x, float y, float Width, float He
     }
 }
 
-void GYDM::ISprite::set_virtual_canvas(float width, float height) {
+void Plteen::ISprite::set_virtual_canvas(float width, float height) {
     if ((this->canvas_width != width) || (this->canvas_height != height)) {
         this->canvas_width = width;
         this->canvas_height = height;
@@ -140,7 +140,7 @@ void GYDM::ISprite::set_virtual_canvas(float width, float height) {
     }
 }
 
-void GYDM::ISprite::auto_virtual_canvas(const char* action_name) {
+void Plteen::ISprite::auto_virtual_canvas(const char* action_name) {
     float cwidth = 0.0F;
     float cheight = 0.0F;
     float cw, ch;
@@ -162,7 +162,7 @@ void GYDM::ISprite::auto_virtual_canvas(const char* action_name) {
     this->set_virtual_canvas(cwidth, cheight);
 }
 
-void GYDM::ISprite::switch_to_costume(int idx) {
+void Plteen::ISprite::switch_to_costume(int idx) {
     /** WARNING
      * `size_t` will implicitly convert the `actual_idx` into a nonnegative integer,
      *      and cause it always be true for `actual_idx >= maxsize`.
@@ -180,7 +180,7 @@ void GYDM::ISprite::switch_to_costume(int idx) {
     }
 }
 
-void GYDM::ISprite::switch_to_costume(const char* name) {
+void Plteen::ISprite::switch_to_costume(const char* name) {
     int cidx = this->costume_name_to_index(name);
 
     if (cidx >= 0) {
@@ -188,12 +188,12 @@ void GYDM::ISprite::switch_to_costume(const char* name) {
     }
 }
 
-void GYDM::ISprite::switch_to_random_costume(int idx0, int idxn) {
+void Plteen::ISprite::switch_to_random_costume(int idx0, int idxn) {
     this->switch_to_costume(random_uniform(idx0, idxn));
 }
 
 
-int GYDM::ISprite::costume_name_to_index(const char* name) {
+int Plteen::ISprite::costume_name_to_index(const char* name) {
     int cidx = -1;
     
     for (size_t idx = 0; idx < this->costume_count(); idx ++) {
@@ -215,7 +215,7 @@ int GYDM::ISprite::costume_name_to_index(const char* name) {
     return cidx;
 }
 
-int GYDM::ISprite::update(uint64_t count, uint32_t interval, uint64_t uptime) {
+int Plteen::ISprite::update(uint64_t count, uint32_t interval, uint64_t uptime) {
     size_t frame_size = this->frame_refs.size();
     int duration = 0;
 
@@ -283,7 +283,7 @@ int GYDM::ISprite::update(uint64_t count, uint32_t interval, uint64_t uptime) {
     return duration;
 }
 
-size_t GYDM::ISprite::play(const char* action, int repetition) {
+size_t Plteen::ISprite::play(const char* action, int repetition) {
     this->current_action_name.clear();
     this->current_action_name.append((action == nullptr) ? "" : action);
 
@@ -299,7 +299,7 @@ size_t GYDM::ISprite::play(const char* action, int repetition) {
     return this->frame_refs.size();
 }
 
-size_t GYDM::ISprite::play(int idx0, size_t count, int repetition) {
+size_t Plteen::ISprite::play(int idx0, size_t count, int repetition) {
     size_t size = this->costume_count();
 
     this->current_action_name.clear();
@@ -318,7 +318,7 @@ size_t GYDM::ISprite::play(int idx0, size_t count, int repetition) {
     return this->frame_refs.size();
 }
 
-void GYDM::ISprite::stop(int rest) {
+void Plteen::ISprite::stop(int rest) {
     this->animation_rest = (rest <= 0) ? 0 : rest;
 
     if (this->animation_rest == 0) {
@@ -327,7 +327,7 @@ void GYDM::ISprite::stop(int rest) {
     }
 }
 
-int GYDM::ISprite::submit_action_frames(std::vector<std::pair<int, int>>& frame_refs, const std::string& action) {
+int Plteen::ISprite::submit_action_frames(std::vector<std::pair<int, int>>& frame_refs, const std::string& action) {
     for (int i = 0; i < this->costume_count(); i++) {
         if (string_ci_prefix(this->costume_index_to_name(i), action)) {
             frame_refs.push_back({ i, 0 });
@@ -337,15 +337,15 @@ int GYDM::ISprite::submit_action_frames(std::vector<std::pair<int, int>>& frame_
     return -1;
 }
 
-int GYDM::ISprite::submit_idle_frames(std::vector<std::pair<int, int>>& frame_refs, int& times) {
+int Plteen::ISprite::submit_idle_frames(std::vector<std::pair<int, int>>& frame_refs, int& times) {
     return ISprite::submit_action_frames(frame_refs, "idle");
 }
 
-uint64_t GYDM::ISprite::preferred_idle_duration() {
+uint64_t Plteen::ISprite::preferred_idle_duration() {
     return static_cast<uint64_t>(random_uniform(2000, 4000));
 }
 
-void GYDM::ISprite::flip(bool horizontal, bool vertical) {
+void Plteen::ISprite::flip(bool horizontal, bool vertical) {
     if (horizontal || vertical) {
         if (horizontal) {
             this->xscale *= -1.0F;
@@ -359,56 +359,56 @@ void GYDM::ISprite::flip(bool horizontal, bool vertical) {
     }
 }
 
-SDL_RendererFlip GYDM::ISprite::current_flip_status() {
+SDL_RendererFlip Plteen::ISprite::current_flip_status() {
     return game_scales_to_flip(this->xscale, this->yscale);
 }
 
-float GYDM::ISprite::get_horizontal_scale() {
+float Plteen::ISprite::get_horizontal_scale() {
     return flabs(this->xscale);
 }
 
-float GYDM::ISprite::get_vertical_scale() {
+float Plteen::ISprite::get_vertical_scale() {
     return flabs(this->yscale);
 }
 
 /**************************************************************************************************/
-void GYDM::ISprite::shh() {
+void Plteen::ISprite::shh() {
     if (this->info != nullptr) {
         this->info->master->shh(this);
     }
 }
 
-void GYDM::ISprite::say(IMatter* message, double sec, SpeechBubble type) {
+void Plteen::ISprite::say(IMatter* message, double sec, SpeechBubble type) {
     if (this->info != nullptr) {
         this->info->master->say(this, sec, message, type);
     }
 }
 
-void GYDM::ISprite::say(const std::string& sentence, const RGBA& color) {
+void Plteen::ISprite::say(const std::string& sentence, const RGBA& color) {
     if (this->info != nullptr) {
         this->info->master->say(this, sentence, color);
     }
 }
 
-void GYDM::ISprite::say(double sec, const std::string& sentence, const RGBA& color) {
+void Plteen::ISprite::say(double sec, const std::string& sentence, const RGBA& color) {
     if (this->info != nullptr) {
         this->info->master->say(this, sec, sentence, color);
     }
 }
 
-void GYDM::ISprite::think(const std::string& sentence, const RGBA& color) {
+void Plteen::ISprite::think(const std::string& sentence, const RGBA& color) {
     if (this->info != nullptr) {
         this->info->master->think(this, sentence, color);
     }
 }
 
-void GYDM::ISprite::think(double sec, const std::string& sentence, const RGBA& color) {
+void Plteen::ISprite::think(double sec, const std::string& sentence, const RGBA& color) {
     if (this->info != nullptr) {
         this->info->master->think(this, sentence, color);
     }
 }
 
-bool GYDM::ISprite::is_speaking() {
+bool Plteen::ISprite::is_speaking() {
     bool yes = false;
 
     if (this->info != nullptr) {
@@ -418,7 +418,7 @@ bool GYDM::ISprite::is_speaking() {
     return yes;
 }
 
-bool GYDM::ISprite::is_thinking() {
+bool Plteen::ISprite::is_thinking() {
     bool yes = false;
 
     if (this->info != nullptr) {
@@ -428,7 +428,7 @@ bool GYDM::ISprite::is_thinking() {
     return yes;
 }
 
-bool GYDM::ISprite::in_speech() {
+bool Plteen::ISprite::in_speech() {
     bool yes = false;
     
     if (this->info != nullptr) {

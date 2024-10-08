@@ -4,16 +4,16 @@
 #include "plane.hpp"
 #include "virtualization/screen.hpp"
 
-namespace GYDM {
-    class __lambda__ Cosmos : public GYDM::IUniverse {
+namespace Plteen {
+    class __lambda__ Cosmos : public Plteen::IUniverse {
     public:
-        Cosmos(uint32_t fps = 60, const GYDM::RGBA& fgc = 0x000000U, const GYDM::RGBA& bgc = 0xFFFFFFU);
+        Cosmos(uint32_t fps = 60, const Plteen::RGBA& fgc = 0x000000U, const Plteen::RGBA& bgc = 0xFFFFFFU);
         virtual ~Cosmos();
 
     public:
         void reflow(float window, float height) override;
         void update(uint64_t count, uint32_t interval, uint64_t uptime) override {};
-        void draw(GYDM::dc_t* dc, int x, int y, int width, int height) override;
+        void draw(Plteen::dc_t* dc, int x, int y, int width, int height) override;
         bool has_current_mission_completed();
         bool can_exit() override;
 
@@ -49,21 +49,21 @@ namespace GYDM {
         const char* usrdata_extension() override;
 
     protected:
-        GYDM::IPlane* push_plane(GYDM::IPlane* plane);
+        Plteen::IPlane* push_plane(Plteen::IPlane* plane);
 
     private:
         void collapse();
-        void notify_transfer(GYDM::IPlane* from, GYDM::IPlane* to);
+        void notify_transfer(Plteen::IPlane* from, Plteen::IPlane* to);
         void on_navigate(int from_idx, int to_idx);
 
     private:
-        GYDM::IScreen* screen = nullptr;
-        GYDM::IPlane* head_plane = nullptr;
-        GYDM::IPlane* recent_plane = nullptr;
+        Plteen::IScreen* screen = nullptr;
+        Plteen::IPlane* head_plane = nullptr;
+        Plteen::IPlane* recent_plane = nullptr;
         size_t chunk_count = 0;
         int recent_plane_idx = 0;
 
     private:
-        GYDM::IPlane* from_plane = nullptr;
+        Plteen::IPlane* from_plane = nullptr;
     };
 }

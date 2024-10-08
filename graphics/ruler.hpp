@@ -5,7 +5,7 @@
 
 #include <vector>
 
-namespace GYDM {
+namespace Plteen {
 	struct __lambda__ HHatchMarkMetrics {
 		float gap_space;
 		float top_space;
@@ -37,63 +37,63 @@ namespace GYDM {
 	
 	class __lambda__ Ruler {
 	public:
-		static GYDM::HHatchMarkMetrics hhatchmark_metrics(
+		static Plteen::HHatchMarkMetrics hhatchmark_metrics(
 					double vmin, double vmax, uint8_t precision = 0U);
 
-		static GYDM::HHatchMarkMetrics hhatchmark_metrics(
-					GYDM::shared_font_t font,
+		static Plteen::HHatchMarkMetrics hhatchmark_metrics(
+					Plteen::shared_font_t font,
 					double vmin, double vmax, uint8_t precision = 0U);
 
-		static GYDM::VHatchMarkMetrics vhatchmark_metrics(
+		static Plteen::VHatchMarkMetrics vhatchmark_metrics(
 					double vmin, double vmax, uint8_t precision = 0U);
 
-		static GYDM::VHatchMarkMetrics vhatchmark_metrics(
-					GYDM::shared_font_t font,
+		static Plteen::VHatchMarkMetrics vhatchmark_metrics(
+					Plteen::shared_font_t font,
 					double vmin, double vmax, uint8_t precision = 0U);
 
 	public:
-		static void draw_ht_hatchmark(GYDM::dc_t* dc, float x, float y,
+		static void draw_ht_hatchmark(Plteen::dc_t* dc, float x, float y,
 					float width, double vmin, double vmax, uint32_t step, uint32_t color,
-					GYDM::HHatchMarkMetrics* metrics = nullptr,
+					Plteen::HHatchMarkMetrics* metrics = nullptr,
 					uint8_t precision = 0U, bool no_short = false);
 
-		static void draw_ht_hatchmark(GYDM::shared_font_t font,
-					GYDM::dc_t* dc, float x, float y,
+		static void draw_ht_hatchmark(Plteen::shared_font_t font,
+					Plteen::dc_t* dc, float x, float y,
 					float width, double vmin, double vmax, uint32_t step, uint32_t color,
-					GYDM::HHatchMarkMetrics* metrics = nullptr,
+					Plteen::HHatchMarkMetrics* metrics = nullptr,
 					uint8_t precision = 0U, bool no_short = false);
 
-		static void draw_hb_hatchmark(GYDM::dc_t* dc, float x, float y,
+		static void draw_hb_hatchmark(Plteen::dc_t* dc, float x, float y,
 					float width, double vmin, double vmax, uint32_t step, uint32_t color,
-					GYDM::HHatchMarkMetrics* metrics = nullptr,
+					Plteen::HHatchMarkMetrics* metrics = nullptr,
 					uint8_t precision = 0U, bool no_short = false);
 		
-		static void draw_hb_hatchmark(GYDM::shared_font_t font,
-					GYDM::dc_t* dc, float x, float y,
+		static void draw_hb_hatchmark(Plteen::shared_font_t font,
+					Plteen::dc_t* dc, float x, float y,
 					float width, double vmin, double vmax, uint32_t step, uint32_t color,
-					GYDM::HHatchMarkMetrics* metrics = nullptr,
+					Plteen::HHatchMarkMetrics* metrics = nullptr,
 					uint8_t precision = 0U, bool no_short = false);
 
-		static void draw_vl_hatchmark(GYDM::dc_t* dc, float x, float y,
+		static void draw_vl_hatchmark(Plteen::dc_t* dc, float x, float y,
 					float height, double vmin, double vmax, uint32_t step, uint32_t color,
-					GYDM::VHatchMarkMetrics* metrics = nullptr,
+					Plteen::VHatchMarkMetrics* metrics = nullptr,
 					uint8_t precision = 0U, bool no_short = false);
 
-		static void draw_vl_hatchmark(GYDM::shared_font_t font,
-					GYDM::dc_t* dc, float x, float y,
+		static void draw_vl_hatchmark(Plteen::shared_font_t font,
+					Plteen::dc_t* dc, float x, float y,
 					float height, double vmin, double vmax, uint32_t step, uint32_t color,
-					GYDM::VHatchMarkMetrics* metrics = nullptr,
+					Plteen::VHatchMarkMetrics* metrics = nullptr,
 					uint8_t precision = 0U, bool no_short = false);
 
-		static void draw_vr_hatchmark(GYDM::dc_t* dc, float x, float y,
+		static void draw_vr_hatchmark(Plteen::dc_t* dc, float x, float y,
 					float height, double vmin, double vmax, uint32_t step, uint32_t color,
-					GYDM::VHatchMarkMetrics* metrics = nullptr,
+					Plteen::VHatchMarkMetrics* metrics = nullptr,
 					uint8_t precision = 0U, bool no_short = false);
 
-		static void draw_vr_hatchmark(GYDM::shared_font_t font,
-					GYDM::dc_t* dc, float x, float y,
+		static void draw_vr_hatchmark(Plteen::shared_font_t font,
+					Plteen::dc_t* dc, float x, float y,
 					float height, double vmin, double vmax, uint32_t step, uint32_t color,
-					GYDM::VHatchMarkMetrics* metrics = nullptr,
+					Plteen::VHatchMarkMetrics* metrics = nullptr,
 					uint8_t precision = 0U, bool no_short = false);
 	};
 }

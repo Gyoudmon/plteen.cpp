@@ -6,7 +6,7 @@
 #include "../../datum/box.hpp"
 #include "../../datum/slot.hpp"
 
-using namespace GYDM;
+using namespace Plteen;
 
 /*************************************************************************************************/
 static uint32_t default_text_color = GHOSTWHITE;
@@ -18,7 +18,7 @@ static uint8_t datum_idx = 1U;
 static uint8_t  unit_idx = 2U;
 
 /*************************************************************************************************/
-DimensionStyle GYDM::make_plain_dimension_style(int lfontsize, int nfsize, int ufsize, int precision) {
+DimensionStyle Plteen::make_plain_dimension_style(int lfontsize, int nfsize, int ufsize, int precision) {
 	DimensionStyle ds;
 
     ds.label_font = GameFont::Default(lfontsize);
@@ -29,7 +29,7 @@ DimensionStyle GYDM::make_plain_dimension_style(int lfontsize, int nfsize, int u
 	return ds;
 }
 
-DimensionStyle GYDM::make_plain_dimension_style(int nfsize, unsigned int min_number, int precision) {
+DimensionStyle Plteen::make_plain_dimension_style(int nfsize, unsigned int min_number, int precision) {
 	DimensionStyle ds = make_plain_dimension_style(nfsize, nfsize, fl2fxi(nfsize * 0.90F), precision);
 
     ds.minimize_number_width = ds.number_font->width('0') * float(min_number);
@@ -41,7 +41,7 @@ DimensionStyle GYDM::make_plain_dimension_style(int nfsize, unsigned int min_num
 	return ds;
 }
 
-DimensionStyle GYDM::make_setting_dimension_style(int nfsize, unsigned int min_number, int precision, const RGBA& color) {
+DimensionStyle Plteen::make_setting_dimension_style(int nfsize, unsigned int min_number, int precision, const RGBA& color) {
 	DimensionStyle ds = make_plain_dimension_style(nfsize, nfsize, nfsize, precision);
 	
     ds.minimize_number_width = ds.number_font->width('0') * float(min_number);
@@ -52,12 +52,12 @@ DimensionStyle GYDM::make_setting_dimension_style(int nfsize, unsigned int min_n
 	return ds;
 }
 
-DimensionStyle GYDM::make_highlight_dimension_style(int nfsize, unsigned int min_number, int precision
+DimensionStyle Plteen::make_highlight_dimension_style(int nfsize, unsigned int min_number, int precision
         , const RGBA& number_bgcolor, const RGBA& label_bgcolor, const RGBA& color) {
 	return make_highlight_dimension_style(nfsize, 0U, min_number, precision, number_bgcolor, label_bgcolor, color);
 }
 
-DimensionStyle GYDM::make_highlight_dimension_style(int nfsize, unsigned int min_label, unsigned int min_number, int precision
+DimensionStyle Plteen::make_highlight_dimension_style(int nfsize, unsigned int min_label, unsigned int min_number, int precision
         , const RGBA& number_bgcolor, const RGBA& label_bgcolor, const RGBA& color) {
 	DimensionStyle ds = make_plain_dimension_style(nfsize, fl2fxi(nfsize * 1.2F), nfsize, precision);
 
@@ -75,51 +75,37 @@ DimensionStyle GYDM::make_highlight_dimension_style(int nfsize, unsigned int min
 }
 
 /*************************************************************************************************/
-GYDM::Dimensionlet::Dimensionlet(const char* unit, const std::string& label) {
+Plteen::Dimensionlet::Dimensionlet(const char* unit, const std::string& label) {
     this->unit = std::string(unit);
     this->label = std::string(label);
 }
 
-GYDM::Dimensionlet::Dimensionlet(const char* unit, const char* label_fmt, ...) {
+Plteen::Dimensionlet::Dimensionlet(const char* unit, const char* label_fmt, ...) {
     VSNPRINT(label, label_fmt);
 
     this->unit = std::string(unit);
     this->label = label;
 }
 
-GYDM::Dimensionlet::Dimensionlet(DimensionState& state, const char* unit, const std::string& label) : IStatelet(state) {
+Plteen::Dimensionlet::Dimensionlet(DimensionState& state, const char* unit, const std::string& label) : IStatelet(state) {
     this->unit = std::string(unit);
     this->label = label;
 }
 
-GYDM::Dimensionlet::Dimensionlet(DimensionState& state, const char* unit, const char* label_fmt, ...) : IStatelet(state) {
-    VSNPRINT(label, label_fmt);
-    
-    this->unit = std::string(unit);
-    this->label = label;
-}
-
-GYDM::Dimensionlet::Dimensionlet(DimensionStyle& style, const char* unit, const std::string& label) {
-    this->unit = std::string(unit);
-    this->label = label;
-    this->set_style(style);
-}
-
-GYDM::Dimensionlet::Dimensionlet(DimensionStyle& style, const char* unit, const char* label_fmt, ...) {
+Plteen::Dimensionlet::Dimensionlet(DimensionState& state, const char* unit, const char* label_fmt, ...) : IStatelet(state) {
     VSNPRINT(label, label_fmt);
     
     this->unit = std::string(unit);
     this->label = label;
-    this->set_style(style);
 }
 
-GYDM::Dimensionlet::Dimensionlet(DimensionState& state, DimensionStyle& style, const char* unit, const std::string& label) : IStatelet(state) {
+Plteen::Dimensionlet::Dimensionlet(DimensionStyle& style, const char* unit, const std::string& label) {
     this->unit = std::string(unit);
     this->label = label;
     this->set_style(style);
 }
 
-GYDM::Dimensionlet::Dimensionlet(DimensionState& state, DimensionStyle& style, const char* unit, const char* label_fmt, ...) : IStatelet(state) {
+Plteen::Dimensionlet::Dimensionlet(DimensionStyle& style, const char* unit, const char* label_fmt, ...) {
     VSNPRINT(label, label_fmt);
     
     this->unit = std::string(unit);
@@ -127,7 +113,21 @@ GYDM::Dimensionlet::Dimensionlet(DimensionState& state, DimensionStyle& style, c
     this->set_style(style);
 }
 
-Box GYDM::Dimensionlet::get_bounding_box() {
+Plteen::Dimensionlet::Dimensionlet(DimensionState& state, DimensionStyle& style, const char* unit, const std::string& label) : IStatelet(state) {
+    this->unit = std::string(unit);
+    this->label = label;
+    this->set_style(style);
+}
+
+Plteen::Dimensionlet::Dimensionlet(DimensionState& state, DimensionStyle& style, const char* unit, const char* label_fmt, ...) : IStatelet(state) {
+    VSNPRINT(label, label_fmt);
+    
+    this->unit = std::string(unit);
+    this->label = label;
+    this->set_style(style);
+}
+
+Box Plteen::Dimensionlet::get_bounding_box() {
     size_t n = sizeof(this->textures) / sizeof(shared_texture_t);
     float w, h;
 
@@ -136,7 +136,7 @@ Box GYDM::Dimensionlet::get_bounding_box() {
     return { w, h };
 }
 
-void GYDM::Dimensionlet::draw_box(GYDM::dc_t* dc, int idx, float xfraction, float x, float y, float Height, const std::optional<RGBA>& bgcolor, const std::optional<RGBA>& bcolor) {
+void Plteen::Dimensionlet::draw_box(Plteen::dc_t* dc, int idx, float xfraction, float x, float y, float Height, const std::optional<RGBA>& bgcolor, const std::optional<RGBA>& bcolor) {
     SDL_FRect* self = &this->boxes[idx];
     
     if ((self->w > 0.0F) && (self->h > 0.0F)) {
@@ -166,7 +166,7 @@ void GYDM::Dimensionlet::draw_box(GYDM::dc_t* dc, int idx, float xfraction, floa
     }
 }
 
-void GYDM::Dimensionlet::draw(GYDM::dc_t* dc, float x, float y, float Width, float Height) {
+void Plteen::Dimensionlet::draw(Plteen::dc_t* dc, float x, float y, float Width, float Height) {
     DimensionStyle style = this->get_style();
 
     this->draw_box(dc, label_idx, style.label_xfraction, x, y, Height, style.label_background_color, style.label_border_color);
@@ -174,7 +174,7 @@ void GYDM::Dimensionlet::draw(GYDM::dc_t* dc, float x, float y, float Width, flo
     this->draw_box(dc, unit_idx, 0.0F, x, y, Height, style.unit_background_color, style.unit_border_color);
 }
 
-void GYDM::Dimensionlet::prepare_style(DimensionState status, DimensionStyle& style) {
+void Plteen::Dimensionlet::prepare_style(DimensionState status, DimensionStyle& style) {
     CAS_SLOT(style.number_font, GameFont::math());
 	CAS_SLOT(style.unit_font, GameFont::monospace());
 	CAS_SLOT(style.label_font, GameFont::Default());
@@ -199,7 +199,7 @@ void GYDM::Dimensionlet::prepare_style(DimensionState status, DimensionStyle& st
 	// NOTE: the others can be `nullptr`
 }
 
-void GYDM::Dimensionlet::apply_style(DimensionStyle& style, GYDM::dc_t* dc) {
+void Plteen::Dimensionlet::apply_style(DimensionStyle& style, Plteen::dc_t* dc) {
     if (!this->label.empty()) {
         this->textures[label_idx].reset(
             new Texture(dc->create_blended_text(this->label, style.label_font, style.label_color.value(), 0)));
@@ -217,16 +217,16 @@ void GYDM::Dimensionlet::apply_style(DimensionStyle& style, GYDM::dc_t* dc) {
     this->update_drawing_box( unit_idx, -1.0F, style.unit_font, style.unit_leading_space);
 }
 
-void GYDM::Dimensionlet::on_value_changed(dc_t* dc, double value) {
+void Plteen::Dimensionlet::on_value_changed(dc_t* dc, double value) {
 	this->update_number_texture(dc, value, this->get_style());
 }
 
-void GYDM::Dimensionlet::update_number_texture(GYDM::dc_t* dc, double value, DimensionStyle& style) {
+void Plteen::Dimensionlet::update_number_texture(Plteen::dc_t* dc, double value, DimensionStyle& style) {
     this->textures[datum_idx].reset(
         new Texture(dc->create_blended_text(flstring(value, style.precision), style.number_font, style.number_color.value(), 0)));
 }
 
-void GYDM::Dimensionlet::update_drawing_box(size_t idx, float min_width, shared_font_t font, float leading_space) {
+void Plteen::Dimensionlet::update_drawing_box(size_t idx, float min_width, shared_font_t font, float leading_space) {
     shared_texture_t self = this->textures[idx];
     SDL_FRect* sbox = &this->boxes[idx];
     int width, height;
@@ -247,7 +247,7 @@ void GYDM::Dimensionlet::update_drawing_box(size_t idx, float min_width, shared_
     }
 }
 
-void GYDM::Dimensionlet::feed_subextent(size_t n, float* w, float* h) {
+void Plteen::Dimensionlet::feed_subextent(size_t n, float* w, float* h) {
     float flw = 0.0F;
     float flh = 0.0F;
 

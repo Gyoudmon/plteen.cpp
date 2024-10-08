@@ -6,25 +6,25 @@
 #include "../virtualization/screen.hpp"
 #include "../forward.hpp"
 
-namespace GYDM {
-	class __lambda__ Continent : public GYDM::IMatter {
+namespace Plteen {
+	class __lambda__ Continent : public Plteen::IMatter {
 	public:
 		virtual ~Continent() noexcept;
 		
-		Continent(GYDM::IPlane* planet, const GYDM::RGBA& background = transparent);
-		Continent(GYDM::IPlane* planet, float width, float height = 0.0F, const GYDM::RGBA& background = transparent);
+		Continent(Plteen::IPlane* planet, const Plteen::RGBA& background = transparent);
+		Continent(Plteen::IPlane* planet, float width, float height = 0.0F, const Plteen::RGBA& background = transparent);
 
 		const char* name() override;
 
 	public:
-		void construct(GYDM::dc_t* dc) override;
-		GYDM::Box get_bounding_box() override;
+		void construct(Plteen::dc_t* dc) override;
+		Plteen::Box get_bounding_box() override;
 		int update(uint64_t count, uint32_t interval, uint64_t uptime) override;
-		void draw(GYDM::dc_t* dc, float x, float y, float Width, float Height) override;
+		void draw(Plteen::dc_t* dc, float x, float y, float Width, float Height) override;
 
 	public:
-		void set_background_color(const GYDM::RGBA& color);
-		void set_border_color(const GYDM::RGBA& color);
+		void set_background_color(const Plteen::RGBA& color);
+		void set_border_color(const Plteen::RGBA& color);
 
     public: // low-level events
         bool on_pointer_pressed(uint8_t button, float local_x, float local_y, uint8_t clicks) override;
@@ -35,12 +35,12 @@ namespace GYDM {
 		template<typename P> P* unsafe_plane() { return static_cast<P*>(this->plane); }
 
 	private:
-		GYDM::IPlane* plane;
+		Plteen::IPlane* plane;
 
 	private:
-		GYDM::IScreen* screen;
-		GYDM::RGBA background;
-		GYDM::RGBA border;
+		Plteen::IScreen* screen;
+		Plteen::RGBA background;
+		Plteen::RGBA border;
 		float width;
 		float height;
 	};

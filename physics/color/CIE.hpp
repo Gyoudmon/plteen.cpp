@@ -1,6 +1,6 @@
 #pragma once
 
-namespace GYDM {
+namespace Plteen {
     enum class CIE_Standard { Primary , D65 };
 
     __lambda__ void CIE_XYZ_to_RGB(CIE_Standard type, double X, double Y, double Z, double* R, double* G, double* B, bool gamma = true);

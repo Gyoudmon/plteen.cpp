@@ -2,16 +2,16 @@
 
 #include "../datum/box.hpp"
 
-using namespace GYDM;
+using namespace Plteen;
 
 /*************************************************************************************************/
-void GYDM::Texture::feed_extent(int* width, int* height) {
+void Plteen::Texture::feed_extent(int* width, int* height) {
     if (this->_self != nullptr) {
         SDL_QueryTexture(this->_self, nullptr, nullptr, width, height);
     }
 }
 
-void GYDM::Texture::feed_extent(float* width, float* height) {
+void Plteen::Texture::feed_extent(float* width, float* height) {
     int w, h;
     
     this->feed_extent(&w, &h);

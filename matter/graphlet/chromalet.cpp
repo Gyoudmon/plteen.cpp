@@ -9,7 +9,7 @@
 
 #include "../../physics/mathematics.hpp"
 
-using namespace GYDM;
+using namespace Plteen;
 
 /*************************************************************************************************/
 #define PseudoPrimaryColorCount sizeof(this->pseudo_primaries) / sizeof(RGBA)
@@ -232,7 +232,7 @@ static const double wavelength_zbars [] = {
 };
 
 /*************************************************************************************************/
-GYDM::Chromalet::Chromalet(float width, float height, CIE_Standard std, double Y)
+Plteen::Chromalet::Chromalet(float width, float height, CIE_Standard std, double Y)
         : width(width), height(height), standard(std), pseudo_primary_triangle_color(GRAY), luminance(Y) {
     if (this->height == 0.0) {
         this->height = flabs(this->width);
@@ -241,23 +241,23 @@ GYDM::Chromalet::Chromalet(float width, float height, CIE_Standard std, double Y
     this->recalculate_primary_colors();
 }
 
-Box GYDM::Chromalet::get_bounding_box() {
+Box Plteen::Chromalet::get_bounding_box() {
     return { flabs(this->width), flabs(this->height) };
 }
 
-void GYDM::Chromalet::on_resize(float w, float h, float width, float height) {
+void Plteen::Chromalet::on_resize(float w, float h, float width, float height) {
     ICanvaslet::on_resize(w, h, width, height);
 
     this->width = w;
     this->height = h;
 }
 
-void GYDM::Chromalet::draw_before_canvas(GYDM::dc_t* dc, float flx, float fly, float flwidth, float flheight) { 
+void Plteen::Chromalet::draw_before_canvas(Plteen::dc_t* dc, float flx, float fly, float flwidth, float flheight) { 
     dc->draw_grid(10, 10, (flwidth - 2.0F) / 10.0F, (flheight - 2.0F)/ 10.0F, DIMGRAY, flx, fly);
     SDL_RenderDrawLineF(dc->self(), flx, fly, flx + flwidth, fly + flheight);
 }
 
-void GYDM::Chromalet::draw_on_canvas(GYDM::dc_t* dc, float flwidth, float flheight) {
+void Plteen::Chromalet::draw_on_canvas(Plteen::dc_t* dc, float flwidth, float flheight) {
     double imaginary_width = abs(this->width);
     double imaginary_height = abs(this->height);
  
@@ -266,18 +266,18 @@ void GYDM::Chromalet::draw_on_canvas(GYDM::dc_t* dc, float flwidth, float flheig
     this->draw_chromaticity(dc, imaginary_width, imaginary_height);
 }
 
-void GYDM::Chromalet::draw_after_canvas(GYDM::dc_t* dc, float flx, float fly, float flwidth, float flheight) {
+void Plteen::Chromalet::draw_after_canvas(Plteen::dc_t* dc, float flx, float fly, float flwidth, float flheight) {
     if (this->pseudo_primary_triangle_color.is_opacity()) {
         this->draw_color_triangle(dc, flx, fly);
     }
 }
 
-bool GYDM::Chromalet::is_colliding(const Dot& local_pt) {
+bool Plteen::Chromalet::is_colliding(const Dot& local_pt) {
     return this->is_point_inside_the_spectrum(double(local_pt.x), double(local_pt.y));
 }
 
 /*************************************************************************************************/
-RGBA GYDM::Chromalet::get_color_at(double mx, double my, bool after_special) {
+RGBA Plteen::Chromalet::get_color_at(double mx, double my, bool after_special) {
     double imaginary_width = abs(this->width);
     double imaginary_height = abs(this->height);
     RGBA c = 0U;
@@ -340,17 +340,17 @@ RGBA GYDM::Chromalet::get_color_at(double mx, double my, bool after_special) {
     return c;
 }
 
-void GYDM::Chromalet::feed_pseudo_primary_color_location(size_t idx, float* x, float* y, float* fx, float* fy) {
+void Plteen::Chromalet::feed_pseudo_primary_color_location(size_t idx, float* x, float* y, float* fx, float* fy) {
     idx %= PseudoPrimaryColorCount;
     this->feed_color_location(this->pseudo_primaries[idx], x, y, fx, fy);
 }
 
-void GYDM::Chromalet::feed_pseudo_primary_color_location(size_t idx, double* x, double* y, double* fx, double* fy) {
+void Plteen::Chromalet::feed_pseudo_primary_color_location(size_t idx, double* x, double* y, double* fx, double* fy) {
     idx %= PseudoPrimaryColorCount;
     this->feed_color_location(this->pseudo_primaries[idx], x, y, fx, fy);
 }
 
-void GYDM::Chromalet::feed_color_location(const RGBA& c, float* x, float *y, float* fx, float* fy) {
+void Plteen::Chromalet::feed_color_location(const RGBA& c, float* x, float *y, float* fx, float* fy) {
     double flx, fly, co_x, co_y;
 
     this->feed_color_location(c, &flx, &fly, &co_x, &co_y);
@@ -358,7 +358,7 @@ void GYDM::Chromalet::feed_color_location(const RGBA& c, float* x, float *y, flo
     SET_VALUES(fx, float(co_x), fy, float(co_y));
 }
 
-void GYDM::Chromalet::feed_color_location(const RGBA& c, double* x, double *y, double* fx, double* fy) {
+void Plteen::Chromalet::feed_color_location(const RGBA& c, double* x, double *y, double* fx, double* fy) {
     if (!c.is_black()) {
         double X, Y, Z, co_x, co_y;
         double imaginary_width = abs(this->width);
@@ -376,7 +376,7 @@ void GYDM::Chromalet::feed_color_location(const RGBA& c, double* x, double *y, d
     }
 }
 
-void GYDM::Chromalet::recalculate_primary_colors(int idx) {
+void Plteen::Chromalet::recalculate_primary_colors(int idx) {
     if (idx < 0) {
         for (int i = 0; i < PseudoPrimaryColorCount; i++) {
             this->recalculate_primary_colors(i);
@@ -399,7 +399,7 @@ void GYDM::Chromalet::recalculate_primary_colors(int idx) {
 }
 
 /*************************************************************************************************/
-void GYDM::Chromalet::draw_color_triangle(GYDM::dc_t* dc, double dx, double dy) {
+void Plteen::Chromalet::draw_color_triangle(Plteen::dc_t* dc, double dx, double dy) {
     static const size_t vcount = PseudoPrimaryColorCount + 1U;
     SDL_FPoint pts[vcount];
     double x, y;
@@ -425,7 +425,7 @@ void GYDM::Chromalet::draw_color_triangle(GYDM::dc_t* dc, double dx, double dy) 
     }
 }
 
-void GYDM::Chromalet::draw_color_map(GYDM::dc_t* dc, double flwidth, double flheight, double dx, double dy) {
+void Plteen::Chromalet::draw_color_map(Plteen::dc_t* dc, double flwidth, double flheight, double dx, double dy) {
     double X, Y, Z, R, G, B, x, y;
 
     for (int px = 0; px < fl2fxi(flwidth); px ++) {
@@ -445,7 +445,7 @@ void GYDM::Chromalet::draw_color_map(GYDM::dc_t* dc, double flwidth, double flhe
     }
 }
 
-void GYDM::Chromalet::draw_spectral_locus(GYDM::dc_t* dc, double flwidth, double flheight, double dx, double dy) {
+void Plteen::Chromalet::draw_spectral_locus(Plteen::dc_t* dc, double flwidth, double flheight, double dx, double dy) {
     double R, G, B, xbar, ybar, zbar, x, y;
     
     for (int idx = 0; idx < sizeof(wavelength_xbars) / sizeof(double); idx ++) {
@@ -459,7 +459,7 @@ void GYDM::Chromalet::draw_spectral_locus(GYDM::dc_t* dc, double flwidth, double
     }
 }
 
-void GYDM::Chromalet::draw_chromaticity(GYDM::dc_t* dc, double flwidth, double flheight, double dx, double dy) {
+void Plteen::Chromalet::draw_chromaticity(Plteen::dc_t* dc, double flwidth, double flheight, double dx, double dy) {
     int slt_idx = this->scanline_idx0;
     int slb_idx = this->scanline_idx0;
     double X, Y, Z, R, G, B;
@@ -484,23 +484,23 @@ void GYDM::Chromalet::draw_chromaticity(GYDM::dc_t* dc, double flwidth, double f
 }
 
 /*************************************************************************************************/
-void GYDM::Chromalet::fix_render_location(double* x, double* y) {
+void Plteen::Chromalet::fix_render_location(double* x, double* y) {
     if (this->width < 0.0F) { (*x) = 1.0 - (*x); }
     if (this->height > 0.0F) { (*y) = 1.0 - (*y); }
 }
 
-void GYDM::Chromalet::render_special_dot(GYDM::dc_t* dc, const RGBA& c, float x, float y) {
+void Plteen::Chromalet::render_special_dot(Plteen::dc_t* dc, const RGBA& c, float x, float y) {
     dc->fill_circle(x, y, triangle_vertice_radius, c);
     dc->draw_circle(x, y, triangle_vertice_radius, GHOSTWHITE);
     dc->draw_circle(x, y, triangle_vertice_radius + 1.0F, GHOSTWHITE);
 }
 
-void GYDM::Chromalet::render_dot(GYDM::dc_t* dc, double x, double y, double width, double height, double R, double G, double B, double dx, double dy, double A) {
+void Plteen::Chromalet::render_dot(Plteen::dc_t* dc, double x, double y, double width, double height, double R, double G, double B, double dx, double dy, double A) {
     this->fix_render_location(&x, &y);
     dc->draw_point(float(x * width + dx), float(y * height + dy), RGBA(R, G, B, A));
 }
 
-void GYDM::Chromalet::make_locus_polygon(double flwidth, double flheight) {
+void Plteen::Chromalet::make_locus_polygon(double flwidth, double flheight) {
     double xbar, ybar, zbar, x, y;
 
     this->locus_count = sizeof(wavelength_xbars) / sizeof(double) + 2;
@@ -538,7 +538,7 @@ void GYDM::Chromalet::make_locus_polygon(double flwidth, double flheight) {
     this->locus_ys[this->locus_count - 1] = this->locus_ys[1];
 }
 
-bool GYDM::Chromalet::is_point_inside_the_spectrum(double mx, double my) {
+bool Plteen::Chromalet::is_point_inside_the_spectrum(double mx, double my) {
     double imaginary_width = abs(this->width);
     double imaginary_height = abs(this->height);
     bool inside = false;
@@ -559,7 +559,7 @@ bool GYDM::Chromalet::is_point_inside_the_spectrum(double mx, double my) {
     return inside;
 }
 
-void GYDM::Chromalet::spectrum_intersection_vpoints(double mx, double flheight, int& slt_idx, int& slb_idx, double* ty, double* by) {
+void Plteen::Chromalet::spectrum_intersection_vpoints(double mx, double flheight, int& slt_idx, int& slb_idx, double* ty, double* by) {
     double t;
 
     while (true) {
@@ -582,11 +582,11 @@ void GYDM::Chromalet::spectrum_intersection_vpoints(double mx, double flheight, 
 }
 
 /*************************************************************************************************/
-void GYDM::Chromalet::on_canvas_invalidated() {
+void Plteen::Chromalet::on_canvas_invalidated() {
     this->invalidate_locus();
 }
 
-void GYDM::Chromalet::invalidate_locus() {
+void Plteen::Chromalet::invalidate_locus() {
     if (this->locus_xs != nullptr) {
         delete [] this->locus_xs;
         delete [] this->locus_ys;
@@ -596,21 +596,21 @@ void GYDM::Chromalet::invalidate_locus() {
     }
 }
 
-void GYDM::Chromalet::set_luminance(double Y) {
+void Plteen::Chromalet::set_luminance(double Y) {
     if (this->luminance != Y) {
         this->luminance = Y;
         this->dirty_canvas();
     }
 }
 
-void GYDM::Chromalet::set_standard(CIE_Standard std) {
+void Plteen::Chromalet::set_standard(CIE_Standard std) {
     if (this->standard != std) {
         this->standard = std;
         this->dirty_canvas();
     }    
 }
 
-void GYDM::Chromalet::set_pseudo_primary_color(const RGBA& color, size_t idx) {
+void Plteen::Chromalet::set_pseudo_primary_color(const RGBA& color, size_t idx) {
     idx %= PseudoPrimaryColorCount;
 
     if (this->pseudo_primaries[idx] != color) {
@@ -624,14 +624,14 @@ void GYDM::Chromalet::set_pseudo_primary_color(const RGBA& color, size_t idx) {
     }
 }
 
-void GYDM::Chromalet::set_pseudo_primary_triangle_color(const RGBA& color) {
+void Plteen::Chromalet::set_pseudo_primary_triangle_color(const RGBA& color) {
     if (this->pseudo_primary_triangle_color != color) {
         this->pseudo_primary_triangle_color = color;
         this->notify_updated();
     }
 }
 
-void GYDM::Chromalet::set_pseudo_primary_triangle_alpha(double alpha) {
+void Plteen::Chromalet::set_pseudo_primary_triangle_alpha(double alpha) {
     if (this->pseudo_primary_triangle_color.alpha() != alpha) {
         this->pseudo_primary_triangle_color = RGBA(this->pseudo_primary_triangle_color, alpha);
         this->notify_updated();

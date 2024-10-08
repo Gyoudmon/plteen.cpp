@@ -15,7 +15,7 @@
  */
 
 /*************************************************************************************************/
-namespace GYDM {
+namespace Plteen {
     template<typename T>
     std::string array2d_to_string(const T& self, size_t R, size_t C, size_t w, bool one_line = false) noexcept {
         std::ostringstream s;

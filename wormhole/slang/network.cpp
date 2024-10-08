@@ -2,10 +2,10 @@
 
 #include <SDL2/SDL_net.h>
 
-using namespace GYDM;
+using namespace Plteen;
 
 /*************************************************************************************************/
-void GYDM::network_initialize() {
+void Plteen::network_initialize() {
     static bool okay = false;
     
     if (!okay) {

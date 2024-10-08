@@ -6,37 +6,37 @@
 #include "../../datum/box.hpp"
 #include "../../datum/bytes.hpp"
 
-using namespace GYDM;
+using namespace Plteen;
 
 /*************************************************************************************************/
-GYDM::UserDatagramPacket::UserDatagramPacket(size_t size) {
+Plteen::UserDatagramPacket::UserDatagramPacket(size_t size) {
     this->self = SDLNet_AllocPacket(int(size));
 }
 
-GYDM::UserDatagramPacket::~UserDatagramPacket() noexcept {
+Plteen::UserDatagramPacket::~UserDatagramPacket() noexcept {
     if (this->self != nullptr) {
         SDLNet_FreePacket(this->self);
         this->self = nullptr;
     }
 }
 
-size_t GYDM::UserDatagramPacket::capacity() {
+size_t Plteen::UserDatagramPacket::capacity() {
     return static_cast<size_t>(this->self->maxlen);
 }
 
-size_t GYDM::UserDatagramPacket::resize(size_t new_size) {
+size_t Plteen::UserDatagramPacket::resize(size_t new_size) {
     return static_cast<size_t>(SDLNet_ResizePacket(this->self, int(new_size)));
 }
 
-const char* GYDM::UserDatagramPacket::hostname() {
+const char* Plteen::UserDatagramPacket::hostname() {
     return SDLNet_ResolveIP(&this->self->address);
 }
 
-uint16_t GYDM::UserDatagramPacket::port() {
+uint16_t Plteen::UserDatagramPacket::port() {
     return this->self->address.port;
 }
 
-const unsigned char* GYDM::UserDatagramPacket::unbox(uint8_t* type, uint16_t* transaction, uint16_t* response_port, size_t* size) {
+const unsigned char* Plteen::UserDatagramPacket::unbox(uint8_t* type, uint16_t* transaction, uint16_t* response_port, size_t* size) {
     unsigned char* payload = nullptr;
     
     if (is_slang_message(this->self->data)) {
@@ -71,7 +71,7 @@ const unsigned char* GYDM::UserDatagramPacket::unbox(uint8_t* type, uint16_t* tr
     return payload;
 }
 
-int GYDM::UserDatagramPacket::recv(UDPsocket udp) {
+int Plteen::UserDatagramPacket::recv(UDPsocket udp) {
     int rsize = -1;
 
     if (SDLNet_UDP_Recv(udp, this->self) == 1) {

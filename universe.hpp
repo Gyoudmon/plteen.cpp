@@ -10,11 +10,11 @@
 #include "physics/color/rgba.hpp"
 #include "virtualization/display.hpp"
 
-namespace GYDM {
-    class __lambda__ IUniverse : public GYDM::IDisplay {
+namespace Plteen {
+    class __lambda__ IUniverse : public Plteen::IDisplay {
     public:
         /* 构造函数，用以设置帧频, 窗口标题, 前景背景色, 和混色模式 */
-        IUniverse(uint32_t fps, const GYDM::RGBA& fgc, const GYDM::RGBA& bgc);
+        IUniverse(uint32_t fps, const Plteen::RGBA& fgc, const Plteen::RGBA& bgc);
         
         /* 析构函数，销毁旧对象时自动调用，默认销毁游戏宇宙 */
         virtual ~IUniverse();
@@ -33,7 +33,7 @@ namespace GYDM {
         virtual void update(uint64_t count, uint32_t interval, uint64_t uptime) = 0;
         
         /* 绘制游戏世界，在合适的时候自动调用 */
-        virtual void draw(GYDM::dc_t* renderer, int x, int y, int width, int height) = 0;
+        virtual void draw(Plteen::dc_t* renderer, int x, int y, int width, int height) = 0;
 
         /* 告诉游戏主循环，是否游戏已经结束可以退出了，默认永久运行 */
         virtual bool can_exit() { return false; }
@@ -44,7 +44,7 @@ namespace GYDM {
         void set_usrdata_folder(const char* path);
         void set_usrdata_folder(const std::string& path);
         SDL_Surface* snapshot() override;
-        GYDM::dc_t* drawing_context() override;
+        Plteen::dc_t* drawing_context() override;
         
     public: // 窗体 setter 和 getter
         void set_window_title(std::string& title);
@@ -53,8 +53,8 @@ namespace GYDM {
         void feed_window_size(int* width, int* height, bool logical = true);
         void set_window_fullscreen(bool yes);
         uint32_t frame_rate() override { return this->_fps; }
-        GYDM::RGBA get_background_color() { return this->_bgc; }
-        GYDM::RGBA get_foreground_color() { return this->_fgc; }
+        Plteen::RGBA get_background_color() { return this->_bgc; }
+        Plteen::RGBA get_foreground_color() { return this->_fgc; }
 
     public: // 窗体相关方法
         void refresh() override;
@@ -68,7 +68,7 @@ namespace GYDM {
         void start_input_text(const std::string& prompt) override;
         void stop_input_text();
         
-        void log_message(GYDM::Log level, const std::string& message) override;
+        void log_message(Plteen::Log level, const std::string& message) override;
 
     protected: // 常规事件处理和分派函数
         virtual void on_click(int x, int y) {}                                               // 处理单击事件
@@ -84,7 +84,7 @@ namespace GYDM {
         virtual void on_save(const std::string& full_path, std::ofstream& dev_datout) {}     // 处理保存事件
 
     protected:
-        virtual void draw_cmdwin(GYDM::dc_t* renderer, int x, int y, int width, int height);
+        virtual void draw_cmdwin(Plteen::dc_t* renderer, int x, int y, int width, int height);
         virtual const char* usrdata_extension() { return nullptr; }
 
     protected:
@@ -117,20 +117,20 @@ namespace GYDM {
         virtual void save_file(bool is_save_as);
 
     private:
-        void do_redraw(GYDM::dc_t* renderer, int x, int y, int width, int height);
-        bool display_usr_input_and_caret(GYDM::dc_t* renderer, bool yes);
-        bool display_usr_message(GYDM::dc_t* renderer);
+        void do_redraw(Plteen::dc_t* renderer, int x, int y, int width, int height);
+        bool display_usr_input_and_caret(Plteen::dc_t* renderer, bool yes);
+        bool display_usr_message(Plteen::dc_t* renderer);
         int cmdline_message_yposition();
         void enter_input_text();
         void popback_input_text();
 
     private:
-        GYDM::RGBA _fgc;                     // 窗体前景色
-        GYDM::RGBA _bgc;                     // 窗体背景色
+        Plteen::RGBA _fgc;                     // 窗体前景色
+        Plteen::RGBA _bgc;                     // 窗体背景色
         int window_width;                    // 窗体宽度
         int window_height;                   // 窗体高度
         SDL_Window* window = nullptr;        // 窗体对象
-        GYDM::dc_t* device = nullptr;        // 渲染器对象
+        Plteen::dc_t* device = nullptr;        // 渲染器对象
         SDL_Texture* texture = nullptr;      // 纹理对象
 
     private:
@@ -143,11 +143,11 @@ namespace GYDM {
         std::string usrin;                   // 用户输入
         bool in_editing = false;             // 是否在输入期间
         SDL_Rect echo;                       // 输入回显区域
-        GYDM::RGBA _ifgc;                    // 回显区前景色
-        GYDM::RGBA _ibgc;                    // 回显区背景色
+        Plteen::RGBA _ifgc;                    // 回显区前景色
+        Plteen::RGBA _ibgc;                    // 回显区背景色
         shared_font_t echo_font;             // 回显字体
         std::string message;                 // 回显区消息
-        GYDM::RGBA _mfgc;                    // 消息颜色
+        Plteen::RGBA _mfgc;                    // 消息颜色
         bool needs_termio_if_no_echo;        // 消息是否需要输出
 
     private:
@@ -155,13 +155,13 @@ namespace GYDM {
         std::string usrdata_rootdir;         // 用户数据保存位置
     };
 
-    class __lambda__ Universe : public GYDM::IUniverse {
+    class __lambda__ Universe : public Plteen::IUniverse {
     public:
         /* 构造函数，创建新对象时自动调用，默认创建一个黑底白字的窗口 */
         Universe();
 
         /* 更有用一些的构造函数，创建新对象时根据参数自动选择 */
-        Universe(const char* title, uint32_t fps = 60, const GYDM::RGBA& fgc = 0x000000U, const GYDM::RGBA& bgc = 0xFFFFFFU);
+        Universe(const char* title, uint32_t fps = 60, const Plteen::RGBA& fgc = 0x000000U, const Plteen::RGBA& bgc = 0xFFFFFFU);
     
     public:
         /* 创建游戏世界，充当程序真正的 main 函数，默认什么都不做 */
@@ -174,7 +174,7 @@ namespace GYDM {
         void update(uint64_t count, uint32_t interval, uint64_t uptime) override {}
         
         /* 绘制游戏世界，在合适的时候自动调用，默认什么都不做 */
-        void draw(GYDM::dc_t* renderer, int x, int y, int width, int height) override {}
+        void draw(Plteen::dc_t* renderer, int x, int y, int width, int height) override {}
 
     protected:
         void on_elapse(uint64_t count, uint32_t interval, uint64_t uptime) override;

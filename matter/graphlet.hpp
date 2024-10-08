@@ -5,13 +5,13 @@
 #include "../datum/enum.hpp"
 #include "../datum/flonum.hpp"
 
-namespace GYDM {
-    class __lambda__ IGraphlet : public GYDM::IMatter {
+namespace Plteen {
+    class __lambda__ IGraphlet : public Plteen::IMatter {
 		// Yes, meanwhile it's empty
     };
 
     template<typename T>
-	class __lambda__ IValuelet : public virtual GYDM::IGraphlet {
+	class __lambda__ IValuelet : public virtual Plteen::IGraphlet {
     public:
 		T get_value() {
 			return this->guarded_value();
@@ -37,11 +37,11 @@ namespace GYDM {
 			}
 		}
 
-		void set_value_port(GYDM::MatterPort port) {
+		void set_value_port(Plteen::MatterPort port) {
 			this->port = port;
 		}
 
-		GYDM::MatterPort get_value_port() {
+		Plteen::MatterPort get_value_port() {
 			return this->port;
 		}
 
@@ -52,7 +52,7 @@ namespace GYDM {
 		}
 		
 	protected:
-		virtual void on_value_changed(GYDM::dc_t* renderer, T value) {}
+		virtual void on_value_changed(Plteen::dc_t* renderer, T value) {}
 		virtual T guarded_value() { return *(this->value); }
 
 	private:
@@ -60,7 +60,7 @@ namespace GYDM {
 			T cur_value = this->guarded_value();
 
 			if (last_value != cur_value) {
-				GYDM::dc_t* dc = this->drawing_context();
+				Plteen::dc_t* dc = this->drawing_context();
 
 				last_value = cur_value;
 				this->moor(this->port);
@@ -70,7 +70,7 @@ namespace GYDM {
 		}
 
 	private:
-		MatterPort port = GYDM::MatterPort::LT;
+		MatterPort port = Plteen::MatterPort::LT;
 		T shadow = T();
 
 	private:
@@ -79,7 +79,7 @@ namespace GYDM {
 	};
 
     template<typename T>
-	class __lambda__ IRangelet : public virtual GYDM::IValuelet<T> {
+	class __lambda__ IRangelet : public virtual Plteen::IValuelet<T> {
 	public:
 		IRangelet(T vmin, T vmax) {
 			if (vmin <= vmax) {
@@ -111,7 +111,7 @@ namespace GYDM {
 				}
 
 				if (changed) {
-					GYDM::dc_t* dc = this->drawing_context();
+					Plteen::dc_t* dc = this->drawing_context();
 
 					this->moor(this->get_value_port());
 					if (dc != nullptr) this->on_range_changed(dc, this->vmin, this->vmax);
@@ -120,7 +120,7 @@ namespace GYDM {
 			}
 		}
 
-		virtual void on_range_changed(GYDM::dc_t* ds, T vmin, T vmax) {}
+		virtual void on_range_changed(Plteen::dc_t* ds, T vmin, T vmax) {}
 
 	public:
 		double get_percentage(T value) {
@@ -160,7 +160,7 @@ namespace GYDM {
 	};
 
 	template<typename State, typename Style>
-	class __lambda__ IStatelet : public virtual GYDM::IGraphlet {
+	class __lambda__ IStatelet : public virtual Plteen::IGraphlet {
 	public:
 		IStatelet() : IStatelet(State::_) {}
 
@@ -174,7 +174,7 @@ namespace GYDM {
 		}
 
 	public:
-		void construct(GYDM::dc_t* dc) override {
+		void construct(Plteen::dc_t* dc) override {
 			this->update_state(dc);
 		}
 
@@ -183,7 +183,7 @@ namespace GYDM {
 			unsigned int new_state = ((state == State::_) ? this->default_state : _I(state));
 
 			if (this->current_state != new_state) {
-				GYDM::dc_t* dc = this->drawing_context();
+				Plteen::dc_t* dc = this->drawing_context();
 
 				this->current_state = new_state;
 				if (dc != nullptr) this->update_state(dc);
@@ -216,7 +216,7 @@ namespace GYDM {
 			this->style_ready[idx] = false;
 
 			if (idx == this->current_state) {
-				GYDM::dc_t* dc = this->drawing_context();
+				Plteen::dc_t* dc = this->drawing_context();
 
 				if (dc != nullptr) this->update_state(dc);
 				this->notify_updated();
@@ -241,7 +241,7 @@ namespace GYDM {
 		}
 
 	protected:
-		void update_state(GYDM::dc_t* dc) {
+		void update_state(Plteen::dc_t* dc) {
 			this->apply_style(this->get_style(), dc);
 			this->on_state_changed(_E(State, this->current_state));
 		}
@@ -249,7 +249,7 @@ namespace GYDM {
 	protected:
 		virtual void prepare_style(State status, Style& style) = 0;
 		virtual void on_state_changed(State status) {}
-		virtual void apply_style(Style& style, GYDM::dc_t* dc) {}
+		virtual void apply_style(Style& style, Plteen::dc_t* dc) {}
 
 	private:
 		unsigned int default_state;

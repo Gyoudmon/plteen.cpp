@@ -5,7 +5,7 @@
 
 #include "datagram.hpp"
 
-namespace GYDM {
+namespace Plteen {
     class __lambda__ IUDPLocalPeer {
     public:
         virtual bool absent() { return false; }
@@ -39,8 +39,8 @@ namespace GYDM {
     private:
         UDPsocket self;
         IPaddress addrv4;
-        GYDM::UserDatagramPacket* packet = nullptr;
-        GYDM::IUDPLocalPeer* peer;
+        Plteen::UserDatagramPacket* packet = nullptr;
+        Plteen::IUDPLocalPeer* peer;
     };
 
     typedef std::shared_ptr<IUDPDaemon> shared_udp_daemon_t;
@@ -58,12 +58,12 @@ namespace GYDM {
     private:
         UDPsocket self;
         IPaddress addrv4;
-        GYDM::UserDatagramPacket* packet = nullptr;
+        Plteen::UserDatagramPacket* packet = nullptr;
     };
 
     /*********************************************************************************************/
     template<typename E>
-    class __lambda__ UDPLocalPeer : public GYDM::IUDPLocalPeer {
+    class __lambda__ UDPLocalPeer : public Plteen::IUDPLocalPeer {
     public:
         void on_user_datagram(uint16_t service, int type, const shared_datagram_t& datagram) override {
             this->on_user_datagram(service, static_cast<E>(type), datagram);
@@ -74,7 +74,7 @@ namespace GYDM {
     };
 
     template<typename E>
-    class __lambda__ UDPDaemon : public GYDM::IUDPDaemon {
+    class __lambda__ UDPDaemon : public Plteen::IUDPDaemon {
     public:
         UDPDaemon(UDPLocalPeer<E>* peer, uint16_t service, int packet_size)
             : IUDPDaemon(peer, service, packet_size) {}

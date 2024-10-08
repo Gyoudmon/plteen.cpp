@@ -4,7 +4,7 @@
 
 #include <utility>
 
-namespace GYDM {
+namespace Plteen {
     enum class MarioPipeColor {
         // Order matters
         Green = 0,
@@ -19,7 +19,7 @@ namespace GYDM {
     enum class MarioHPipeDirection { Left, Right, Both };
 
     /*********************************************************************************************/
-    class __lambda__ MarioGroundAtlas : public GYDM::GridAtlas {
+    class __lambda__ MarioGroundAtlas : public Plteen::GridAtlas {
     public:
         MarioGroundAtlas(size_t slot, int row, int col, float tile_size = 0.0F);
 
@@ -34,45 +34,45 @@ namespace GYDM {
     };
 
     /*********************************************************************************************/
-    class __lambda__ MarioPipe : public GYDM::GridAtlas {
+    class __lambda__ MarioPipe : public Plteen::GridAtlas {
     public:
         MarioPipe(int row, int col,
-            GYDM::MarioPipeColor color = MarioPipeColor::Green,
+            Plteen::MarioPipeColor color = MarioPipeColor::Green,
             float tile_size = 0.0F);
 
     public:
-        void set_color(GYDM::MarioPipeColor color);
-        GYDM::MarioPipeColor get_color();
+        void set_color(Plteen::MarioPipeColor color);
+        Plteen::MarioPipeColor get_color();
 
     protected:
         int color_idx;
     };
 
-    class __lambda__ MarioVPipe : public GYDM::MarioPipe {
+    class __lambda__ MarioVPipe : public Plteen::MarioPipe {
     public:
         MarioVPipe(int length,
-            GYDM::MarioVPipeDirection dir = MarioVPipeDirection::Up,
-            GYDM::MarioPipeColor color = MarioPipeColor::Green,
+            Plteen::MarioVPipeDirection dir = MarioVPipeDirection::Up,
+            Plteen::MarioPipeColor color = MarioPipeColor::Green,
             float tile_size = 0.0F);
 
     protected:
         int get_atlas_tile_index(size_t map_idx, int& xoff, int& yoff) override;
         
     private:
-        GYDM::MarioVPipeDirection direction;
+        Plteen::MarioVPipeDirection direction;
     };
 
-    class __lambda__ MarioHPipe : public GYDM::MarioPipe {
+    class __lambda__ MarioHPipe : public Plteen::MarioPipe {
     public:
         MarioHPipe(int length,
-            GYDM::MarioHPipeDirection dir = MarioHPipeDirection::Both,
-            GYDM::MarioPipeColor color = MarioPipeColor::Green,
+            Plteen::MarioHPipeDirection dir = MarioHPipeDirection::Both,
+            Plteen::MarioPipeColor color = MarioPipeColor::Green,
             float tile_size = 0.0F);
 
     protected:
         int get_atlas_tile_index(size_t map_idx, int& xoff, int& yoff) override;
         
     private:
-        GYDM::MarioHPipeDirection direction;
+        Plteen::MarioHPipeDirection direction;
     };
 }

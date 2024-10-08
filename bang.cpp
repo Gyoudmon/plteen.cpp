@@ -1,9 +1,9 @@
 #include "bang.hpp"
 
-using namespace GYDM;
+using namespace Plteen;
 
 /*************************************************************************************************/
-void GYDM::TheBigBang::load(float width, float height) {
+void Plteen::TheBigBang::load(float width, float height) {
     this->title = this->insert(new Labellet(GameFont::Title(), this->title_color,
         "%s: %s", this->_the_name.c_str(), this->name()));
 
@@ -18,7 +18,7 @@ void GYDM::TheBigBang::load(float width, float height) {
     this->set_tooltip_matter(this->tooltip);
 }
 
-float GYDM::TheBigBang::get_titlebar_height() {
+float Plteen::TheBigBang::get_titlebar_height() {
     float height = 0.0F;
 
     if (this->agent != nullptr) {

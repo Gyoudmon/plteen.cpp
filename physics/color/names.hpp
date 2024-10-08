@@ -1,6 +1,6 @@
 #pragma once
 
-namespace GYDM {
+namespace Plteen {
 #define BISQUE 0xffe4c4U
 #define MOCCASIN 0xffe4b5U
 #define FUCHSIA 0xff00ffU

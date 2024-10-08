@@ -7,7 +7,7 @@
 #include "../forward.hpp"
 
 /**************************************************************************************************/
-namespace GYDM {
+namespace Plteen {
     class __lambda__ IDisplay {
     public:
         IDisplay() {}
@@ -20,10 +20,10 @@ namespace GYDM {
         virtual void refresh() = 0;
 
     public:
-        virtual void log_message(GYDM::Log level, const std::string& message) = 0;
+        virtual void log_message(Plteen::Log level, const std::string& message) = 0;
         virtual void start_input_text(const std::string& prompt) = 0;
         virtual SDL_Surface* snapshot() = 0;
-        virtual GYDM::dc_t* drawing_context() = 0;
+        virtual Plteen::dc_t* drawing_context() = 0;
 
     public:
         void begin_update_sequence() { this->update_sequence_depth += 1; }

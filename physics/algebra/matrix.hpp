@@ -13,7 +13,7 @@
 
 #include <type_traits>
 
-namespace GYDM {
+namespace Plteen {
     /*********************************************************************************************/
     template<typename Fl, typename Super>
     Fl matrix_determinant(const Fl (&self)[1][1]) {
@@ -103,11 +103,11 @@ namespace GYDM {
     template<size_t M, size_t N = M, typename T = Flonum>
     class __lambda__ matrix
 #ifdef __racket__
-        : public GYDM::MatrixTop
+        : public Plteen::MatrixTop
 #endif
     {
-        template<size_t R, size_t C, typename U> friend class GYDM::matrix;
-        friend class GYDM::Matrix;
+        template<size_t R, size_t C, typename U> friend class Plteen::matrix;
+        friend class Plteen::Matrix;
 
         using Super = std::enable_if_t<std::is_arithmetic_v<T>, super_t<T>>;
 
@@ -135,10 +135,10 @@ namespace GYDM {
         matrix(const Array2D& src2D, size_t rN, size_t cN) noexcept { this->fill(src2D, rN, cN); }
 
         template<size_t R, size_t C, typename U>
-        matrix(const GYDM::matrix<R, C, U>& src) noexcept { this->fill(src); }
+        matrix(const Plteen::matrix<R, C, U>& src) noexcept { this->fill(src); }
 
         template<size_t R, size_t C, typename U>
-        matrix(const GYDM::matrix<R, C, U>* src) noexcept { this->fill(src); }
+        matrix(const Plteen::matrix<R, C, U>* src) noexcept { this->fill(src); }
 
     public:
         inline T unsafe_ref(size_t r, size_t c) const noexcept { return this->entries[r][c]; }
@@ -191,10 +191,10 @@ namespace GYDM {
         void fill(const U (&src)[O]) noexcept { array2d_fill_from_array1d(this->entries, M, N, src, O); }
 
         template<size_t R, size_t C, typename U>
-        void fill(const GYDM::matrix<R, C, U>& src) noexcept { array2d_copy_to_array2d(src.entries, R, C, this->entries, M, N); }
+        void fill(const Plteen::matrix<R, C, U>& src) noexcept { array2d_copy_to_array2d(src.entries, R, C, this->entries, M, N); }
 
         template<size_t R, size_t C, typename U>
-        void fill(const GYDM::matrix<R, C, U>* src) noexcept { array2d_copy_to_array2d(src->entries, R, C, this->entries, M, N); }
+        void fill(const Plteen::matrix<R, C, U>* src) noexcept { array2d_copy_to_array2d(src->entries, R, C, this->entries, M, N); }
 
         template<size_t Pi, typename V = void>
         typename std::enable_if_t<M == N, V> fill_row_permutation(const size_t (&pi)[Pi]) noexcept
@@ -205,11 +205,11 @@ namespace GYDM {
         { array2d_fill_based_on_row_permutation(this->entries, M, N, pi, n); }
         
         template<size_t Pi, typename V = void>
-        typename std::enable_if_t<M == N, V> fill_row_permutation(const GYDM::matrix<1, Pi, size_t>& pi) noexcept
+        typename std::enable_if_t<M == N, V> fill_row_permutation(const Plteen::matrix<1, Pi, size_t>& pi) noexcept
         { array2d_fill_based_on_row_permutation(this->entries, M, N, pi.entries[0], Pi); }
 
         template<size_t Pi, typename V = void>
-        typename std::enable_if_t<M == N, V> fill_row_permutation(const GYDM::matrix<1, Pi, size_t>* pi) noexcept
+        typename std::enable_if_t<M == N, V> fill_row_permutation(const Plteen::matrix<1, Pi, size_t>* pi) noexcept
         { array2d_fill_based_on_row_permutation(this->entries, M, N, pi->entries[0], Pi); }
 
         void fill_diagonal(T datum) noexcept { array2d_fill_diagonal_with_datum(this->entries, M, N, datum); }
@@ -227,10 +227,10 @@ namespace GYDM {
         void fill_diagonal(const U (&src)[O]) noexcept { array2d_fill_diagonal_from_array1d(this->entries, M, N, src, O); }
 
         template<size_t R, size_t C, typename U>
-        void fill_diagonal(const GYDM::matrix<R, C, U>& src) noexcept { array2d_copy_diagonal_to_array2d(src.entries, R, C, this->entries, M, N); }
+        void fill_diagonal(const Plteen::matrix<R, C, U>& src) noexcept { array2d_copy_diagonal_to_array2d(src.entries, R, C, this->entries, M, N); }
 
         template<size_t R, size_t C, typename U>
-        void fill_diagonal(const GYDM::matrix<R, C, U>* src) noexcept { array2d_copy_diagonal_to_array2d(src->entries, R, C, this->entries, M, N); }
+        void fill_diagonal(const Plteen::matrix<R, C, U>* src) noexcept { array2d_copy_diagonal_to_array2d(src->entries, R, C, this->entries, M, N); }
 
         void fill_lower_triangle(T datum) noexcept { array2d_fill_lower_triangle_with_datum(this->entries, M, N, datum); }
 
@@ -241,10 +241,10 @@ namespace GYDM {
         void fill_lower_triangle(const U (&src)[R][C]) noexcept { array2d_copy_lower_triangle_to_array2d(src, R, C, this->entries, M, N); }
         
         template<size_t R, size_t C, typename U>
-        void fill_lower_triangle(const GYDM::matrix<R, C, U>& src) noexcept { array2d_copy_lower_triangle_to_array2d(src.entries, R, C, this->entries, M, N); }
+        void fill_lower_triangle(const Plteen::matrix<R, C, U>& src) noexcept { array2d_copy_lower_triangle_to_array2d(src.entries, R, C, this->entries, M, N); }
 
         template<size_t R, size_t C, typename U>
-        void fill_lower_triangle(const GYDM::matrix<R, C, U>* src) noexcept { array2d_copy_lower_triangle_to_array2d(src->entries, R, C, this->entries, M, N); }
+        void fill_lower_triangle(const Plteen::matrix<R, C, U>* src) noexcept { array2d_copy_lower_triangle_to_array2d(src->entries, R, C, this->entries, M, N); }
 
         void fill_upper_triangle(T datum) noexcept { array2d_fill_upper_triangle_with_datum(this->entries, M, N, datum); }
 
@@ -257,109 +257,109 @@ namespace GYDM {
         { array2d_copy_upper_triangle_to_array2d(src, R, C, this->entries, M, N, diagonal); }
         
         template<size_t R, size_t C, typename U>
-        void fill_upper_triangle(const GYDM::matrix<R, C, U>& src, bool diagonal = false) noexcept
+        void fill_upper_triangle(const Plteen::matrix<R, C, U>& src, bool diagonal = false) noexcept
         { array2d_copy_upper_triangle_to_array2d(src.entries, R, C, this->entries, M, N, diagonal); }
 
         template<size_t R, size_t C, typename U>
-        void fill_upper_triangle(const GYDM::matrix<R, C, U>* src, bool diagonal = false) noexcept
+        void fill_upper_triangle(const Plteen::matrix<R, C, U>* src, bool diagonal = false) noexcept
         { array2d_copy_upper_triangle_to_array2d(src->entries, R, C, this->entries, M, N, diagonal); }
 
     public:
-	    GYDM::matrix<M, N, T> operator-() const noexcept { GYDM::matrix<M, N, T> self; array2d_opposite(self.entries, this->entries, M, N); return self; }
-	    bool operator!=(const GYDM::matrix<M, N, T>& m) const noexcept { return !(this->operator==(m)); }
-        bool operator==(const GYDM::matrix<M, N, T>& m) const noexcept { return array2d_equal(this->entries, M, N, m.entries, M, N); }
+	    Plteen::matrix<M, N, T> operator-() const noexcept { Plteen::matrix<M, N, T> self; array2d_opposite(self.entries, this->entries, M, N); return self; }
+	    bool operator!=(const Plteen::matrix<M, N, T>& m) const noexcept { return !(this->operator==(m)); }
+        bool operator==(const Plteen::matrix<M, N, T>& m) const noexcept { return array2d_equal(this->entries, M, N, m.entries, M, N); }
 
         template<size_t R, size_t C, typename U>
-        bool operator!=(const GYDM::matrix<R, C, U>& m) const noexcept { return true; }
+        bool operator!=(const Plteen::matrix<R, C, U>& m) const noexcept { return true; }
         
         template<size_t R, size_t C, typename U>
-        bool operator==(const GYDM::matrix<R, C, U>& m) const noexcept { return false; }
+        bool operator==(const Plteen::matrix<R, C, U>& m) const noexcept { return false; }
 
         template<size_t R, size_t C, typename U, typename B = bool>
-        typename std::enable_if_t<std::is_floating_point_v<T>, B> flequal(const GYDM::matrix<R, C, U>& m, double epsilon) const noexcept
+        typename std::enable_if_t<std::is_floating_point_v<T>, B> flequal(const Plteen::matrix<R, C, U>& m, double epsilon) const noexcept
         { return array2d_equal(this->entries, M, N, m.entries, R, C, epsilon); }
 
         template<size_t R, size_t C, typename U, typename B = bool>
-        typename std::enable_if_t<std::is_floating_point_v<T>, B> flequal(const GYDM::matrix<R, C, U>* m, double epsilon) const noexcept
+        typename std::enable_if_t<std::is_floating_point_v<T>, B> flequal(const Plteen::matrix<R, C, U>* m, double epsilon) const noexcept
         { return array2d_equal(this->entries, M, N, m->entries, R, C, epsilon); }
 
         template<typename R>
-		GYDM::matrix<M, N, T>& operator+=(const GYDM::matrix<M, N, R>& rhs)
+		Plteen::matrix<M, N, T>& operator+=(const Plteen::matrix<M, N, R>& rhs)
         { array2d_add(this->entries, rhs.entries, M, N); return (*this); }
         
         template<typename R>
-		GYDM::matrix<M, N, T>& operator-=(const GYDM::matrix<M, N, R>& rhs)
+		Plteen::matrix<M, N, T>& operator-=(const Plteen::matrix<M, N, R>& rhs)
         { array2d_subtract(this->entries, rhs.entries, M, N); return (*this); }
 		
-        GYDM::matrix<M, N, T>& operator*=(T rhs) { array2d_scalar_multiply(this->entries, rhs, M, N); return (*this); }
-        GYDM::matrix<M, N, T>& operator/=(T rhs) { array2d_divide(this->entries, rhs, M, N); return (*this); }
+        Plteen::matrix<M, N, T>& operator*=(T rhs) { array2d_scalar_multiply(this->entries, rhs, M, N); return (*this); }
+        Plteen::matrix<M, N, T>& operator/=(T rhs) { array2d_divide(this->entries, rhs, M, N); return (*this); }
         
         template<typename L, typename R>
-		friend inline GYDM::matrix<M, N, decltype(L{} + R{})> operator+(const GYDM::matrix<M, N, L>& lhs, const GYDM::matrix<M, N, R>& rhs)
-        { return GYDM::matrix<M, N, decltype(L{} + R{})>(lhs, rhs, true); }
+		friend inline Plteen::matrix<M, N, decltype(L{} + R{})> operator+(const Plteen::matrix<M, N, L>& lhs, const Plteen::matrix<M, N, R>& rhs)
+        { return Plteen::matrix<M, N, decltype(L{} + R{})>(lhs, rhs, true); }
 
         template<typename L, typename R>
-		friend inline GYDM::matrix<M, N, decltype(L{} - R{})> operator-(const GYDM::matrix<M, N, L>& lhs, const GYDM::matrix<M, N, R>& rhs)
-        { return GYDM::matrix<M, N, decltype(L{} - R{})>(lhs, rhs, false); }
+		friend inline Plteen::matrix<M, N, decltype(L{} - R{})> operator-(const Plteen::matrix<M, N, L>& lhs, const Plteen::matrix<M, N, R>& rhs)
+        { return Plteen::matrix<M, N, decltype(L{} - R{})>(lhs, rhs, false); }
 		
         template<typename L, typename R>
-        friend inline GYDM::matrix<M, N, decltype(L{} * R{})> operator*(const GYDM::matrix<M, N, L>& lhs, real_if_t<R> rhs)
-        { return GYDM::matrix<M, N, decltype(L{} * R{})>(lhs, rhs, true); }
+        friend inline Plteen::matrix<M, N, decltype(L{} * R{})> operator*(const Plteen::matrix<M, N, L>& lhs, real_if_t<R> rhs)
+        { return Plteen::matrix<M, N, decltype(L{} * R{})>(lhs, rhs, true); }
         
         template<typename L, typename R>
-        friend inline GYDM::matrix<M, N, decltype(L{} * R{})> operator*(real_if_t<L> lhs, const GYDM::matrix<M, N, R>& rhs)
-        { return GYDM::matrix<M, N, decltype(L{} * R{})>(rhs, lhs, true); }
+        friend inline Plteen::matrix<M, N, decltype(L{} * R{})> operator*(real_if_t<L> lhs, const Plteen::matrix<M, N, R>& rhs)
+        { return Plteen::matrix<M, N, decltype(L{} * R{})>(rhs, lhs, true); }
 
         template<typename L, typename R>
-        friend inline GYDM::matrix<M, N, decltype(L{} / R{})> operator/(const GYDM::matrix<M, N, L> lhs, real_if_t<R> rhs)
-        { return GYDM::matrix<M, N, decltype(L{} / R{})>(lhs, rhs, false); }
+        friend inline Plteen::matrix<M, N, decltype(L{} / R{})> operator/(const Plteen::matrix<M, N, L> lhs, real_if_t<R> rhs)
+        { return Plteen::matrix<M, N, decltype(L{} / R{})>(lhs, rhs, false); }
 
         template<size_t P, typename L, typename R>
-        friend inline GYDM::matrix<M, P, decltype(L{} * R{})> operator*(const GYDM::matrix<M, N, L>& lhs, const GYDM::matrix<N, P, R>& rhs)
-        { GYDM::matrix<M, P, decltype(L{} * R{})> self; array2d_multiply(self.entries, lhs.entries, rhs.entries, M, N, P); return self; }
+        friend inline Plteen::matrix<M, P, decltype(L{} * R{})> operator*(const Plteen::matrix<M, N, L>& lhs, const Plteen::matrix<N, P, R>& rhs)
+        { Plteen::matrix<M, P, decltype(L{} * R{})> self; array2d_multiply(self.entries, lhs.entries, rhs.entries, M, N, P); return self; }
 
     public:
-        GYDM::matrix<N, M, T> transpose() const noexcept { GYDM::matrix<N, M, T> dest; this->transpose(&dest); return dest; }
-        GYDM::matrix<M, N, T> diagonal() const noexcept { GYDM::matrix<M, N, T> dest; this->diagonal(&dest); return dest; }
-        GYDM::matrix<1, N, T> row(size_t r) const { GYDM::matrix<1, N, T> dest; this->row(r, &dest); return dest; }
-        GYDM::matrix<M, 1, T> column(size_t c) const { GYDM::matrix<M, 1, T> dest; this->column(c, &dest); return dest; }
-        GYDM::matrix<M, N, T> lower_triangle() const noexcept { GYDM::matrix<M, N, T> dest; this->lower_triangle(&dest); return dest; }
-        GYDM::matrix<M, N, T> upper_triangle(bool diagonal = false) const noexcept
-        { GYDM::matrix<M, N, T> dest; this->upper_triangle(&dest, diagonal); return dest; }
+        Plteen::matrix<N, M, T> transpose() const noexcept { Plteen::matrix<N, M, T> dest; this->transpose(&dest); return dest; }
+        Plteen::matrix<M, N, T> diagonal() const noexcept { Plteen::matrix<M, N, T> dest; this->diagonal(&dest); return dest; }
+        Plteen::matrix<1, N, T> row(size_t r) const { Plteen::matrix<1, N, T> dest; this->row(r, &dest); return dest; }
+        Plteen::matrix<M, 1, T> column(size_t c) const { Plteen::matrix<M, 1, T> dest; this->column(c, &dest); return dest; }
+        Plteen::matrix<M, N, T> lower_triangle() const noexcept { Plteen::matrix<M, N, T> dest; this->lower_triangle(&dest); return dest; }
+        Plteen::matrix<M, N, T> upper_triangle(bool diagonal = false) const noexcept
+        { Plteen::matrix<M, N, T> dest; this->upper_triangle(&dest, diagonal); return dest; }
         
-        void transpose(GYDM::matrix<N, M, T>* dest) const noexcept {
+        void transpose(Plteen::matrix<N, M, T>* dest) const noexcept {
             if (this != dest) {
                 array2d_transpose(this->entries, dest->entries, M, N);
             }
         }
 
-        void diagonal(GYDM::matrix<M, N, T>* dest) const noexcept {
+        void diagonal(Plteen::matrix<M, N, T>* dest) const noexcept {
             if (this != dest) {
                 array2d_copy_diagonal_to_array2d(this->entries, M, N, dest->entries, M, N);
             }
         }
 
-        void row(size_t r, GYDM::matrix<1, N, T>* dest) const {
+        void row(size_t r, Plteen::matrix<1, N, T>* dest) const {
             if (this != dest) {
                 array2d_check_bounds(M, 1, r, 0);
                 array2d_copy_row_to_array2d(this->entries, M, N, dest->entries, 1, N, r, 0);
             }
         }
 
-        void column(size_t c, GYDM::matrix<M, 1, T>* dest) const {
+        void column(size_t c, Plteen::matrix<M, 1, T>* dest) const {
             if (this != dest) {
                 array2d_check_bounds(1, N, 0, c);
                 array2d_copy_column_to_array2d(this->entries, M, N, dest->entries, M, 1, c, 0);
             }
         }
 
-        void lower_triangle(GYDM::matrix<M, N, T>* dest) const noexcept {
+        void lower_triangle(Plteen::matrix<M, N, T>* dest) const noexcept {
             if (this != dest) {
                 dest->fill_lower_triangle(this->entries, M, N);
             }
         }
 
-        void upper_triangle(GYDM::matrix<M, N, T>* dest, bool diagonal = false) const noexcept {
+        void upper_triangle(Plteen::matrix<M, N, T>* dest, bool diagonal = false) const noexcept {
             if (this != dest) {
                 dest->fill_upper_triangle(this->entries, M, N, diagonal);
             }
@@ -398,12 +398,12 @@ namespace GYDM {
     public:
         template<typename D, typename B = bool>
         typename std::enable_if_t<M == N, B>
-        LU_decomposite(GYDM::matrix<M, N, D>* L, GYDM::matrix<M, N, D>* U) const noexcept
+        LU_decomposite(Plteen::matrix<M, N, D>* L, Plteen::matrix<M, N, D>* U) const noexcept
         { return array2d_lu_decomposite(this->entries, L->entries, U->entries); }
 
         template<typename D, typename B = bool>
         typename std::enable_if_t<M == N, B>
-        LUP_decomposite(GYDM::matrix<M, N, D>* L, GYDM::matrix<M, N, D>* U, GYDM::matrix<1, N, size_t>* P) const noexcept
+        LUP_decomposite(Plteen::matrix<M, N, D>* L, Plteen::matrix<M, N, D>* U, Plteen::matrix<1, N, size_t>* P) const noexcept
         { return array2d_lup_decomposite(this->entries, L->entries, U->entries, P->entries); }
         
     public:
@@ -442,7 +442,7 @@ namespace GYDM {
 
     private:
         template<typename Lhs, typename Rhs>
-        matrix(const GYDM::matrix<M, N, Lhs>& lhs, const GYDM::matrix<M, N, Rhs>& rhs, bool forward) noexcept {
+        matrix(const Plteen::matrix<M, N, Lhs>& lhs, const Plteen::matrix<M, N, Rhs>& rhs, bool forward) noexcept {
             if (forward) {
                 array2d_add(this->entries, lhs.entries, rhs.entries, M, N);
             } else {
@@ -451,7 +451,7 @@ namespace GYDM {
         }
 
         template<typename Lhs, typename Rhs, typename = real_t<Rhs>>
-        matrix(const GYDM::matrix<M, N, Lhs>& lhs, Rhs rhs, bool forward) noexcept {
+        matrix(const Plteen::matrix<M, N, Lhs>& lhs, Rhs rhs, bool forward) noexcept {
             if (forward) {
                 array2d_scalar_multiply(this->entries, lhs.entries, rhs, M, N);
             } else {
@@ -465,7 +465,7 @@ namespace GYDM {
 
     /*********************************************************************************************/
     class __lambda__ Matrix {
-        template<size_t R, size_t C, typename U> friend class GYDM::matrix;
+        template<size_t R, size_t C, typename U> friend class Plteen::matrix;
         
         using Super = super_t<Flonum>;
 
@@ -475,14 +475,14 @@ namespace GYDM {
         Matrix(size_t m, size_t n) noexcept;
         Matrix(size_t n) noexcept : Matrix(n, n) {}
 
-        Matrix(const GYDM::Matrix& src) noexcept;
-        Matrix(const GYDM::Matrix* src) noexcept;
+        Matrix(const Plteen::Matrix& src) noexcept;
+        Matrix(const Plteen::Matrix* src) noexcept;
 
         template<size_t R, size_t C, typename U>
-        Matrix(const GYDM::matrix<R, C, U>& src) noexcept : Matrix(R, C) { this->fill(src); }
+        Matrix(const Plteen::matrix<R, C, U>& src) noexcept : Matrix(R, C) { this->fill(src); }
 
         template<size_t R, size_t C, typename U>
-        Matrix(const GYDM::matrix<R, C, U>* src) noexcept : Matrix(R, C) { this->fill(src); }
+        Matrix(const Plteen::matrix<R, C, U>* src) noexcept : Matrix(R, C) { this->fill(src); }
         
         template<typename Array2D>
         Matrix(const Array2D& src2D, size_t rN, size_t cN) noexcept : Matrix(rN, cN) { this->fill(src2D, rN, cN); }
@@ -507,10 +507,10 @@ namespace GYDM {
         size_t extract(Array2D& dest2D, size_t nR, size_t nC) const noexcept { return array2d_copy_to_array2d(this->entries, this->M, this->N, dest2D, nR, nC); }
 
         template<size_t R, size_t C, typename U>
-        size_t extract(GYDM::matrix<R, C, U>& mtx) const noexcept { return array2d_copy_to_array2d(this->entries, this->M, this->N, mtx.entries, R, C); }
+        size_t extract(Plteen::matrix<R, C, U>& mtx) const noexcept { return array2d_copy_to_array2d(this->entries, this->M, this->N, mtx.entries, R, C); }
 
         template<size_t R, size_t C, typename U>
-        size_t extract(GYDM::matrix<R, C, U>* mtx) const noexcept { return array2d_copy_to_array2d(this->entries, this->M, this->N, mtx->entries, R, C); }
+        size_t extract(Plteen::matrix<R, C, U>* mtx) const noexcept { return array2d_copy_to_array2d(this->entries, this->M, this->N, mtx->entries, R, C); }
 
         template<typename Array1D>
         size_t extract_row(size_t r, Array1D& dest, size_t size) const { return array2d_copy_row_to_array1d(this->entries, this->M, this->N, dest, size, r); }
@@ -525,21 +525,21 @@ namespace GYDM {
         size_t extract_diagonal(Array2D& dest2D, size_t nR, size_t nC) const noexcept { return array2d_copy_diagonal_to_array2d(this->entries, this->M, this->N, dest2D, nR, nC); }
 
         template<size_t R, size_t C, typename U>
-        size_t extract_diagonal(GYDM::matrix<R, C, U>& mtx) const noexcept { return array2d_copy_diagonal_to_array2d(this->entries, this->M, this->N, mtx.entries, R, C); }
+        size_t extract_diagonal(Plteen::matrix<R, C, U>& mtx) const noexcept { return array2d_copy_diagonal_to_array2d(this->entries, this->M, this->N, mtx.entries, R, C); }
 
         template<size_t R, size_t C, typename U>
-        size_t extract_diagonal(GYDM::matrix<R, C, U>* mtx) const noexcept { return array2d_copy_diagonal_to_array2d(this->entries, this->M, this->N, mtx->entries, R, C); }
+        size_t extract_diagonal(Plteen::matrix<R, C, U>* mtx) const noexcept { return array2d_copy_diagonal_to_array2d(this->entries, this->M, this->N, mtx->entries, R, C); }
 
         template<typename Array2D>
         size_t extract_lower_triangle(Array2D& dest2D, size_t nR, size_t nC) const noexcept
         { return array2d_copy_lower_triangle_to_array2d(this->entries, this->M, this->N, dest2D, nR, nC); }
 
         template<size_t R, size_t C, typename U>
-        size_t extract_lower_triangle(GYDM::matrix<R, C, U>& mtx) const noexcept
+        size_t extract_lower_triangle(Plteen::matrix<R, C, U>& mtx) const noexcept
         { return array2d_copy_lower_triangle_to_array2d(this->entries, this->M, this->N, mtx.entries, R, C); }
 
         template<size_t R, size_t C, typename U>
-        size_t extract_lower_triangle(GYDM::matrix<R, C, U>* mtx) const noexcept
+        size_t extract_lower_triangle(Plteen::matrix<R, C, U>* mtx) const noexcept
         { return array2d_copy_lower_triangle_to_array2d(this->entries, this->M, this->N, mtx->entries, R, C); }
 
         template<typename Array2D>
@@ -547,11 +547,11 @@ namespace GYDM {
         { return array2d_copy_upper_triangle_to_array2d(this->entries, this->M, this->N, dest2D, nR, nC, diagonal); }
 
         template<size_t R, size_t C, typename U>
-        size_t extract_upper_triangle(GYDM::matrix<R, C, U>& mtx) const noexcept
+        size_t extract_upper_triangle(Plteen::matrix<R, C, U>& mtx) const noexcept
         { return array2d_copy_upper_triangle_to_array2d(this->entries, this->M, this->N, mtx.entries, R, C); }
 
         template<size_t R, size_t C, typename U>
-        size_t extract_upper_triangle(GYDM::matrix<R, C, U>* mtx) const noexcept
+        size_t extract_upper_triangle(Plteen::matrix<R, C, U>* mtx) const noexcept
         { return array2d_copy_upper_triangle_to_array2d(this->entries, this->M, this->N, mtx->entries, R, C); }
 
         void fill(Flonum datum) noexcept { array2d_fill_with_datum(this->entries, this->M, this->N, datum); }
@@ -569,34 +569,34 @@ namespace GYDM {
         void fill(const U (&src)[O]) noexcept { array2d_fill_from_array1d(this->entries, this->M, this->N, src, O); }
 
         template<size_t R, size_t C, typename U>
-        void fill(const GYDM::matrix<R, C, U>& src) noexcept { array2d_copy_to_array2d(src.entries, R, C, this->entries, this->M, this->N); }
+        void fill(const Plteen::matrix<R, C, U>& src) noexcept { array2d_copy_to_array2d(src.entries, R, C, this->entries, this->M, this->N); }
 
         template<size_t R, size_t C, typename U>
-        void fill(const GYDM::matrix<R, C, U>* src) noexcept { array2d_copy_to_array2d(src->entries, R, C, this->entries, this->M, this->N); }
+        void fill(const Plteen::matrix<R, C, U>* src) noexcept { array2d_copy_to_array2d(src->entries, R, C, this->entries, this->M, this->N); }
 
     public:
-	    bool operator!=(const GYDM::Matrix& m) const noexcept { return !(this->operator==(m)); }
-        bool operator==(const GYDM::Matrix& m) const noexcept { return array2d_equal(this->entries, this->M, this->N, m.entries, m.M, m.N); }
+	    bool operator!=(const Plteen::Matrix& m) const noexcept { return !(this->operator==(m)); }
+        bool operator==(const Plteen::Matrix& m) const noexcept { return array2d_equal(this->entries, this->M, this->N, m.entries, m.M, m.N); }
 
-        bool flequal(const GYDM::Matrix& m, double epsilon) const noexcept
+        bool flequal(const Plteen::Matrix& m, double epsilon) const noexcept
         { return array2d_equal(this->entries, this->M, this->N, m.entries, m.M, m.N, epsilon); }
 
-        bool flequal(const GYDM::Matrix* m, double epsilon) const noexcept
+        bool flequal(const Plteen::Matrix* m, double epsilon) const noexcept
         { return array2d_equal(this->entries, this->M, this->N, m->entries, m->M, m->N, epsilon); }
 
-        GYDM::Matrix& operator+=(const GYDM::Matrix& rhs);
-        GYDM::Matrix& operator-=(const GYDM::Matrix& rhs);
+        Plteen::Matrix& operator+=(const Plteen::Matrix& rhs);
+        Plteen::Matrix& operator-=(const Plteen::Matrix& rhs);
 		
-        GYDM::Matrix& operator*=(Flonum rhs) { array2d_scalar_multiply(this->entries, rhs, M, N); return (*this); }
-        GYDM::Matrix& operator/=(Flonum rhs) { array2d_divide(this->entries, rhs, M, N); return (*this); }
+        Plteen::Matrix& operator*=(Flonum rhs) { array2d_scalar_multiply(this->entries, rhs, M, N); return (*this); }
+        Plteen::Matrix& operator/=(Flonum rhs) { array2d_divide(this->entries, rhs, M, N); return (*this); }
         
-        friend inline GYDM::Matrix operator+(const GYDM::Matrix& lhs, const GYDM::Matrix& rhs) { return GYDM::Matrix(lhs, rhs, true); }
-        friend inline GYDM::Matrix operator-(const GYDM::Matrix& lhs, const GYDM::Matrix& rhs) { return GYDM::Matrix(lhs, rhs, false); }
-        friend inline GYDM::Matrix operator*(const GYDM::Matrix& lhs, Flonum rhs) { return GYDM::Matrix(lhs, rhs, true); }
-        friend inline GYDM::Matrix operator*(Flonum lhs, const GYDM::Matrix& rhs) { return GYDM::Matrix(rhs, lhs, true); }
-        friend inline GYDM::Matrix operator/(const GYDM::Matrix lhs, Flonum rhs) { return GYDM::Matrix(lhs, rhs, false); }
-        friend inline GYDM::Matrix operator*(const GYDM::Matrix& lhs, const GYDM::Matrix& rhs)
-        { GYDM::Matrix self(lhs.M, rhs.N); array2d_multiply(self.entries, lhs.entries, rhs.entries, lhs.M, lhs.N, rhs.N); return self; }
+        friend inline Plteen::Matrix operator+(const Plteen::Matrix& lhs, const Plteen::Matrix& rhs) { return Plteen::Matrix(lhs, rhs, true); }
+        friend inline Plteen::Matrix operator-(const Plteen::Matrix& lhs, const Plteen::Matrix& rhs) { return Plteen::Matrix(lhs, rhs, false); }
+        friend inline Plteen::Matrix operator*(const Plteen::Matrix& lhs, Flonum rhs) { return Plteen::Matrix(lhs, rhs, true); }
+        friend inline Plteen::Matrix operator*(Flonum lhs, const Plteen::Matrix& rhs) { return Plteen::Matrix(rhs, lhs, true); }
+        friend inline Plteen::Matrix operator/(const Plteen::Matrix lhs, Flonum rhs) { return Plteen::Matrix(lhs, rhs, false); }
+        friend inline Plteen::Matrix operator*(const Plteen::Matrix& lhs, const Plteen::Matrix& rhs)
+        { Plteen::Matrix self(lhs.M, rhs.N); array2d_multiply(self.entries, lhs.entries, rhs.entries, lhs.M, lhs.N, rhs.N); return self; }
 
     public:
         size_t row_size() const noexcept { return this->M; }
@@ -625,16 +625,16 @@ namespace GYDM {
         bool is_scalar_matrix() const noexcept;
 
     public:
-        bool LU_decomposite(GYDM::Matrix* L, GYDM::Matrix* U) const noexcept;
-        bool LUP_decomposite(GYDM::Matrix* L, GYDM::Matrix* U, GYDM::Matrix* P) const noexcept;
+        bool LU_decomposite(Plteen::Matrix* L, Plteen::Matrix* U) const noexcept;
+        bool LUP_decomposite(Plteen::Matrix* L, Plteen::Matrix* U, Plteen::Matrix* P) const noexcept;
         
     public:
         std::string desc(bool one_line = false) const noexcept
         { return array2d_to_string(this->entries, M, N, 0, one_line); }
 
     private:
-        Matrix(const GYDM::Matrix& lhs, const GYDM::Matrix& rhs, bool forward) noexcept;
-        Matrix(const GYDM::Matrix& lhs, Flonum rhs, bool forward) noexcept;
+        Matrix(const Plteen::Matrix& lhs, const Plteen::Matrix& rhs, bool forward) noexcept;
+        Matrix(const Plteen::Matrix& lhs, Flonum rhs, bool forward) noexcept;
 
     private:
         size_t M;
@@ -643,34 +643,34 @@ namespace GYDM {
     };
 
     /*********************************************************************************************/
-    template<size_t N, typename T> using square_matrix = GYDM::matrix<N, N, T>;
-    template<size_t N, typename T> using row_matrix = GYDM::matrix<N, 1, T>;
-    template<size_t N, typename T> using col_matrix = GYDM::matrix<1, N, T>;
+    template<size_t N, typename T> using square_matrix = Plteen::matrix<N, N, T>;
+    template<size_t N, typename T> using row_matrix = Plteen::matrix<N, 1, T>;
+    template<size_t N, typename T> using col_matrix = Plteen::matrix<1, N, T>;
 
-    template<size_t M, size_t N> using flmatrix = GYDM::matrix<M, N, Flonum>;
-    template<size_t M, size_t N> using fxmatrix = GYDM::matrix<M, N, int>;
+    template<size_t M, size_t N> using flmatrix = Plteen::matrix<M, N, Flonum>;
+    template<size_t M, size_t N> using fxmatrix = Plteen::matrix<M, N, int>;
 
-    template<size_t N> using flsmatrix = GYDM::square_matrix<N, Flonum>;
-    template<size_t N> using fxsmatrix = GYDM::square_matrix<N, int>;
+    template<size_t N> using flsmatrix = Plteen::square_matrix<N, Flonum>;
+    template<size_t N> using fxsmatrix = Plteen::square_matrix<N, int>;
 
-    template<size_t N> using flrmatrix = GYDM::row_matrix<N, Flonum>;
-    template<size_t N> using fxrmatrix = GYDM::row_matrix<N, int>;
+    template<size_t N> using flrmatrix = Plteen::row_matrix<N, Flonum>;
+    template<size_t N> using fxrmatrix = Plteen::row_matrix<N, int>;
 
-    template<size_t N> using flcmatrix = GYDM::col_matrix<N, Flonum>;
-    template<size_t N> using fxcmatrix = GYDM::col_matrix<N, int>;
+    template<size_t N> using flcmatrix = Plteen::col_matrix<N, Flonum>;
+    template<size_t N> using fxcmatrix = Plteen::col_matrix<N, int>;
     
-    typedef GYDM::flsmatrix<2> flmatrix_2x2;
-    typedef GYDM::flsmatrix<3> flmatrix_3x3;
-    typedef GYDM::flsmatrix<4> flmatrix_4x4;
-    typedef GYDM::flmatrix<3, 4> flmatrix_3x4;
-    typedef GYDM::flmatrix<4, 3> flmatrix_4x3;
+    typedef Plteen::flsmatrix<2> flmatrix_2x2;
+    typedef Plteen::flsmatrix<3> flmatrix_3x3;
+    typedef Plteen::flsmatrix<4> flmatrix_4x4;
+    typedef Plteen::flmatrix<3, 4> flmatrix_3x4;
+    typedef Plteen::flmatrix<4, 3> flmatrix_4x3;
 
-    typedef GYDM::fxsmatrix<2> fxmatrix_2x2;
-    typedef GYDM::fxsmatrix<3> fxmatrix_3x3;
-    typedef GYDM::fxsmatrix<4> fxmatrix_4x4;
-    typedef GYDM::fxmatrix<3, 4> fxmatrix_3x4;
-    typedef GYDM::fxmatrix<4, 3> fxmatrix_4x3;
+    typedef Plteen::fxsmatrix<2> fxmatrix_2x2;
+    typedef Plteen::fxsmatrix<3> fxmatrix_3x3;
+    typedef Plteen::fxsmatrix<4> fxmatrix_4x4;
+    typedef Plteen::fxmatrix<3, 4> fxmatrix_3x4;
+    typedef Plteen::fxmatrix<4, 3> fxmatrix_4x3;
 
-    template<size_t N> using pi_matrix = GYDM::col_matrix<N, size_t>;
-    typedef GYDM::pi_matrix<4> pi_matrix_1x4;
+    template<size_t N> using pi_matrix = Plteen::col_matrix<N, size_t>;
+    typedef Plteen::pi_matrix<4> pi_matrix_1x4;
 }

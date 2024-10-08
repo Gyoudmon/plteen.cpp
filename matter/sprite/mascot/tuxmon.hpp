@@ -9,8 +9,8 @@
 
 /* https://github.com/SuperTux/supertux */
 
-namespace GYDM {
-    class __lambda__ Tuxmon : public GYDM::Sprite, public virtual GYDM::ICreature, protected virtual GYDM::IPlatformMotion {
+namespace Plteen {
+    class __lambda__ Tuxmon : public Plteen::Sprite, public virtual Plteen::ICreature, protected virtual Plteen::IPlatformMotion {
     public:
         Tuxmon(bool walk_only = false);
         virtual ~Tuxmon() {}

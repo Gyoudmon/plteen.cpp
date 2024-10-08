@@ -3,7 +3,7 @@
 #include <cmath>
 #include <cstdlib>
 
-namespace GYDM {
+namespace Plteen {
 #define fxin(open, v, close) ((open <= v) && (v <= close))
 #define fxout(open, v, close) ((v < open) || (v > close))
 

@@ -21,7 +21,7 @@
 
 #include <deque>
 
-using namespace GYDM;
+using namespace Plteen;
 
 /** NOTE
  *   C-Style casting tries all C++ style casting except dynamic_cast;
@@ -31,7 +31,7 @@ using namespace GYDM;
 #define MATTER_INFO(m) (static_cast<MatterInfo*>(m->info))
 #define SPEECH_INFO(m) (static_cast<SpeechInfo*>(m->info))
 
-namespace GYDM {
+namespace Plteen {
     enum class MotionActionType { Motion, TrackReset, TrackDrawing, PenColor, PenWidth, Heading, Rotation, Stamp };
 
     struct GlidingMotion {
@@ -112,8 +112,8 @@ namespace GYDM {
         };
     };
 
-    struct MatterInfo : public GYDM::IMatterInfo {
-        MatterInfo(GYDM::IPlane* master) : IMatterInfo(master) {}
+    struct MatterInfo : public Plteen::IMatterInfo {
+        MatterInfo(Plteen::IPlane* master) : IMatterInfo(master) {}
         virtual ~MatterInfo() noexcept;
 
         float x = 0.0F;
@@ -157,9 +157,9 @@ namespace GYDM {
         IMatter* prev = nullptr;
     };
 
-    class SpeechInfo : public GYDM::IMatterInfo {
+    class SpeechInfo : public Plteen::IMatterInfo {
     public:
-        SpeechInfo(GYDM::IPlane* master) : IMatterInfo(master) {}
+        SpeechInfo(Plteen::IPlane* master) : IMatterInfo(master) {}
         virtual ~SpeechInfo() {}
 
     public:
@@ -183,7 +183,7 @@ namespace GYDM {
         uint32_t refcount = 0;
     };
 
-    GYDM::MatterInfo::~MatterInfo() noexcept {
+    Plteen::MatterInfo::~MatterInfo() noexcept {
         if (this->bubble != nullptr) {
             auto speech_info = dynamic_cast<SpeechInfo*>(this->bubble->info);
 
@@ -360,14 +360,14 @@ static inline Box unsafe_get_matter_bound(IMatter* m, MatterInfo* info) {
     return m->get_bounding_box() + Dot(info->x, info->y);
 }
 
-static inline void unsafe_add_selected(GYDM::IPlane* master, IMatter* m, MatterInfo* info, bool selected) {
+static inline void unsafe_add_selected(Plteen::IPlane* master, IMatter* m, MatterInfo* info, bool selected) {
     master->on_select(m, selected);
     info->selected = selected;
     master->after_select(m, selected);
     master->notify_updated();
 }
 
-static inline void unsafe_set_selected(GYDM::IPlane* master, IMatter* m, MatterInfo* info) {
+static inline void unsafe_set_selected(Plteen::IPlane* master, IMatter* m, MatterInfo* info) {
     master->begin_update_sequence();
     master->no_selected();
     unsafe_add_selected(master, m, info, true);
@@ -403,7 +403,7 @@ Plane::~Plane() {
     this->erase();
 }
 
-void GYDM::Plane::notify_matter_ready(IMatter* m) {
+void Plteen::Plane::notify_matter_ready(IMatter* m) {
     MatterInfo* info = plane_matter_info(this, m);
 
     if (info != nullptr) {
@@ -415,7 +415,7 @@ void GYDM::Plane::notify_matter_ready(IMatter* m) {
     }
 }
 
-void GYDM::Plane::bring_to_front(IMatter* m, IMatter* target) {
+void Plteen::Plane::bring_to_front(IMatter* m, IMatter* target) {
     MatterInfo* tinfo = plane_matter_info(this, target);
 
     if (tinfo == nullptr) {
@@ -444,7 +444,7 @@ void GYDM::Plane::bring_to_front(IMatter* m, IMatter* target) {
     }
 }
 
-void GYDM::Plane::bring_forward(IMatter* m, int n) {
+void Plteen::Plane::bring_forward(IMatter* m, int n) {
     MatterInfo* sinfo = plane_matter_info(this, m);
     
     if (sinfo != nullptr) {
@@ -460,7 +460,7 @@ void GYDM::Plane::bring_forward(IMatter* m, int n) {
     }
 }
 
-void GYDM::Plane::send_to_back(IMatter* m, IMatter* target) {
+void Plteen::Plane::send_to_back(IMatter* m, IMatter* target) {
     MatterInfo* tinfo = plane_matter_info(this, target);
 
     if (tinfo == nullptr) {
@@ -489,7 +489,7 @@ void GYDM::Plane::send_to_back(IMatter* m, IMatter* target) {
     }
 }
 
-void GYDM::Plane::send_backward(IMatter* m, int n) {
+void Plteen::Plane::send_backward(IMatter* m, int n) {
     MatterInfo* sinfo = plane_matter_info(this, m);
     
     if (sinfo != nullptr) {
@@ -504,7 +504,7 @@ void GYDM::Plane::send_backward(IMatter* m, int n) {
     }
 }
 
-void GYDM::Plane::insert_at(IMatter* m, const Position& pos, const Port& p, const Vector& vec) {
+void Plteen::Plane::insert_at(IMatter* m, const Position& pos, const Port& p, const Vector& vec) {
     if (m->info == nullptr) {
         MatterInfo* info = bind_matter_ownership(this, m);
         
@@ -526,7 +526,7 @@ void GYDM::Plane::insert_at(IMatter* m, const Position& pos, const Port& p, cons
     }
 }
 
-void GYDM::Plane::insert_as_speech_bubble(IMatter* m) {
+void Plteen::Plane::insert_as_speech_bubble(IMatter* m) {
     if (m->info == nullptr) {
         SpeechInfo* info = bind_speech_owership(this, m);
 
@@ -537,7 +537,7 @@ void GYDM::Plane::insert_as_speech_bubble(IMatter* m) {
     }
 }
 
-void GYDM::Plane::handle_new_matter(IMatter* m, MatterInfo* info, const Position& pos, const Port& p, float dx, float dy) {
+void Plteen::Plane::handle_new_matter(IMatter* m, MatterInfo* info, const Position& pos, const Port& p, float dx, float dy) {
     this->begin_update_sequence();
     m->construct(this->drawing_context());
     this->move_matter_to_location_via_info(m, info, pos, p, dx, dy);
@@ -551,14 +551,14 @@ void GYDM::Plane::handle_new_matter(IMatter* m, MatterInfo* info, const Position
 }
 
 
-void GYDM::Plane::handle_new_matter(IMatter* m, SpeechInfo* info) {
+void Plteen::Plane::handle_new_matter(IMatter* m, SpeechInfo* info) {
     this->begin_update_sequence();
     m->construct(this->drawing_context());
     this->notify_updated();
     this->end_update_sequence();
 }
 
-void GYDM::Plane::remove(IMatter* m, bool needs_delete) {
+void Plteen::Plane::remove(IMatter* m, bool needs_delete) {
     MatterInfo* info = plane_matter_info(this, m);
 
     if (info != nullptr) {
@@ -586,7 +586,7 @@ void GYDM::Plane::remove(IMatter* m, bool needs_delete) {
     }
 }
 
-void GYDM::Plane::erase() {
+void Plteen::Plane::erase() {
     IMatter* temp_head = this->head_matter;
         
     if (this->head_matter != nullptr) {
@@ -613,7 +613,7 @@ void GYDM::Plane::erase() {
     }
 }
 
-void GYDM::Plane::move(IMatter* m, double length, bool ignore_gliding) {
+void Plteen::Plane::move(IMatter* m, double length, bool ignore_gliding) {
     if (m != nullptr) {
         MatterInfo* info = plane_matter_info(this, m);
 
@@ -639,7 +639,7 @@ void GYDM::Plane::move(IMatter* m, double length, bool ignore_gliding) {
     }
 }
 
-void GYDM::Plane::move(IMatter* m, const Vector& vec, bool ignore_gliding) {
+void Plteen::Plane::move(IMatter* m, const Vector& vec, bool ignore_gliding) {
     if (m != nullptr) {
         MatterInfo* info = plane_matter_info(this, m);
 
@@ -665,7 +665,7 @@ void GYDM::Plane::move(IMatter* m, const Vector& vec, bool ignore_gliding) {
     }
 }
 
-void GYDM::Plane::move_to(IMatter* m, const Position& pos, const Port& p, const Vector& vec) {
+void Plteen::Plane::move_to(IMatter* m, const Position& pos, const Port& p, const Vector& vec) {
     MatterInfo* info = plane_matter_info(this, m);
     
     if (info != nullptr) {
@@ -675,7 +675,7 @@ void GYDM::Plane::move_to(IMatter* m, const Position& pos, const Port& p, const 
     }
 }
 
-void GYDM::Plane::glide(double sec, IMatter* m, double length) {
+void Plteen::Plane::glide(double sec, IMatter* m, double length) {
     if (m != nullptr) {
         MatterInfo* info = plane_matter_info(this, m);
 
@@ -697,7 +697,7 @@ void GYDM::Plane::glide(double sec, IMatter* m, double length) {
     }
 }
 
-void GYDM::Plane::glide(double sec, IMatter* m, const Vector& vec) {
+void Plteen::Plane::glide(double sec, IMatter* m, const Vector& vec) {
     if (m != nullptr) {
         MatterInfo* info = plane_matter_info(this, m);
 
@@ -719,7 +719,7 @@ void GYDM::Plane::glide(double sec, IMatter* m, const Vector& vec) {
     }
 }
 
-void GYDM::Plane::glide_to(double sec, IMatter* m, const Position& pos, const Port& p, const Vector& vec) {
+void Plteen::Plane::glide_to(double sec, IMatter* m, const Position& pos, const Port& p, const Vector& vec) {
     MatterInfo* info = plane_matter_info(this, m);
     
     if (info != nullptr) {
@@ -727,7 +727,7 @@ void GYDM::Plane::glide_to(double sec, IMatter* m, const Position& pos, const Po
     }
 }
 
-void GYDM::Plane::clear_motion_actions(IMatter* m) {
+void Plteen::Plane::clear_motion_actions(IMatter* m) {
     MatterInfo* info = plane_matter_info(this, m);
 
     if (info != nullptr) {
@@ -735,7 +735,7 @@ void GYDM::Plane::clear_motion_actions(IMatter* m) {
     }
 }
 
-IMatter* GYDM::Plane::find_matter(const Position& pos, IMatter* after) {
+IMatter* Plteen::Plane::find_matter(const Position& pos, IMatter* after) {
     IMatter* found = nullptr;
 
     if (this->head_matter != nullptr) {
@@ -761,7 +761,7 @@ IMatter* GYDM::Plane::find_matter(const Position& pos, IMatter* after) {
     return found;
 }
 
-IMatter* GYDM::Plane::find_matter(IMatter* collided_matter, IMatter* after) {
+IMatter* Plteen::Plane::find_matter(IMatter* collided_matter, IMatter* after) {
     IMatter* found = nullptr;
     Box self = this->get_matter_bounding_box(collided_matter);
 
@@ -789,7 +789,7 @@ IMatter* GYDM::Plane::find_matter(IMatter* collided_matter, IMatter* after) {
     return found;
 }
 
-IMatter* GYDM::Plane::find_least_recent_matter(const Dot& pos) {
+IMatter* Plteen::Plane::find_least_recent_matter(const Dot& pos) {
     IMatter* found = nullptr;
     uint32_t found_hit = 0xFFFFFFFFU;
 
@@ -827,7 +827,7 @@ IMatter* GYDM::Plane::find_least_recent_matter(const Dot& pos) {
 /**
  * TODO: if we need to check selected matters first? 
  */
-IMatter* GYDM::Plane::find_matter_for_tooltip(const Dot& pos) {
+IMatter* Plteen::Plane::find_matter_for_tooltip(const Dot& pos) {
     IMatter* found = nullptr;
 
     if (this->head_matter != nullptr) {
@@ -851,7 +851,7 @@ IMatter* GYDM::Plane::find_matter_for_tooltip(const Dot& pos) {
     return found;
 }
 
-IMatter* GYDM::Plane::find_next_selected_matter(IMatter* start) {
+IMatter* Plteen::Plane::find_next_selected_matter(IMatter* start) {
     IMatter* found = nullptr;
     
     if (start == nullptr) {
@@ -869,7 +869,7 @@ IMatter* GYDM::Plane::find_next_selected_matter(IMatter* start) {
     return found;
 }
 
-GYDM::Dot GYDM::Plane::get_matter_location(IMatter* m, const Port& a) {
+Plteen::Dot Plteen::Plane::get_matter_location(IMatter* m, const Port& a) {
     MatterInfo* info = plane_matter_info(this, m);
     Dot dot(flnan_f, flnan_f);
     
@@ -880,7 +880,7 @@ GYDM::Dot GYDM::Plane::get_matter_location(IMatter* m, const Port& a) {
     return dot;
 }
 
-GYDM::Box GYDM::Plane::get_matter_bounding_box(IMatter* m) {
+Plteen::Box Plteen::Plane::get_matter_bounding_box(IMatter* m) {
     MatterInfo* info = plane_matter_info(this, m);
     Box box;
     
@@ -891,17 +891,17 @@ GYDM::Box GYDM::Plane::get_matter_bounding_box(IMatter* m) {
     return box;
 }
 
-GYDM::Box GYDM::Plane::get_bounding_box() {
+Plteen::Box Plteen::Plane::get_bounding_box() {
     this->recalculate_matters_extent_when_invalid();
 
     return this->extent;
 }
 
-void GYDM::Plane::size_cache_invalid() {
+void Plteen::Plane::size_cache_invalid() {
     this->extent.invalidate();
 }
 
-void GYDM::Plane::recalculate_matters_extent_when_invalid() {
+void Plteen::Plane::recalculate_matters_extent_when_invalid() {
     if (this->extent.is_empty()) {
         if (this->head_matter == nullptr) {
             this->extent *= 0.0F;
@@ -918,7 +918,7 @@ void GYDM::Plane::recalculate_matters_extent_when_invalid() {
     }
 }
 
-void GYDM::Plane::add_selected(IMatter* m) {
+void Plteen::Plane::add_selected(IMatter* m) {
     if (this->can_select_multiple()) {
         MatterInfo* info = plane_matter_info(this, m);
 
@@ -930,7 +930,7 @@ void GYDM::Plane::add_selected(IMatter* m) {
     }
 }
 
-void GYDM::Plane::remove_selected(IMatter* m) {
+void Plteen::Plane::remove_selected(IMatter* m) {
     MatterInfo* info = plane_matter_info(this, m);
 
     if ((info != nullptr) && (info->selected)) {
@@ -938,7 +938,7 @@ void GYDM::Plane::remove_selected(IMatter* m) {
     }
 }
 
-void GYDM::Plane::set_selected(IMatter* m) {
+void Plteen::Plane::set_selected(IMatter* m) {
     MatterInfo* info = plane_matter_info(this, m);
 
     if ((info != nullptr) && (!info->selected)) {
@@ -948,11 +948,11 @@ void GYDM::Plane::set_selected(IMatter* m) {
     }
 }
 
-void GYDM::Plane::no_selected() {
+void Plteen::Plane::no_selected() {
     this->no_selected_except(nullptr);
 }
 
-void GYDM::Plane::no_selected_except(IMatter* m) {
+void Plteen::Plane::no_selected_except(IMatter* m) {
     if (this->head_matter != nullptr) {
         IMatter* child = this->head_matter;
 
@@ -972,7 +972,7 @@ void GYDM::Plane::no_selected_except(IMatter* m) {
     }
 }
 
-bool GYDM::Plane::is_selected(IMatter* m) {
+bool Plteen::Plane::is_selected(IMatter* m) {
     MatterInfo* info = plane_matter_info(this, m);
     bool selected = false;
 
@@ -983,7 +983,7 @@ bool GYDM::Plane::is_selected(IMatter* m) {
     return selected;
 }
 
-size_t GYDM::Plane::count_selected() {
+size_t Plteen::Plane::count_selected() {
     size_t n = 0U;
 
     if (this->head_matter != nullptr) {
@@ -1003,11 +1003,11 @@ size_t GYDM::Plane::count_selected() {
     return n;
 }
 
-IMatter* GYDM::Plane::get_focused_matter() {
+IMatter* Plteen::Plane::get_focused_matter() {
     return this->focused_matter;
 }
 
-void GYDM::Plane::set_caret_owner(IMatter* m) {
+void Plteen::Plane::set_caret_owner(IMatter* m) {
     if (this->focused_matter != m) {
         if ((m != nullptr) && (m->events_allowed())) {
             MatterInfo* info = plane_matter_info(this, m);
@@ -1034,25 +1034,25 @@ void GYDM::Plane::set_caret_owner(IMatter* m) {
 }
 
 /************************************************************************************************/
-void GYDM::Plane::on_char(char key, uint16_t modifiers, uint8_t repeats, bool pressed) {
+void Plteen::Plane::on_char(char key, uint16_t modifiers, uint8_t repeats, bool pressed) {
     if (this->focused_matter != nullptr) {
         this->focused_matter->on_char(key, modifiers, repeats, pressed);
     }
 }
 
-void GYDM::Plane::on_text(const char* text, size_t size, bool entire) {
+void Plteen::Plane::on_text(const char* text, size_t size, bool entire) {
     if (this->focused_matter != nullptr) {
         this->focused_matter->on_text(text, size, entire);
     }
 }
 
-void GYDM::Plane::on_editing_text(const char* text, int pos, int span) {
+void Plteen::Plane::on_editing_text(const char* text, int pos, int span) {
     if (this->focused_matter != nullptr) {
         this->focused_matter->on_editing_text(text, pos, span);
     }
 }
 
-void GYDM::Plane::on_tap(IMatter* m, float local_x, float local_y) {
+void Plteen::Plane::on_tap(IMatter* m, float local_x, float local_y) {
     MatterInfo* info = plane_matter_info(this, m);
 
     if (info != nullptr) {
@@ -1076,7 +1076,7 @@ void GYDM::Plane::on_tap(IMatter* m, float local_x, float local_y) {
     }
 }
 
-void GYDM::Plane::on_tap_selected(IMatter* m, float local_x, float local_y) {
+void Plteen::Plane::on_tap_selected(IMatter* m, float local_x, float local_y) {
     MatterInfo* info = plane_matter_info(this, m);
 
     if (info != nullptr) {
@@ -1084,7 +1084,7 @@ void GYDM::Plane::on_tap_selected(IMatter* m, float local_x, float local_y) {
     }
 }
 
-bool GYDM::Plane::on_pointer_pressed(uint8_t button, float x, float y, uint8_t clicks) {
+bool Plteen::Plane::on_pointer_pressed(uint8_t button, float x, float y, uint8_t clicks) {
     bool handled = false;
 
     switch (button) {
@@ -1111,7 +1111,7 @@ bool GYDM::Plane::on_pointer_pressed(uint8_t button, float x, float y, uint8_t c
     return handled;
 }
 
-bool GYDM::Plane::on_pointer_move(uint32_t state, float x, float y, float dx, float dy) {
+bool Plteen::Plane::on_pointer_move(uint32_t state, float x, float y, float dx, float dy) {
     bool handled = false;
 
     if (state == 0) {
@@ -1165,7 +1165,7 @@ bool GYDM::Plane::on_pointer_move(uint32_t state, float x, float y, float dx, fl
     return handled;
 }
 
-bool GYDM::Plane::on_pointer_released(uint8_t button, float x, float y, uint8_t clicks) {
+bool Plteen::Plane::on_pointer_released(uint8_t button, float x, float y, uint8_t clicks) {
     bool handled = false;
 
     switch (button) {
@@ -1210,13 +1210,13 @@ bool GYDM::Plane::on_pointer_released(uint8_t button, float x, float y, uint8_t 
     return handled;
 }
 
-bool GYDM::Plane::on_scroll(int horizon, int vertical, float hprecise, float vprecise) {
+bool Plteen::Plane::on_scroll(int horizon, int vertical, float hprecise, float vprecise) {
     bool handled = false;
 
     return handled;
 }
 
-bool GYDM::Plane::say_goodbye_to_hover_matter(uint32_t state, float x, float y, float dx, float dy) {
+bool Plteen::Plane::say_goodbye_to_hover_matter(uint32_t state, float x, float y, float dx, float dy) {
     bool done = false;
 
     if (this->hovering_matter != nullptr) {
@@ -1239,7 +1239,7 @@ bool GYDM::Plane::say_goodbye_to_hover_matter(uint32_t state, float x, float y, 
     return done;
 }
 
-void GYDM::Plane::on_enter(IPlane* from) {
+void Plteen::Plane::on_enter(IPlane* from) {
     this->mission_done = false;
 
     if (this->sentry != nullptr) {
@@ -1249,7 +1249,7 @@ void GYDM::Plane::on_enter(IPlane* from) {
     IPlane::on_enter(from);
 }
 
-void GYDM::Plane::mission_complete() {
+void Plteen::Plane::mission_complete() {
     if (this->sentry != nullptr) {
         this->sentry->play_goodbye(1);
         this->sentry->stop(1);
@@ -1259,16 +1259,16 @@ void GYDM::Plane::mission_complete() {
     this->mission_done = true;
 }
 
-bool GYDM::Plane::has_mission_completed() {
+bool Plteen::Plane::has_mission_completed() {
     return this->mission_done &&
             ((this->sentry == nullptr) || !this->sentry->in_playing());
 }
 
-bool GYDM::Plane::can_select(IMatter* m) {
+bool Plteen::Plane::can_select(IMatter* m) {
     return this->sentry == m;
 }
 
-void GYDM::Plane::set_tooltip_matter(IMatter* m, const Vector& offset) {
+void Plteen::Plane::set_tooltip_matter(IMatter* m, const Vector& offset) {
     this->begin_update_sequence();
 
     if ((this->tooltip != nullptr) && !this->tooltip->visible()) {
@@ -1282,7 +1282,7 @@ void GYDM::Plane::set_tooltip_matter(IMatter* m, const Vector& offset) {
     this->end_update_sequence();
 }
 
-void GYDM::Plane::place_tooltip(GYDM::IMatter* target) {
+void Plteen::Plane::place_tooltip(Plteen::IMatter* target) {
     float width, height;
     Dot tt;
 
@@ -1307,7 +1307,7 @@ void GYDM::Plane::place_tooltip(GYDM::IMatter* target) {
 }
 
 /************************************************************************************************/
-void GYDM::Plane::set_matter_fps(IMatter* m, int fps, bool restart) {
+void Plteen::Plane::set_matter_fps(IMatter* m, int fps, bool restart) {
     MatterInfo* info = plane_matter_info(this, m);
 
     if (info != nullptr) {
@@ -1315,12 +1315,12 @@ void GYDM::Plane::set_matter_fps(IMatter* m, int fps, bool restart) {
     }
 }
 
-void GYDM::Plane::set_local_fps(int fps, bool restart) {
+void Plteen::Plane::set_local_fps(int fps, bool restart) {
     unsafe_set_local_fps(fps, restart, this->local_frame_delta, this->local_frame_count, this->local_elapse);
 }
 
 
-void GYDM::Plane::notify_matter_timeline_restart(IMatter* m, uint32_t count0, int duration) {
+void Plteen::Plane::notify_matter_timeline_restart(IMatter* m, uint32_t count0, int duration) {
     MatterInfo* info = plane_matter_info(this, m);
 
     if (info != nullptr) {
@@ -1329,7 +1329,7 @@ void GYDM::Plane::notify_matter_timeline_restart(IMatter* m, uint32_t count0, in
     }
 }
 
-void GYDM::Plane::on_elapse(uint64_t count, uint32_t interval, uint64_t uptime) {
+void Plteen::Plane::on_elapse(uint64_t count, uint32_t interval, uint64_t uptime) {
     uint32_t elapse = 0U;
 
     if (this->head_matter != nullptr) {
@@ -1374,7 +1374,7 @@ void GYDM::Plane::on_elapse(uint64_t count, uint32_t interval, uint64_t uptime) 
     }
 }
 
-void GYDM::Plane::draw(dc_t* dc, float X, float Y, float Width, float Height) {
+void Plteen::Plane::draw(dc_t* dc, float X, float Y, float Width, float Height) {
     float dsX = flmax(0.0F, X);
     float dsY = flmax(0.0F, Y);
     float dsWidth = X + Width;
@@ -1435,11 +1435,11 @@ void GYDM::Plane::draw(dc_t* dc, float X, float Y, float Width, float Height) {
     }
 }
 
-void GYDM::Plane::draw_visible_selection(dc_t* dc, float x, float y, float width, float height) {
+void Plteen::Plane::draw_visible_selection(dc_t* dc, float x, float y, float width, float height) {
     dc->draw_rect(x, y, width, height, 0x00FFFFU);
 }
 
-void GYDM::Plane::draw_matter(dc_t* dc, IMatter* child, MatterInfo* info, float X, float Y, float dsX, float dsY, float dsWidth, float dsHeight) {
+void Plteen::Plane::draw_matter(dc_t* dc, IMatter* child, MatterInfo* info, float X, float Y, float dsX, float dsY, float dsWidth, float dsHeight) {
     float mx, my;
     SDL_Rect clip;
     
@@ -1473,7 +1473,7 @@ void GYDM::Plane::draw_matter(dc_t* dc, IMatter* child, MatterInfo* info, float 
     }
 }
 
-void GYDM::Plane::draw_speech(dc_t* dc, IMatter* child, MatterInfo* info, float Width, float Height, float X, float Y, float dsX, float dsY, float dsWidth, float dsHeight) {
+void Plteen::Plane::draw_speech(dc_t* dc, IMatter* child, MatterInfo* info, float Width, float Height, float X, float Y, float dsX, float dsY, float dsWidth, float dsHeight) {
     if (is_matter_bubble_showing(child, info)) {
         float ix, iy, bx, by, bwidth, bheight, dx, dy;
         Port mp, bp;
@@ -1523,7 +1523,7 @@ void GYDM::Plane::draw_speech(dc_t* dc, IMatter* child, MatterInfo* info, float 
 }
 
 /*************************************************************************************************/
-bool GYDM::Plane::do_moving_via_info(IMatter* m, MatterInfo* info, const Position& pos, bool absolute, bool ignore_track, bool heading) {
+bool Plteen::Plane::do_moving_via_info(IMatter* m, MatterInfo* info, const Position& pos, bool absolute, bool ignore_track, bool heading) {
     bool moved = false;
     Dot dot = pos.calculate_point();
     float x = dot.x;
@@ -1553,7 +1553,7 @@ bool GYDM::Plane::do_moving_via_info(IMatter* m, MatterInfo* info, const Positio
     return moved;
 }
 
-bool GYDM::Plane::do_gliding_via_info(IMatter* m, MatterInfo* info, const Position& pos, double sec, double sec_delta, bool absolute, bool ignore_track) {
+bool Plteen::Plane::do_gliding_via_info(IMatter* m, MatterInfo* info, const Position& pos, double sec, double sec_delta, bool absolute, bool ignore_track) {
     bool moved = false;
     Dot dot = pos.calculate_point();
     float x = dot.x;
@@ -1595,7 +1595,7 @@ bool GYDM::Plane::do_gliding_via_info(IMatter* m, MatterInfo* info, const Positi
     return moved;
 }
 
-bool GYDM::Plane::move_matter_via_info(IMatter* m, MatterInfo* info, double length, bool ignore_gliding, bool heading) {
+bool Plteen::Plane::move_matter_via_info(IMatter* m, MatterInfo* info, double length, bool ignore_gliding, bool heading) {
     bool moved = false;
 
     if ((!info->gliding) || ignore_gliding) {
@@ -1611,7 +1611,7 @@ bool GYDM::Plane::move_matter_via_info(IMatter* m, MatterInfo* info, double leng
     return moved;
 }
 
-bool GYDM::Plane::move_matter_via_info(IMatter* m, MatterInfo* info, const Position& pos, bool absolute, bool ignore_gliding, bool heading) {
+bool Plteen::Plane::move_matter_via_info(IMatter* m, MatterInfo* info, const Position& pos, bool absolute, bool ignore_gliding, bool heading) {
     bool moved = false;
 
     if ((!info->gliding) || ignore_gliding) {
@@ -1625,7 +1625,7 @@ bool GYDM::Plane::move_matter_via_info(IMatter* m, MatterInfo* info, const Posit
     return moved;
 }
 
-bool GYDM::Plane::glide_matter_via_info(IMatter* m, MatterInfo* info, double sec, double length) {
+bool Plteen::Plane::glide_matter_via_info(IMatter* m, MatterInfo* info, double sec, double length) {
     bool moved = false;
 
     if (!info->gliding) {
@@ -1637,7 +1637,7 @@ bool GYDM::Plane::glide_matter_via_info(IMatter* m, MatterInfo* info, double sec
     return moved;
 }
 
-bool GYDM::Plane::glide_matter_via_info(IMatter* m, MatterInfo* info, double sec, const Position& pos, bool absolute, bool heading) {
+bool Plteen::Plane::glide_matter_via_info(IMatter* m, MatterInfo* info, double sec, const Position& pos, bool absolute, bool heading) {
     bool moved = false;
     
     if (sec <= 0.0F) {
@@ -1660,7 +1660,7 @@ bool GYDM::Plane::glide_matter_via_info(IMatter* m, MatterInfo* info, double sec
     return moved;
 }
 
-bool GYDM::Plane::glide_matter_to_location_via_info(IMatter* m, MatterInfo* info, double sec, const Position& pos, const Port& p, float dx, float dy, bool heading) {
+bool Plteen::Plane::glide_matter_to_location_via_info(IMatter* m, MatterInfo* info, double sec, const Position& pos, const Port& p, float dx, float dy, bool heading) {
     float xoff = dx;
     float yoff = dy;
     bool moved = false;
@@ -1684,11 +1684,11 @@ bool GYDM::Plane::glide_matter_to_location_via_info(IMatter* m, MatterInfo* info
     return moved;
 }
 
-bool GYDM::Plane::move_matter_to_location_via_info(IMatter* m, MatterInfo* info, const Position& pos, const Port& p, float dx, float dy) {
+bool Plteen::Plane::move_matter_to_location_via_info(IMatter* m, MatterInfo* info, const Position& pos, const Port& p, float dx, float dy) {
     return this->glide_matter_to_location_via_info(m, info, 0.0F, pos, p, dx, dy, false);
 }
 
-void GYDM::Plane::handle_queued_motion(IMatter* m, MatterInfo* info, float dwidth, float dheight) {
+void Plteen::Plane::handle_queued_motion(IMatter* m, MatterInfo* info, float dwidth, float dheight) {
     if (!m->motion_stopped()) {
         Box box = m->get_bounding_box();
         float cwidth = box.width();
@@ -1797,7 +1797,7 @@ void GYDM::Plane::handle_queued_motion(IMatter* m, MatterInfo* info, float dwidt
     }
 }
 
-bool GYDM::Plane::do_vector_moving(IMatter* m, MatterInfo* info, double length, bool heading) {
+bool Plteen::Plane::do_vector_moving(IMatter* m, MatterInfo* info, double length, bool heading) {
     double x, y;
 
     orthogonal_decompose(length, m->get_heading(), &x, &y);
@@ -1805,7 +1805,7 @@ bool GYDM::Plane::do_vector_moving(IMatter* m, MatterInfo* info, double length, 
     return this->move_matter_via_info(m, info, Position(x, y), false, true, heading);
 }
 
-bool GYDM::Plane::do_vector_gliding(IMatter* m, MatterInfo* info, double length, double sec) {
+bool Plteen::Plane::do_vector_gliding(IMatter* m, MatterInfo* info, double length, double sec) {
     double x, y;
 
     orthogonal_decompose(length, m->get_heading(), &x, &y);
@@ -1813,7 +1813,7 @@ bool GYDM::Plane::do_vector_gliding(IMatter* m, MatterInfo* info, double length,
     return this->glide_matter_via_info(m, info, sec, Position(x, y), false, true);
 }
 
-bool GYDM::Plane::is_matter_found(IMatter* m, MatterInfo* info, const Dot& dot) {
+bool Plteen::Plane::is_matter_found(IMatter* m, MatterInfo* info, const Dot& dot) {
     Dot lp = Dot(dot.x - info->x, dot.y - info->y);
 
     /** NOTE:
@@ -1824,7 +1824,7 @@ bool GYDM::Plane::is_matter_found(IMatter* m, MatterInfo* info, const Dot& dot) 
 }
 
 /*************************************************************************************************/
-void GYDM::Plane::bind_canvas(IMatter* m, GYDM::Tracklet* canvas, const Port& p, bool shared) {
+void Plteen::Plane::bind_canvas(IMatter* m, Plteen::Tracklet* canvas, const Port& p, bool shared) {
     MatterInfo* info = plane_matter_info(this, m);
 
     if (info != nullptr) {
@@ -1838,7 +1838,7 @@ void GYDM::Plane::bind_canvas(IMatter* m, GYDM::Tracklet* canvas, const Port& p,
     }
 }
 
-void GYDM::Plane::reset_pen(IMatter* m) {
+void Plteen::Plane::reset_pen(IMatter* m) {
     MatterInfo* info = plane_matter_info(this, m);
 
     if (info != nullptr) {
@@ -1846,7 +1846,7 @@ void GYDM::Plane::reset_pen(IMatter* m) {
     }
 }
 
-void GYDM::Plane::stamp(IMatter* m) {
+void Plteen::Plane::stamp(IMatter* m) {
     MatterInfo* info = plane_matter_info(this, m);
 
     if (info != nullptr) {
@@ -1854,7 +1854,7 @@ void GYDM::Plane::stamp(IMatter* m) {
     }
 }
 
-void GYDM::Plane::set_drawing(IMatter* m, bool yes_or_no) {
+void Plteen::Plane::set_drawing(IMatter* m, bool yes_or_no) {
     MatterInfo* info = plane_matter_info(this, m);
 
     if ((info != nullptr) && (info->master != nullptr)) {
@@ -1862,7 +1862,7 @@ void GYDM::Plane::set_drawing(IMatter* m, bool yes_or_no) {
     }
 }
 
-void GYDM::Plane::set_pen_width(IMatter* m, uint8_t width) {
+void Plteen::Plane::set_pen_width(IMatter* m, uint8_t width) {
     MatterInfo* info = plane_matter_info(this, m);
 
     if ((info != nullptr) && (info->master != nullptr)) {
@@ -1870,7 +1870,7 @@ void GYDM::Plane::set_pen_width(IMatter* m, uint8_t width) {
     }
 }
 
-void GYDM::Plane::set_pen_color(IMatter* m, const RGBA& color) {
+void Plteen::Plane::set_pen_color(IMatter* m, const RGBA& color) {
     MatterInfo* info = plane_matter_info(this, m);
 
     if ((info != nullptr) && (info->master != nullptr)) {
@@ -1878,7 +1878,7 @@ void GYDM::Plane::set_pen_color(IMatter* m, const RGBA& color) {
     }
 }
 
-void GYDM::Plane::set_heading(IMatter* m, double direction, bool is_radian) {
+void Plteen::Plane::set_heading(IMatter* m, double direction, bool is_radian) {
     MatterInfo* info = plane_matter_info(this, m);
 
     if ((info != nullptr) && (info->master != nullptr)) {
@@ -1886,7 +1886,7 @@ void GYDM::Plane::set_heading(IMatter* m, double direction, bool is_radian) {
     }
 }
 
-void GYDM::Plane::turn(IMatter* m, double theta, bool is_radian) {
+void Plteen::Plane::turn(IMatter* m, double theta, bool is_radian) {
     MatterInfo* info = plane_matter_info(this, m);
 
     if ((info != nullptr) && (info->master != nullptr)) {
@@ -1895,7 +1895,7 @@ void GYDM::Plane::turn(IMatter* m, double theta, bool is_radian) {
 }
 
 /*************************************************************************************************/
-void GYDM::Plane::log_message(Log level, const std::string& msg) {
+void Plteen::Plane::log_message(Log level, const std::string& msg) {
     if (this->sentry != nullptr) {
         RGBA color;
 
@@ -1914,7 +1914,7 @@ void GYDM::Plane::log_message(Log level, const std::string& msg) {
     }
 }
 
-void GYDM::Plane::say(ISprite* m, double sec, IMatter* message, SpeechBubble type) {
+void Plteen::Plane::say(ISprite* m, double sec, IMatter* message, SpeechBubble type) {
     MatterInfo* info = plane_matter_info(this, m);
 
     if (info != nullptr) {
@@ -1948,7 +1948,7 @@ void GYDM::Plane::say(ISprite* m, double sec, IMatter* message, SpeechBubble typ
     }
 }
 
-void GYDM::Plane::say(ISprite* m, double sec, const std::string& message, const RGBA& color, SpeechBubble type) {
+void Plteen::Plane::say(ISprite* m, double sec, const std::string& message, const RGBA& color, SpeechBubble type) {
     MatterInfo* info = plane_matter_info(this, m);
 
     if (info != nullptr) {
@@ -1962,7 +1962,7 @@ void GYDM::Plane::say(ISprite* m, double sec, const std::string& message, const 
     }
 }
 
-void GYDM::Plane::shh(ISprite* m) {
+void Plteen::Plane::shh(ISprite* m) {
     MatterInfo* info = plane_matter_info(this, m);
 
     if (info != nullptr) {
@@ -1972,11 +1972,11 @@ void GYDM::Plane::shh(ISprite* m) {
     }
 }
 
-IMatter* GYDM::Plane::make_bubble_text(const std::string& message, const RGBA& color) {
+IMatter* Plteen::Plane::make_bubble_text(const std::string& message, const RGBA& color) {
     return new Labellet(this->bubble_font, color, "%s", message.c_str());
 }
 
-bool GYDM::Plane::merge_bubble_text(IMatter* bubble, const std::string& message, const RGBA& color) {
+bool Plteen::Plane::merge_bubble_text(IMatter* bubble, const std::string& message, const RGBA& color) {
     auto bmsg = dynamic_cast<ITextlet*>(bubble);
     bool okay = (bmsg != nullptr);
 
@@ -1988,7 +1988,7 @@ bool GYDM::Plane::merge_bubble_text(IMatter* bubble, const std::string& message,
     return okay;
 }
 
-bool GYDM::Plane::is_bubble_showing(IMatter* m, SpeechBubble* type) {
+bool Plteen::Plane::is_bubble_showing(IMatter* m, SpeechBubble* type) {
     MatterInfo* info = plane_matter_info(this, m);
     bool yes = is_matter_bubble_showing(m, info);
 
@@ -1999,13 +1999,13 @@ bool GYDM::Plane::is_bubble_showing(IMatter* m, SpeechBubble* type) {
     return yes;
 }
 
-void GYDM::Plane::place_speech_bubble(IMatter* m, float bubble_width, float bubble_height, float Width, float Height, Port* mp, Port* bp, float* dx, float* dy) {
+void Plteen::Plane::place_speech_bubble(IMatter* m, float bubble_width, float bubble_height, float Width, float Height, Port* mp, Port* bp, float* dx, float* dy) {
     mp->reset(0.0F);
     bp->reset(0.618F, 1.0);
     SET_BOXES(dx, dy, 0.0F);
 }
 
-void GYDM::Plane::set_bubble_duration(double second) {
+void Plteen::Plane::set_bubble_duration(double second) {
     if (second <= 0.0) {
         this->set_bubble_duration();
     } else {
@@ -2013,18 +2013,18 @@ void GYDM::Plane::set_bubble_duration(double second) {
     }
 }
 
-void GYDM::Plane::set_bubble_color(const RGBA& border, const RGBA& background) {
+void Plteen::Plane::set_bubble_color(const RGBA& border, const RGBA& background) {
     this->bubble_border = border;
     this->bubble_color = background;
 }
 
-void GYDM::Plane::delete_matter(IMatter* m) {
+void Plteen::Plane::delete_matter(IMatter* m) {
     // m's destructor will delete the associated info object
     delete m;
 }
 
 /*************************************************************************************************/
-bool GYDM::Plane::is_colliding_with_mouse(IMatter* m) {
+bool Plteen::Plane::is_colliding_with_mouse(IMatter* m) {
     Dot mdot = this->get_matter_location(m, MatterPort::LT);
     bool okay = false;
     
@@ -2037,7 +2037,7 @@ bool GYDM::Plane::is_colliding_with_mouse(IMatter* m) {
     return okay;
 }
 
-void GYDM::Plane::glide_to_random_location(double sec, IMatter* m) {
+void Plteen::Plane::glide_to_random_location(double sec, IMatter* m) {
     MatterInfo* info = plane_matter_info(this, m);
     
     if (info != nullptr) {
@@ -2061,7 +2061,7 @@ void GYDM::Plane::glide_to_random_location(double sec, IMatter* m) {
     }
 }
 
-void GYDM::Plane::glide_to_mouse(double sec, IMatter* m, const Port& p, const Vector& vec) {
+void Plteen::Plane::glide_to_mouse(double sec, IMatter* m, const Port& p, const Vector& vec) {
     MatterInfo* info = plane_matter_info(this, m);
     
     if (info != nullptr) {
@@ -2072,21 +2072,21 @@ void GYDM::Plane::glide_to_mouse(double sec, IMatter* m, const Port& p, const Ve
 }
 
 /*************************************************************************************************/
-GYDM::IPlane::IPlane(const char* name) : caption(name) {}
-GYDM::IPlane::IPlane(const std::string& name) : IPlane(name.c_str()) {}
+Plteen::IPlane::IPlane(const char* name) : caption(name) {}
+Plteen::IPlane::IPlane(const std::string& name) : IPlane(name.c_str()) {}
 
-GYDM::IPlane::~IPlane() {
+Plteen::IPlane::~IPlane() {
     if (this->info != nullptr) {
         delete this->info;
         this->info = nullptr;
     }
 }
 
-const char* GYDM::IPlane::name() const {
+const char* Plteen::IPlane::name() const {
     return this->caption.c_str();
 }
 
-IScreen* GYDM::IPlane::master() const {
+IScreen* Plteen::IPlane::master() const {
     IScreen* screen = nullptr;
 
     if (this->info != nullptr) {
@@ -2096,7 +2096,7 @@ IScreen* GYDM::IPlane::master() const {
     return screen;
 }
 
-dc_t* GYDM::IPlane::drawing_context() const {
+dc_t* Plteen::IPlane::drawing_context() const {
     IScreen* screen = this->master();
     dc_t* device = nullptr;
     
@@ -2107,66 +2107,66 @@ dc_t* GYDM::IPlane::drawing_context() const {
     return device;
 }
 
-void GYDM::IPlane::on_enter(IPlane* from) {
+void Plteen::IPlane::on_enter(IPlane* from) {
     float width, height;
 
     this->master()->feed_client_extent(&width, &height);
     this->on_mission_start(width, height);
 }
 
-void GYDM::IPlane::start_input_text(const char* fmt, ...) {
+void Plteen::IPlane::start_input_text(const char* fmt, ...) {
     if (this->info != nullptr) {
         VSNPRINT(prompt, fmt);
         this->info->master->start_input_text(prompt);
     }
 }
 
-void GYDM::IPlane::start_input_text(const std::string& prompt) {
+void Plteen::IPlane::start_input_text(const std::string& prompt) {
     if (this->info != nullptr) {
         this->info->master->start_input_text(prompt);
     }
 }
 
-void GYDM::IPlane::log_message(Log level, const std::string& msg) {
+void Plteen::IPlane::log_message(Log level, const std::string& msg) {
     if (this->info != nullptr) {
         this->info->master->log_message(level, msg);
     }
 }
 
-void GYDM::IPlane::begin_update_sequence() {
+void Plteen::IPlane::begin_update_sequence() {
     if (this->info != nullptr) {
         this->info->master->begin_update_sequence();
     }
 }
 
-bool GYDM::IPlane::is_in_update_sequence() {
+bool Plteen::IPlane::is_in_update_sequence() {
     return ((this->info != nullptr) && this->info->master->is_in_update_sequence());
 }
 
-void GYDM::IPlane::end_update_sequence() {
+void Plteen::IPlane::end_update_sequence() {
     if (this->info != nullptr) {
         this->info->master->end_update_sequence();
     }
 }
 
-bool GYDM::IPlane::should_update() {
+bool Plteen::IPlane::should_update() {
     return ((this->info != nullptr) && this->info->master->should_update());
 }
 
-void GYDM::IPlane::notify_updated(IMatter* m) {
+void Plteen::IPlane::notify_updated(IMatter* m) {
     if (this->info != nullptr) {
         this->info->master->notify_updated();
     }
 }
 
-bool GYDM::IPlane::is_colliding(IMatter* m, IMatter* target) {
+bool Plteen::IPlane::is_colliding(IMatter* m, IMatter* target) {
     Box sbox = this->get_matter_bounding_box(m);
     Box tbox = this->get_matter_bounding_box(target);
 
     return sbox.overlay(tbox);
 }
 
-bool GYDM::IPlane::is_colliding(IMatter* m, IMatter* target, const Port& a) {
+bool Plteen::IPlane::is_colliding(IMatter* m, IMatter* target, const Port& a) {
     Box sbox = this->get_matter_bounding_box(m);
     Dot tdot = this->get_matter_location(target, a);
 
@@ -2174,7 +2174,7 @@ bool GYDM::IPlane::is_colliding(IMatter* m, IMatter* target, const Port& a) {
 }
 
 /*************************************************************************************************/
-void GYDM::IPlane::create_grid(int col, float x, float y, float width) {
+void Plteen::IPlane::create_grid(int col, float x, float y, float width) {
     IScreen* master = this->master();
     float height;
 
@@ -2206,7 +2206,7 @@ void GYDM::IPlane::create_grid(int col, float x, float y, float width) {
     }
 }
 
-void GYDM::IPlane::create_grid(int row, int col, float x, float y, float width, float height) {
+void Plteen::IPlane::create_grid(int row, int col, float x, float y, float width, float height) {
     this->row = row;
     this->column = col;
 
@@ -2240,7 +2240,7 @@ void GYDM::IPlane::create_grid(int row, int col, float x, float y, float width, 
     }
 }
 
-void GYDM::IPlane::create_grid(int row, int col, IMatter* m) {
+void Plteen::IPlane::create_grid(int row, int col, IMatter* m) {
     MatterInfo* info = plane_matter_info(this, m);
 
     if (info != nullptr) {
@@ -2252,7 +2252,7 @@ void GYDM::IPlane::create_grid(int row, int col, IMatter* m) {
     }
 }
 
-void GYDM::IPlane::create_grid(float cell_width, float x, float y, int col) {
+void Plteen::IPlane::create_grid(float cell_width, float x, float y, int col) {
     IScreen* master = this->master();
     float height;
 
@@ -2276,7 +2276,7 @@ void GYDM::IPlane::create_grid(float cell_width, float x, float y, int col) {
     }
 }
 
-void GYDM::IPlane::create_grid(float cell_width, float cell_height, float x, float y, int row, int col) {
+void Plteen::IPlane::create_grid(float cell_width, float cell_height, float x, float y, int row, int col) {
     this->column = col;
     this->row = row;
 
@@ -2307,7 +2307,7 @@ void GYDM::IPlane::create_grid(float cell_width, float cell_height, float x, flo
     }
 }
 
-int GYDM::IPlane::grid_cell_index(float x, float y, int* r, int* c) {
+int Plteen::IPlane::grid_cell_index(float x, float y, int* r, int* c) {
     int row = int(flfloor((y - this->grid_y) / this->cell_height));
     int col = int(flfloor((x - this->grid_x) / this->cell_width));
     
@@ -2316,17 +2316,17 @@ int GYDM::IPlane::grid_cell_index(float x, float y, int* r, int* c) {
     return row * this->column + col;
 }
 
-int GYDM::IPlane::grid_cell_index(IMatter* m, int* r, int* c, const Port& a) {
+int Plteen::IPlane::grid_cell_index(IMatter* m, int* r, int* c, const Port& a) {
     Dot dot = this->get_matter_location(m, a);
     
     return this->grid_cell_index(dot.x, dot.y, r, c);    
 }
 
-GYDM::Box GYDM::IPlane::get_grid_cell_bounding_box() {
+Plteen::Box Plteen::IPlane::get_grid_cell_bounding_box() {
     return { this->cell_width, this->cell_height };
 }
 
-Dot GYDM::IPlane::get_grid_cell_location(int idx, const Port& a) {
+Dot Plteen::IPlane::get_grid_cell_location(int idx, const Port& a) {
     if (idx < 0) {
         idx += this->column * this->row;
     }
@@ -2341,7 +2341,7 @@ Dot GYDM::IPlane::get_grid_cell_location(int idx, const Port& a) {
     }
 }
 
-Dot GYDM::IPlane::get_grid_cell_location(int row, int col, const Port& a) {
+Dot Plteen::IPlane::get_grid_cell_location(int row, int col, const Port& a) {
     Dot dot;
     /** NOTE
      * Both `row` and `col` are just hints,
@@ -2363,50 +2363,50 @@ Dot GYDM::IPlane::get_grid_cell_location(int row, int col, const Port& a) {
     return dot;
 }
 
-void GYDM::IPlane::insert_at_grid(IMatter* m, int idx, const Port& p, const Vector& vec) {
+void Plteen::IPlane::insert_at_grid(IMatter* m, int idx, const Port& p, const Vector& vec) {
     this->insert_at(m, this->get_grid_cell_location(idx, p), p, vec);
 }
 
-void GYDM::IPlane::insert_at_grid(IMatter* m, int row, int col, const Port& p, const Vector& vec) {
+void Plteen::IPlane::insert_at_grid(IMatter* m, int row, int col, const Port& p, const Vector& vec) {
     this->insert_at(m, this->get_grid_cell_location(row, col, p), p, vec);
 }
 
-void GYDM::IPlane::move_to_grid(IMatter* m, int idx, const Port& p, const Vector& vec) {
+void Plteen::IPlane::move_to_grid(IMatter* m, int idx, const Port& p, const Vector& vec) {
     this->move_to(m, this->get_grid_cell_location(idx, p), p, vec);
 }
 
-void GYDM::IPlane::move_to_grid(IMatter* m, int row, int col, const Port& p, const Vector& vec) {
+void Plteen::IPlane::move_to_grid(IMatter* m, int row, int col, const Port& p, const Vector& vec) {
     this->move_to(m, this->get_grid_cell_location(row, col, p), p, vec);
 }
 
-void GYDM::IPlane::glide_to_grid(double sec, IMatter* m, int idx, const Port& p, const Vector& vec) {
+void Plteen::IPlane::glide_to_grid(double sec, IMatter* m, int idx, const Port& p, const Vector& vec) {
     this->glide_to(sec, m, this->get_grid_cell_location(idx, p), p, vec);
 }
 
-void GYDM::IPlane::glide_to_grid(double sec, IMatter* m, int row, int col, const Port& p, const Vector& vec) {
+void Plteen::IPlane::glide_to_grid(double sec, IMatter* m, int row, int col, const Port& p, const Vector& vec) {
     this->glide_to(sec, m, this->get_grid_cell_location(row, col, p), p, vec);
 }
 
 /*************************************************************************************************/
-bool GYDM::IPlane::in_speech(ISprite* m) {
+bool Plteen::IPlane::in_speech(ISprite* m) {
     return this->is_bubble_showing(m, nullptr);
 }
 
-bool GYDM::IPlane::is_speaking(ISprite* m) {
+bool Plteen::IPlane::is_speaking(ISprite* m) {
     SpeechBubble type;
     bool showing = this->is_bubble_showing(m, &type);
 
     return showing && (type == SpeechBubble::Default);
 }
 
-bool GYDM::IPlane::is_thinking(ISprite* m) {
+bool Plteen::IPlane::is_thinking(ISprite* m) {
     SpeechBubble type;
     bool showing = this->is_bubble_showing(m, &type);
 
     return showing && (type == SpeechBubble::Thought);
 }
 
-void GYDM::IPlane::say(ISprite* m, const std::string& sentence, const RGBA& color) {
+void Plteen::IPlane::say(ISprite* m, const std::string& sentence, const RGBA& color) {
     if (sentence.empty()) {
         this->shh(m);
     } else {
@@ -2414,7 +2414,7 @@ void GYDM::IPlane::say(ISprite* m, const std::string& sentence, const RGBA& colo
     }
 }
 
-void GYDM::IPlane::say(ISprite* m, double sec, const std::string& sentence, const RGBA& color) {
+void Plteen::IPlane::say(ISprite* m, double sec, const std::string& sentence, const RGBA& color) {
     if (sentence.empty()) {
         this->shh(m);
     } else {
@@ -2422,7 +2422,7 @@ void GYDM::IPlane::say(ISprite* m, double sec, const std::string& sentence, cons
     }
 }
 
-void GYDM::IPlane::think(ISprite* m, const std::string& sentence, const RGBA& color) {
+void Plteen::IPlane::think(ISprite* m, const std::string& sentence, const RGBA& color) {
     if (sentence.empty()) {
         this->shh(m);
     } else {
@@ -2430,7 +2430,7 @@ void GYDM::IPlane::think(ISprite* m, const std::string& sentence, const RGBA& co
     }
 }
 
-void GYDM::IPlane::think(ISprite* m, double sec, const std::string& sentence, const RGBA& color) {
+void Plteen::IPlane::think(ISprite* m, double sec, const std::string& sentence, const RGBA& color) {
     if (sentence.empty()) {
         this->shh(m);
     } else {

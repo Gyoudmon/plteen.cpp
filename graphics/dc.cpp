@@ -10,7 +10,7 @@
 
 #include <SDL2/SDL2_gfxPrimitives.h>
 
-using namespace GYDM;
+using namespace Plteen;
 
 /**************************************************************************************************/
 #define FILL_BOX(box, px, py, width, height) { box.x = px; box.y = py; box.w = width; box.h = height; }
@@ -311,45 +311,45 @@ SDL_Surface* DrawingContext::snapshot(int width, int height) {
 }
 
 /*************************************************************************************************/
-void GYDM::DrawingContext::clear(const RGBA& color) {
+void Plteen::DrawingContext::clear(const RGBA& color) {
     // the `alpha` might not affect the underline window instance
 
     this->set_draw_color(color);
     SDL_RenderClear(this->device);
 }
 
-void GYDM::DrawingContext::reset(const RGBA& fgc, const RGBA& bgc) {
+void Plteen::DrawingContext::reset(const RGBA& fgc, const RGBA& bgc) {
     this->clear(bgc);
     this->set_draw_color(fgc);
 }
 
-void GYDM::DrawingContext::reset(SDL_Texture* texture, const RGBA& fgc, const RGBA& bgc) {
+void Plteen::DrawingContext::reset(SDL_Texture* texture, const RGBA& fgc, const RGBA& bgc) {
     SDL_SetRenderTarget(this->device, texture);
     this->reset(fgc, bgc);
 }
 
-void GYDM::DrawingContext::refresh(SDL_Texture* texture) {
+void Plteen::DrawingContext::refresh(SDL_Texture* texture) {
     SDL_SetRenderTarget(this->device, nullptr);
     SDL_RenderCopy(this->device, texture, nullptr, nullptr);
     SDL_RenderPresent(this->device);
     SDL_SetRenderTarget(this->device, texture);
 }
 
-int GYDM::DrawingContext::set_draw_color(const RGBA& color) {
+int Plteen::DrawingContext::set_draw_color(const RGBA& color) {
     return SDL_SetRenderDrawColor(this->device, color.R(), color.G(), color.B(), color.A());
 }
 
 /*************************************************************************************************/
-SDL_Texture* GYDM::DrawingContext::create_blank_image(int width, int height) {
+SDL_Texture* Plteen::DrawingContext::create_blank_image(int width, int height) {
     return game_blank_image(this->device, width, height);
 }
 
-SDL_Texture* GYDM::DrawingContext::create_blank_image(float width, float height) {
+SDL_Texture* Plteen::DrawingContext::create_blank_image(float width, float height) {
     return game_blank_image(this->device, width, height);
 }
 
 /*************************************************************************************************/
-void GYDM::DrawingContext::draw_frame(int x, int y, int width, int height, const RGBA& color) {
+void Plteen::DrawingContext::draw_frame(int x, int y, int width, int height, const RGBA& color) {
     SDL_Rect box;
 
     FILL_BOX(box, x - 1, y - 1, width + 3, height + 3);
@@ -357,7 +357,7 @@ void GYDM::DrawingContext::draw_frame(int x, int y, int width, int height, const
     SDL_RenderDrawRect(this->device, &box);
 }
 
-void GYDM::DrawingContext::draw_grid(int row, int col, int cell_width, int cell_height, const RGBA& color, int xoff, int yoff) {
+void Plteen::DrawingContext::draw_grid(int row, int col, int cell_width, int cell_height, const RGBA& color, int xoff, int yoff) {
     int xend = xoff + col * cell_width;
     int yend = yoff + row * cell_height;
 
@@ -376,7 +376,7 @@ void GYDM::DrawingContext::draw_grid(int row, int col, int cell_width, int cell_
     }
 }
 
-void GYDM::DrawingContext::fill_grid(int* grids[], int row, int col, int cell_width, int cell_height, const RGBA& color, int xoff, int yoff) {
+void Plteen::DrawingContext::fill_grid(int* grids[], int row, int col, int cell_width, int cell_height, const RGBA& color, int xoff, int yoff) {
     SDL_Rect cell_self;
 
     cell_self.w = cell_width;
@@ -395,22 +395,22 @@ void GYDM::DrawingContext::fill_grid(int* grids[], int row, int col, int cell_wi
     }
 }
 
-void GYDM::DrawingContext::stamp(SDL_Surface* surface, int x, int y, SDL_RendererFlip flip, double angle) {
+void Plteen::DrawingContext::stamp(SDL_Surface* surface, int x, int y, SDL_RendererFlip flip, double angle) {
     this->stamp(surface, x, y, surface->w, surface->h, flip, angle);
 }
 
-void GYDM::DrawingContext::stamp(SDL_Surface* surface, int x, int y, int width, int height, SDL_RendererFlip flip, double angle) {
+void Plteen::DrawingContext::stamp(SDL_Surface* surface, int x, int y, int width, int height, SDL_RendererFlip flip, double angle) {
     SDL_Rect box;
 
     FILL_BOX(box, x, y, width, height);
     this->stamp(surface, &box, flip, angle);
 }
 
-void GYDM::DrawingContext::stamp(SDL_Surface* surface, SDL_Rect* region, SDL_RendererFlip flip, double angle) {
+void Plteen::DrawingContext::stamp(SDL_Surface* surface, SDL_Rect* region, SDL_RendererFlip flip, double angle) {
     this->stamp(surface, nullptr, region, flip, angle);
 }
 
-void GYDM::DrawingContext::stamp(SDL_Surface* surface, SDL_Rect* src, SDL_Rect* dst, SDL_RendererFlip flip, double angle) {
+void Plteen::DrawingContext::stamp(SDL_Surface* surface, SDL_Rect* src, SDL_Rect* dst, SDL_RendererFlip flip, double angle) {
     SDL_Texture* texture = SDL_CreateTextureFromSurface(this->device, surface);
 
     if (texture != nullptr) {
@@ -419,7 +419,7 @@ void GYDM::DrawingContext::stamp(SDL_Surface* surface, SDL_Rect* src, SDL_Rect* 
     }
 }
 
-int GYDM::DrawingContext::stamp(SDL_Texture* texture, int x, int y, SDL_RendererFlip flip, double angle) {
+int Plteen::DrawingContext::stamp(SDL_Texture* texture, int x, int y, SDL_RendererFlip flip, double angle) {
     int width, height;
 
     SDL_QueryTexture(texture, nullptr, nullptr, &width, &height);
@@ -427,7 +427,7 @@ int GYDM::DrawingContext::stamp(SDL_Texture* texture, int x, int y, SDL_Renderer
     return this->stamp(texture, x, y, width, height, flip, angle);
 }
 
-int GYDM::DrawingContext::stamp(SDL_Texture* texture, int x, int y, int width, int height, SDL_RendererFlip flip, double angle) {
+int Plteen::DrawingContext::stamp(SDL_Texture* texture, int x, int y, int width, int height, SDL_RendererFlip flip, double angle) {
     SDL_Rect box;
     
     FILL_BOX(box, x, y, width, height);
@@ -435,11 +435,11 @@ int GYDM::DrawingContext::stamp(SDL_Texture* texture, int x, int y, int width, i
     return this->stamp(texture, &box, flip, angle);
 }
 
-int GYDM::DrawingContext::stamp(SDL_Texture* texture, SDL_Rect* region, SDL_RendererFlip flip, double angle) {
+int Plteen::DrawingContext::stamp(SDL_Texture* texture, SDL_Rect* region, SDL_RendererFlip flip, double angle) {
     return this->stamp(texture, nullptr, region, flip, angle);
 }
 
-int GYDM::DrawingContext::stamp(SDL_Texture* texture, SDL_Rect* src, SDL_Rect* dst, SDL_RendererFlip flip, double angle) {
+int Plteen::DrawingContext::stamp(SDL_Texture* texture, SDL_Rect* src, SDL_Rect* dst, SDL_RendererFlip flip, double angle) {
     if ((flip == SDL_FLIP_NONE) && (angle == 0.0)) {
         return SDL_RenderCopy(this->device, texture, src, dst);
     } else {
@@ -448,122 +448,122 @@ int GYDM::DrawingContext::stamp(SDL_Texture* texture, SDL_Rect* src, SDL_Rect* d
 }
 
 /**************************************************************************************************/
-void GYDM::DrawingContext::draw_point(int x, int y, const RGBA& color) {
+void Plteen::DrawingContext::draw_point(int x, int y, const RGBA& color) {
     SDL_SetRenderDrawColor(this->device, color.R(), color.G(), color.B(), color.A());
     SDL_RenderDrawPoint(this->device, x, y);
 }
 
-void GYDM::DrawingContext::draw_line(int x1, int y1, int x2, int y2, const RGBA& color) {
+void Plteen::DrawingContext::draw_line(int x1, int y1, int x2, int y2, const RGBA& color) {
     SDL_SetRenderDrawColor(this->device, color.R(), color.G(), color.B(), color.A());
     SDL_RenderDrawLine(this->device, x1, y1, x2, y2);
 }
 
-void GYDM::DrawingContext::draw_hline(int x, int y, int length, const RGBA& color) {
+void Plteen::DrawingContext::draw_hline(int x, int y, int length, const RGBA& color) {
     SDL_SetRenderDrawColor(this->device, color.R(), color.G(), color.B(), color.A());
     SDL_RenderDrawLine(this->device, x, y, x + length, y);
 }
 
-void GYDM::DrawingContext::draw_vline(int x, int y, int length, const RGBA& color) {
+void Plteen::DrawingContext::draw_vline(int x, int y, int length, const RGBA& color) {
     SDL_SetRenderDrawColor(this->device, color.R(), color.G(), color.B(), color.A());
     SDL_RenderDrawLine(this->device, x, y, x, y + length);
 }
 
-void GYDM::DrawingContext::draw_points(const SDL_Point* pts, int size, const RGBA& color) {
+void Plteen::DrawingContext::draw_points(const SDL_Point* pts, int size, const RGBA& color) {
     SDL_SetRenderDrawColor(this->device, color.R(), color.G(), color.B(), color.A());
     SDL_RenderDrawPoints(this->device, pts, size);
 }
 
-void GYDM::DrawingContext::draw_lines(const SDL_Point* pts, int size, const RGBA& color) {
+void Plteen::DrawingContext::draw_lines(const SDL_Point* pts, int size, const RGBA& color) {
     SDL_SetRenderDrawColor(this->device, color.R(), color.G(), color.B(), color.A());
     SDL_RenderDrawLines(this->device, pts, size);
 }
 
-void GYDM::DrawingContext::draw_rect(SDL_Rect* box, const RGBA& color) {
+void Plteen::DrawingContext::draw_rect(SDL_Rect* box, const RGBA& color) {
     SDL_SetRenderDrawColor(this->device, color.R(), color.G(), color.B(), color.A());
     SDL_RenderDrawRect(this->device, box);
 }
 
-void GYDM::DrawingContext::fill_rect(SDL_Rect* box, const RGBA& color) {
+void Plteen::DrawingContext::fill_rect(SDL_Rect* box, const RGBA& color) {
     SDL_SetRenderDrawColor(this->device, color.R(), color.G(), color.B(), color.A());
     SDL_RenderFillRect(this->device, box);
 }
 
-void GYDM::DrawingContext::draw_rect(int x, int y, int width, int height, const RGBA& color) {
+void Plteen::DrawingContext::draw_rect(int x, int y, int width, int height, const RGBA& color) {
     SDL_Rect box;
 
     FILL_BOX(box, x, y, width, height);
     this->draw_rect(&box, color);
 }
 
-void GYDM::DrawingContext::fill_rect(int x, int y, int width, int height, const RGBA& color) {
+void Plteen::DrawingContext::fill_rect(int x, int y, int width, int height, const RGBA& color) {
     SDL_Rect box;
 
     FILL_BOX(box, x, y, width, height);
     this->fill_rect(&box, color);
 }
 
-void GYDM::DrawingContext::draw_rounded_rect(SDL_Rect* box, float rad, const RGBA& color) {
+void Plteen::DrawingContext::draw_rounded_rect(SDL_Rect* box, float rad, const RGBA& color) {
     this->draw_rounded_rect(box->x, box->y, box->w, box->h, rad, color);
 }
 
-void GYDM::DrawingContext::fill_rounded_rect(SDL_Rect* box, float rad, const RGBA& color) {
+void Plteen::DrawingContext::fill_rounded_rect(SDL_Rect* box, float rad, const RGBA& color) {
     this->fill_rounded_rect(box->x, box->y, box->w, box->h, rad, color);
 }
 
-void GYDM::DrawingContext::draw_rounded_rect(int x, int y, int width, int height, float radius, const RGBA& color) {
+void Plteen::DrawingContext::draw_rounded_rect(int x, int y, int width, int height, float radius, const RGBA& color) {
     this->draw_rounded_rect(float(x), float(y), float(width), float(height), radius, color);
 }
 
-void GYDM::DrawingContext::fill_rounded_rect(int x, int y, int width, int height, float radius, const RGBA& color) {
+void Plteen::DrawingContext::fill_rounded_rect(int x, int y, int width, int height, float radius, const RGBA& color) {
     this->fill_rounded_rect(float(x), float(y), float(width), float(height), radius, color);
 }
 
-void GYDM::DrawingContext::draw_square(int cx, int cy, int apothem, const RGBA& color) {
+void Plteen::DrawingContext::draw_square(int cx, int cy, int apothem, const RGBA& color) {
     this->draw_rect(cx - apothem, cy - apothem, apothem * 2, apothem * 2, color);
 }
 
-void GYDM::DrawingContext::fill_square(int cx, int cy, int apothem, const RGBA& color) {
+void Plteen::DrawingContext::fill_square(int cx, int cy, int apothem, const RGBA& color) {
     this->fill_rect(cx - apothem, cy - apothem, apothem * 2, apothem * 2, color);
 }
 
-void GYDM::DrawingContext::draw_rounded_square(int cx, int cy, int apothem, float rad, const RGBA& color) {
+void Plteen::DrawingContext::draw_rounded_square(int cx, int cy, int apothem, float rad, const RGBA& color) {
     this->draw_rounded_rect(cx - apothem, cy - apothem, apothem * 2, apothem * 2, rad, color);
 }
 
-void GYDM::DrawingContext::fill_rounded_square(int cx, int cy, int apothem, float rad, const RGBA& color) {
+void Plteen::DrawingContext::fill_rounded_square(int cx, int cy, int apothem, float rad, const RGBA& color) {
     this->fill_rounded_rect(cx - apothem, cy - apothem, apothem * 2, apothem * 2, rad, color);
 }
 
-void GYDM::DrawingContext::draw_circle(int cx, int cy, int radius, const RGBA& color) {
+void Plteen::DrawingContext::draw_circle(int cx, int cy, int radius, const RGBA& color) {
     SDL_SetRenderDrawColor(this->device, color.R(), color.G(), color.B(), color.A());
     pen_draw_circle(this->device, cx, cy, radius);
 }
 
-void GYDM::DrawingContext::fill_circle(int cx, int cy, int radius, const RGBA& color) {
+void Plteen::DrawingContext::fill_circle(int cx, int cy, int radius, const RGBA& color) {
     SDL_SetRenderDrawColor(this->device, color.R(), color.G(), color.B(), color.A());
     pen_draw_filled_circle(this->device, cx, cy, radius);
 }
 
-void GYDM::DrawingContext::draw_ellipse(int cx, int cy, int ar, int br, const RGBA& color) {
+void Plteen::DrawingContext::draw_ellipse(int cx, int cy, int ar, int br, const RGBA& color) {
     SDL_SetRenderDrawColor(this->device, color.R(), color.G(), color.B(), color.A());
     pen_draw_ellipse(this->device, cx, cy, ar, br);
 }
 
-void GYDM::DrawingContext::fill_ellipse(int cx, int cy, int ar, int br, const RGBA& color) {
+void Plteen::DrawingContext::fill_ellipse(int cx, int cy, int ar, int br, const RGBA& color) {
     SDL_SetRenderDrawColor(this->device, color.R(), color.G(), color.B(), color.A());
     pen_draw_filled_ellipse(this->device, cx, cy, ar, br);
 }
 
-void GYDM::DrawingContext::draw_regular_polygon(int n, int cx, int cy, int radius, float rotation, const RGBA& color) {
+void Plteen::DrawingContext::draw_regular_polygon(int n, int cx, int cy, int radius, float rotation, const RGBA& color) {
     this->draw_regular_polygon(n, float(cx), float(cy), float(radius), rotation, color);
 }
 
-void GYDM::DrawingContext::fill_regular_polygon(int n, int cx, int cy, int radius, float rotation, const RGBA& color) {
+void Plteen::DrawingContext::fill_regular_polygon(int n, int cx, int cy, int radius, float rotation, const RGBA& color) {
     this->fill_regular_polygon(n, float(cx), float(cy), float(radius), rotation, color);
 }
 
 /*************************************************************************************************/
-void GYDM::DrawingContext::draw_frame(float x, float y, float width, float height, const RGBA& color) {
+void Plteen::DrawingContext::draw_frame(float x, float y, float width, float height, const RGBA& color) {
     SDL_FRect box;
 
     FILL_BOX(box, x - 1.0F, y - 1.0F, width + 3.0F, height + 3.0F);
@@ -571,7 +571,7 @@ void GYDM::DrawingContext::draw_frame(float x, float y, float width, float heigh
     SDL_RenderDrawRectF(this->device, &box);
 }
 
-void GYDM::DrawingContext::draw_grid(int row, int col, float cell_width, float cell_height, const RGBA& color, float xoff, float yoff) {
+void Plteen::DrawingContext::draw_grid(int row, int col, float cell_width, float cell_height, const RGBA& color, float xoff, float yoff) {
     float xend = xoff + col * cell_width;
     float yend = yoff + row * cell_height;
 
@@ -590,7 +590,7 @@ void GYDM::DrawingContext::draw_grid(int row, int col, float cell_width, float c
     }
 }
 
-void GYDM::DrawingContext::fill_grid(int* grids[], int row, int col, float cell_width, float cell_height, const RGBA& color, float xoff, float yoff) {
+void Plteen::DrawingContext::fill_grid(int* grids[], int row, int col, float cell_width, float cell_height, const RGBA& color, float xoff, float yoff) {
     SDL_FRect cell_self;
 
     cell_self.w = cell_width;
@@ -609,22 +609,22 @@ void GYDM::DrawingContext::fill_grid(int* grids[], int row, int col, float cell_
     }
 }
 
-void GYDM::DrawingContext::stamp(SDL_Surface* surface, float x, float y, SDL_RendererFlip flip, double angle) {
+void Plteen::DrawingContext::stamp(SDL_Surface* surface, float x, float y, SDL_RendererFlip flip, double angle) {
     this->stamp(surface, x, y, float(surface->w), float(surface->h), flip, angle);
 }
 
-void GYDM::DrawingContext::stamp(SDL_Surface* surface, float x, float y, float width, float height, SDL_RendererFlip flip, double angle) {
+void Plteen::DrawingContext::stamp(SDL_Surface* surface, float x, float y, float width, float height, SDL_RendererFlip flip, double angle) {
     SDL_FRect box;
 
     FILL_BOX(box, x, y, width, height);
     this->stamp(surface, &box, flip, angle);
 }
 
-void GYDM::DrawingContext::stamp(SDL_Surface* surface, SDL_FRect* region, SDL_RendererFlip flip, double angle) {
+void Plteen::DrawingContext::stamp(SDL_Surface* surface, SDL_FRect* region, SDL_RendererFlip flip, double angle) {
     this->stamp(surface, nullptr, region, flip, angle);
 }
 
-void GYDM::DrawingContext::stamp(SDL_Surface* surface, SDL_Rect* src, SDL_FRect* dst, SDL_RendererFlip flip, double angle) {
+void Plteen::DrawingContext::stamp(SDL_Surface* surface, SDL_Rect* src, SDL_FRect* dst, SDL_RendererFlip flip, double angle) {
     SDL_Texture* texture = SDL_CreateTextureFromSurface(this->device, surface);
 
     if (texture != nullptr) {
@@ -633,7 +633,7 @@ void GYDM::DrawingContext::stamp(SDL_Surface* surface, SDL_Rect* src, SDL_FRect*
     }
 }
 
-int GYDM::DrawingContext::stamp(SDL_Texture* texture, float x, float y, SDL_RendererFlip flip, double angle) {
+int Plteen::DrawingContext::stamp(SDL_Texture* texture, float x, float y, SDL_RendererFlip flip, double angle) {
     int width, height;
 
     SDL_QueryTexture(texture, nullptr, nullptr, &width, &height);
@@ -641,7 +641,7 @@ int GYDM::DrawingContext::stamp(SDL_Texture* texture, float x, float y, SDL_Rend
     return this->stamp(texture, x, y, float(width), float(height), flip, angle);
 }
 
-int GYDM::DrawingContext::stamp(SDL_Texture* texture, float x, float y, float width, float height, SDL_RendererFlip flip, double angle) {
+int Plteen::DrawingContext::stamp(SDL_Texture* texture, float x, float y, float width, float height, SDL_RendererFlip flip, double angle) {
     SDL_FRect box;
     
     FILL_BOX(box, x, y, width, height);
@@ -649,11 +649,11 @@ int GYDM::DrawingContext::stamp(SDL_Texture* texture, float x, float y, float wi
     return this->stamp(texture, &box, flip, angle);
 }
 
-int GYDM::DrawingContext::stamp(SDL_Texture* texture, SDL_FRect* region, SDL_RendererFlip flip, double angle) {
+int Plteen::DrawingContext::stamp(SDL_Texture* texture, SDL_FRect* region, SDL_RendererFlip flip, double angle) {
     return this->stamp(texture, nullptr, region, flip, angle);
 }
 
-int GYDM::DrawingContext::stamp(SDL_Texture* texture, SDL_Rect* src, SDL_FRect* dst, SDL_RendererFlip flip, double angle) {
+int Plteen::DrawingContext::stamp(SDL_Texture* texture, SDL_Rect* src, SDL_FRect* dst, SDL_RendererFlip flip, double angle) {
     if ((flip == SDL_FLIP_NONE) && (angle == 0.0)) {
         return SDL_RenderCopyF(this->device, texture, src, dst);
     } else {
@@ -662,67 +662,67 @@ int GYDM::DrawingContext::stamp(SDL_Texture* texture, SDL_Rect* src, SDL_FRect* 
 }
 
 /**************************************************************************************************/
-void GYDM::DrawingContext::draw_point(float x, float y, const RGBA& color) {
+void Plteen::DrawingContext::draw_point(float x, float y, const RGBA& color) {
     SDL_SetRenderDrawColor(this->device, color.R(), color.G(), color.B(), color.A());
     SDL_RenderDrawPointF(this->device, x, y);
 }
 
-void GYDM::DrawingContext::draw_line(float x1, float y1, float x2, float y2, const RGBA& color) {
+void Plteen::DrawingContext::draw_line(float x1, float y1, float x2, float y2, const RGBA& color) {
     aalineRGBA(this->device, fl2fx<int16_t>(x1), fl2fx<int16_t>(y1), fl2fx<int16_t>(x2), fl2fx<int16_t>(y2),
                 color.R(), color.G(), color.B(), color.A());
 }
 
-void GYDM::DrawingContext::draw_hline(float x, float y, float length, const RGBA& color) {
+void Plteen::DrawingContext::draw_hline(float x, float y, float length, const RGBA& color) {
     this->draw_hline(fl2fx<int>(x), fl2fx<int>(y), fl2fx<int>(length), color);
 }
 
-void GYDM::DrawingContext::draw_vline(float x, float y, float length, const RGBA& color) {
+void Plteen::DrawingContext::draw_vline(float x, float y, float length, const RGBA& color) {
     this->draw_vline(fl2fx<int>(x), fl2fx<int>(y), fl2fx<int>(length), color);
 }
 
-void GYDM::DrawingContext::draw_points(const SDL_FPoint* pts, int size, const RGBA& color) {
+void Plteen::DrawingContext::draw_points(const SDL_FPoint* pts, int size, const RGBA& color) {
     SDL_SetRenderDrawColor(this->device, color.R(), color.G(), color.B(), color.A());
     SDL_RenderDrawPointsF(this->device, pts, size);
 }
 
-void GYDM::DrawingContext::draw_lines(const SDL_FPoint* pts, int size, const RGBA& color) {
+void Plteen::DrawingContext::draw_lines(const SDL_FPoint* pts, int size, const RGBA& color) {
     SDL_SetRenderDrawColor(this->device, color.R(), color.G(), color.B(), color.A());
     SDL_RenderDrawLinesF(this->device, pts, size);
 }
 
-void GYDM::DrawingContext::draw_rect(SDL_FRect* box, const RGBA& color) {
+void Plteen::DrawingContext::draw_rect(SDL_FRect* box, const RGBA& color) {
     SDL_SetRenderDrawColor(this->device, color.R(), color.G(), color.B(), color.A());
     SDL_RenderDrawRectF(this->device, box);
 }
 
-void GYDM::DrawingContext::fill_rect(SDL_FRect* box, const RGBA& color) {
+void Plteen::DrawingContext::fill_rect(SDL_FRect* box, const RGBA& color) {
     SDL_SetRenderDrawColor(this->device, color.R(), color.G(), color.B(), color.A());
     SDL_RenderFillRectF(this->device, box);
 }
 
-void GYDM::DrawingContext::draw_rect(float x, float y, float width, float height, const RGBA& color) {
+void Plteen::DrawingContext::draw_rect(float x, float y, float width, float height, const RGBA& color) {
     SDL_FRect box;
 
     FILL_BOX(box, x, y, width, height);
     this->draw_rect(&box, color);
 }
 
-void GYDM::DrawingContext::fill_rect(float x, float y, float width, float height, const RGBA& color) {
+void Plteen::DrawingContext::fill_rect(float x, float y, float width, float height, const RGBA& color) {
     SDL_FRect box;
 
     FILL_BOX(box, x, y, width, height);
     this->fill_rect(&box, color);
 }
 
-void GYDM::DrawingContext::draw_rounded_rect(SDL_FRect* box, float rad, const RGBA& color) {
+void Plteen::DrawingContext::draw_rounded_rect(SDL_FRect* box, float rad, const RGBA& color) {
     this->draw_rounded_rect(box->x, box->y, box->w, box->h, rad, color);
 }
 
-void GYDM::DrawingContext::fill_rounded_rect(SDL_FRect* box, float rad, const RGBA& color) {
+void Plteen::DrawingContext::fill_rounded_rect(SDL_FRect* box, float rad, const RGBA& color) {
     this->fill_rounded_rect(box->x, box->y, box->w, box->h, rad, color);
 }
 
-void GYDM::DrawingContext::draw_rounded_rect(float x, float y, float width, float height, float radius, const RGBA& color) {
+void Plteen::DrawingContext::draw_rounded_rect(float x, float y, float width, float height, float radius, const RGBA& color) {
     int16_t X1 = fl2fx<int16_t>(x);
     int16_t Y1 = fl2fx<int16_t>(y);
     int16_t X2 = fl2fx<int16_t>(x + width);
@@ -737,7 +737,7 @@ void GYDM::DrawingContext::draw_rounded_rect(float x, float y, float width, floa
     roundedRectangleRGBA(this->device, X1, Y1, X2, Y2, rad, color.R(), color.G(), color.B(), color.A());
 }
 
-void GYDM::DrawingContext::fill_rounded_rect(float x, float y, float width, float height, float radius, const RGBA& color) {
+void Plteen::DrawingContext::fill_rounded_rect(float x, float y, float width, float height, float radius, const RGBA& color) {
     int16_t X1 = fl2fx<int16_t>(x);
     int16_t Y1 = fl2fx<int16_t>(y);
     int16_t X2 = fl2fx<int16_t>(x + width);
@@ -752,23 +752,23 @@ void GYDM::DrawingContext::fill_rounded_rect(float x, float y, float width, floa
     roundedBoxRGBA(this->device, X1, Y1, X2, Y2, rad, color.R(), color.G(), color.B(), color.A());
 }
 
-void GYDM::DrawingContext::draw_square(float cx, float cy, float apothem, const RGBA& color) {
+void Plteen::DrawingContext::draw_square(float cx, float cy, float apothem, const RGBA& color) {
     this->draw_rect(cx - apothem, cy - apothem, apothem * 2.0F, apothem * 2.0F, color);
 }
 
-void GYDM::DrawingContext::fill_square(float cx, float cy, float apothem, const RGBA& color) {
+void Plteen::DrawingContext::fill_square(float cx, float cy, float apothem, const RGBA& color) {
     this->fill_rect(cx - apothem, cy - apothem, apothem * 2.0F, apothem * 2.0F, color);
 }
 
-void GYDM::DrawingContext::draw_rounded_square(float cx, float cy, float apothem, float rad, const RGBA& color) {
+void Plteen::DrawingContext::draw_rounded_square(float cx, float cy, float apothem, float rad, const RGBA& color) {
     this->draw_rounded_rect(cx - apothem, cy - apothem, apothem * 2.0F, apothem * 2.0F, rad, color);
 }
 
-void GYDM::DrawingContext::fill_rounded_square(float cx, float cy, float apothem, float rad, const RGBA& color) {
+void Plteen::DrawingContext::fill_rounded_square(float cx, float cy, float apothem, float rad, const RGBA& color) {
     this->fill_rounded_rect(cx - apothem, cy - apothem, apothem * 2.0F, apothem * 2.0F, rad, color);
 }
 
-void GYDM::DrawingContext::draw_circle(float cx, float cy, float radius, const RGBA& color) {
+void Plteen::DrawingContext::draw_circle(float cx, float cy, float radius, const RGBA& color) {
     int16_t CX = fl2fx<int16_t>(cx);
     int16_t CY = fl2fx<int16_t>(cy);
     int16_t R = fl2fx<int16_t>(radius);
@@ -776,7 +776,7 @@ void GYDM::DrawingContext::draw_circle(float cx, float cy, float radius, const R
     aacircleRGBA(this->device, CX, CY, R, color.R(), color.G(), color.B(), color.A());
 }
 
-void GYDM::DrawingContext::fill_circle(float cx, float cy, float radius, const RGBA& color) {
+void Plteen::DrawingContext::fill_circle(float cx, float cy, float radius, const RGBA& color) {
     int16_t CX = fl2fx<int16_t>(cx);
     int16_t CY = fl2fx<int16_t>(cy);
     int16_t R = fl2fx<int16_t>(radius);
@@ -789,7 +789,7 @@ void GYDM::DrawingContext::fill_circle(float cx, float cy, float radius, const R
     aacircleRGBA(this->device, CX, CY, R, r, g, b, a);
 }
 
-void GYDM::DrawingContext::draw_ellipse(float cx, float cy, float ar, float br, const RGBA& color) {
+void Plteen::DrawingContext::draw_ellipse(float cx, float cy, float ar, float br, const RGBA& color) {
     int16_t CX = fl2fx<int16_t>(cx);
     int16_t CY = fl2fx<int16_t>(cy);
     int16_t AR = fl2fx<int16_t>(ar);
@@ -806,7 +806,7 @@ void GYDM::DrawingContext::draw_ellipse(float cx, float cy, float ar, float br, 
     }
 }
 
-void GYDM::DrawingContext::fill_ellipse(float cx, float cy, float ar, float br, const RGBA& color) {
+void Plteen::DrawingContext::fill_ellipse(float cx, float cy, float ar, float br, const RGBA& color) {
     int16_t CX = fl2fx<int16_t>(cx);
     int16_t CY = fl2fx<int16_t>(cy);
     int16_t AR = fl2fx<int16_t>(ar);
@@ -825,18 +825,18 @@ void GYDM::DrawingContext::fill_ellipse(float cx, float cy, float ar, float br, 
     }
 }
 
-void GYDM::DrawingContext::draw_regular_polygon(int n, float cx, float cy, float radius, float rotation, const RGBA& color) {
+void Plteen::DrawingContext::draw_regular_polygon(int n, float cx, float cy, float radius, float rotation, const RGBA& color) {
     SDL_SetRenderDrawColor(this->device, color.R(), color.G(), color.B(), color.A());
     pen_draw_regular_polygon(this->device, n, cx, cy, radius, rotation);
 }
 
-void GYDM::DrawingContext::fill_regular_polygon(int n, float cx, float cy, float radius, float rotation, const RGBA& color) {
+void Plteen::DrawingContext::fill_regular_polygon(int n, float cx, float cy, float radius, float rotation, const RGBA& color) {
     SDL_SetRenderDrawColor(this->device, color.R(), color.G(), color.B(), color.A());
     pen_fill_regular_polygon(this->device, n, cx, cy, radius, rotation);
 }
 
 /*************************************************************************************************/
-SDL_Texture* GYDM::DrawingContext::create_text_texture(const std::string& text, const shared_font_t& font, TextRenderMode mode, const RGBA& fgc, const RGBA& bgc, int wrap) {
+SDL_Texture* Plteen::DrawingContext::create_text_texture(const std::string& text, const shared_font_t& font, TextRenderMode mode, const RGBA& fgc, const RGBA& bgc, int wrap) {
     SDL_Surface* surface = game_text_surface(this->_disable_font_selection, text, font, mode, fgc, bgc, wrap);
     SDL_Texture* texture = SDL_CreateTextureFromSurface(this->device, surface);
 
@@ -845,58 +845,58 @@ SDL_Texture* GYDM::DrawingContext::create_text_texture(const std::string& text, 
     return texture;
 }
 
-SDL_Texture* GYDM::DrawingContext::create_solid_text(const std::string& text, const shared_font_t& font, const RGBA& fgc, int wrap) {
+SDL_Texture* Plteen::DrawingContext::create_solid_text(const std::string& text, const shared_font_t& font, const RGBA& fgc, int wrap) {
     return this->create_text_texture(text, font, TextRenderMode::Solid, fgc, fgc, wrap);
 }
 
-SDL_Texture* GYDM::DrawingContext::create_shaded_text(const std::string& text, const shared_font_t& font, const RGBA& fgc, const RGBA& bgc, int wrap) {
+SDL_Texture* Plteen::DrawingContext::create_shaded_text(const std::string& text, const shared_font_t& font, const RGBA& fgc, const RGBA& bgc, int wrap) {
     return this->create_text_texture(text, font, TextRenderMode::Shaded, fgc, bgc, wrap);
 }
 
-SDL_Texture* GYDM::DrawingContext::create_lcd_text(const std::string& text, const shared_font_t& font, const RGBA& fgc, const RGBA& bgc, int wrap) {
+SDL_Texture* Plteen::DrawingContext::create_lcd_text(const std::string& text, const shared_font_t& font, const RGBA& fgc, const RGBA& bgc, int wrap) {
     return this->create_text_texture(text, font, TextRenderMode::LCD, fgc, bgc, wrap);
 }
 
-SDL_Texture* GYDM::DrawingContext::create_blended_text(const std::string& text, const shared_font_t& font, const RGBA& fgc, int wrap) {
+SDL_Texture* Plteen::DrawingContext::create_blended_text(const std::string& text, const shared_font_t& font, const RGBA& fgc, int wrap) {
     return this->create_text_texture(text, font, TextRenderMode::Blender, fgc, fgc, wrap);
 }
 
-void GYDM::DrawingContext::draw_solid_text(const std::string& text, const shared_font_t& font, int x, int y, const RGBA& rgb, int wrap) {
+void Plteen::DrawingContext::draw_solid_text(const std::string& text, const shared_font_t& font, int x, int y, const RGBA& rgb, int wrap) {
     SDL_Surface* message = game_text_surface(this->_disable_font_selection, text, font, ::TextRenderMode::Solid, rgb, rgb, wrap);
     safe_render_text_surface(this, message, x, y);
 }
 
-void GYDM::DrawingContext::draw_shaded_text(const std::string& text, const shared_font_t& font, int x, int y, const RGBA& fgc, const RGBA& bgc, int wrap) {
+void Plteen::DrawingContext::draw_shaded_text(const std::string& text, const shared_font_t& font, int x, int y, const RGBA& fgc, const RGBA& bgc, int wrap) {
     SDL_Surface* message = game_text_surface(this->_disable_font_selection, text, font, ::TextRenderMode::Shaded, fgc, bgc, wrap);
     safe_render_text_surface(this, message, x, y);
 }
 
-void GYDM::DrawingContext::draw_lcd_text(const std::string& text, const shared_font_t& font, int x, int y, const RGBA& fgc, const RGBA& bgc, int wrap) {
+void Plteen::DrawingContext::draw_lcd_text(const std::string& text, const shared_font_t& font, int x, int y, const RGBA& fgc, const RGBA& bgc, int wrap) {
     SDL_Surface* message = game_text_surface(this->_disable_font_selection, text, font, ::TextRenderMode::LCD, fgc, bgc, wrap);
     safe_render_text_surface(this, message, x, y);
 }
 
-void GYDM::DrawingContext::draw_blended_text(const std::string& text, const shared_font_t& font, int x, int y, const RGBA& rgb, int wrap) {
+void Plteen::DrawingContext::draw_blended_text(const std::string& text, const shared_font_t& font, int x, int y, const RGBA& rgb, int wrap) {
     SDL_Surface* message = game_text_surface(this->_disable_font_selection, text, font, ::TextRenderMode::Blender, rgb, rgb, wrap);
     safe_render_text_surface(this, message, x, y);
 }
 
-void GYDM::DrawingContext::draw_solid_text(const std::string& text, const shared_font_t& font, float x, float y, const RGBA& rgb, int wrap) {
+void Plteen::DrawingContext::draw_solid_text(const std::string& text, const shared_font_t& font, float x, float y, const RGBA& rgb, int wrap) {
     SDL_Surface* message = game_text_surface(this->_disable_font_selection, text, font, ::TextRenderMode::Solid, rgb, rgb, wrap);
     safe_render_text_surface(this, message, x, y);
 }
 
-void GYDM::DrawingContext::draw_shaded_text(const std::string& text, const shared_font_t& font, float x, float y, const RGBA& fgc, const RGBA& bgc, int wrap) {
+void Plteen::DrawingContext::draw_shaded_text(const std::string& text, const shared_font_t& font, float x, float y, const RGBA& fgc, const RGBA& bgc, int wrap) {
     SDL_Surface* message = game_text_surface(this->_disable_font_selection, text, font, ::TextRenderMode::Shaded, fgc, bgc, wrap);
     safe_render_text_surface(this, message, x, y);
 }
 
-void GYDM::DrawingContext::draw_lcd_text(const std::string& text, const shared_font_t& font, float x, float y, const RGBA& fgc, const RGBA& bgc, int wrap) {
+void Plteen::DrawingContext::draw_lcd_text(const std::string& text, const shared_font_t& font, float x, float y, const RGBA& fgc, const RGBA& bgc, int wrap) {
     SDL_Surface* message = game_text_surface(this->_disable_font_selection, text, font, ::TextRenderMode::LCD, fgc, bgc, wrap);
     safe_render_text_surface(this, message, x, y);
 }
 
-void GYDM::DrawingContext::draw_blended_text(const std::string& text, const shared_font_t& font, float x, float y, const RGBA& rgb, int wrap) {
+void Plteen::DrawingContext::draw_blended_text(const std::string& text, const shared_font_t& font, float x, float y, const RGBA& rgb, int wrap) {
     SDL_Surface* message = game_text_surface(this->_disable_font_selection, text, font, ::TextRenderMode::Blender, rgb, rgb, wrap);
     safe_render_text_surface(this, message, x, y);
 }

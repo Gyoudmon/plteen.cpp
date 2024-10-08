@@ -3,13 +3,13 @@
 #include "../screen.hpp"
 #include "../../forward.hpp"
 
-namespace GYDM {
-	class __lambda__ Pasteboard : public GYDM::IScreen {
+namespace Plteen {
+	class __lambda__ Pasteboard : public Plteen::IScreen {
 	public:
-		Pasteboard(GYDM::IMatter* master) : matter(master) {}
+		Pasteboard(Plteen::IMatter* master) : matter(master) {}
 	
     public:
-        GYDM::IDisplay* display() override;
+        Plteen::IDisplay* display() override;
     
     public:
         void refresh() override;
@@ -25,10 +25,10 @@ namespace GYDM {
         void notify_updated() override;
 
     public:
-        void log_message(GYDM::Log level, const std::string& message) override;
+        void log_message(Plteen::Log level, const std::string& message) override;
         void start_input_text(const std::string& prompt) override;
 
     private:
-        GYDM::IMatter* matter;
+        Plteen::IMatter* matter;
     };
 }

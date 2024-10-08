@@ -4,7 +4,7 @@
 #include <vector>
 #include <cstdarg>
 
-namespace GYDM {
+namespace Plteen {
 #define VSNPRINT(retval, fmt) \
     const int DEFAULT_POOL_SIZE = 1024; \
     char chpool[DEFAULT_POOL_SIZE]; \

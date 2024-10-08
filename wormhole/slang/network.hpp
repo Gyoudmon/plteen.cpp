@@ -1,5 +1,5 @@
 #pragma once
 
-namespace GYDM {
+namespace Plteen {
     __lambda__ void network_initialize();
 }

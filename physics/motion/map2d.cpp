@@ -2,7 +2,7 @@
 
 #include "../../datum/flonum.hpp"
 
-using namespace GYDM;
+using namespace Plteen;
 
 static const double pi_125 = q_pi * 0.5;
 
@@ -13,7 +13,7 @@ static const double theta_thresholds [] = {
 };
 
 /*************************************************************************************************/
-void GYDM::I4WayMotion::dispatch_heading_event(double theta_rad, double vx, double vy, double prev_vr) {
+void Plteen::I4WayMotion::dispatch_heading_event(double theta_rad, double vx, double vy, double prev_vr) {
     double theta = flabs(theta_rad);
 
     if (theta < q_pi) {
@@ -28,7 +28,7 @@ void GYDM::I4WayMotion::dispatch_heading_event(double theta_rad, double vx, doub
 }
 
 /*************************************************************************************************/
-void GYDM::I8WayMotion::dispatch_heading_event(double theta_rad, double vx, double vy, double prev_vr) {
+void Plteen::I8WayMotion::dispatch_heading_event(double theta_rad, double vx, double vy, double prev_vr) {
     double theta = theta_rad;
     
     if (theta < 0.0) {

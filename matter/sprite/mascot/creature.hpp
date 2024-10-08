@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace GYDM {
+namespace Plteen {
     enum class CreatureGender { Male, Female, _ };
 
     class __lambda__ ICreature {

@@ -5,7 +5,7 @@
 
 #include <type_traits>
 
-namespace GYDM {
+namespace Plteen {
     /*********************************************************************************************/
     template<typename Fl>
     inline Fl clamp(Fl v, Fl min, Fl max) {

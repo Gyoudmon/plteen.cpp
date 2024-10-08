@@ -3,33 +3,33 @@
 #include "../sprite.hpp"
 #include "../../virtualization/filesystem/imgdb.hpp"
 
-namespace GYDM {
-    class __lambda__ ISpriteSheet : public GYDM::ISprite {
+namespace Plteen {
+    class __lambda__ ISpriteSheet : public Plteen::ISprite {
     public:
         ISpriteSheet(const std::string& pathname);
         ISpriteSheet(const char* pathname);
         virtual ~ISpriteSheet() {}
 
-        void construct(GYDM::dc_t* renderer) override;
+        void construct(Plteen::dc_t* renderer) override;
         const char* name() override;
 
     protected:
-        virtual void on_sheet_load(GYDM::shared_texture_t sheet) = 0;
+        virtual void on_sheet_load(Plteen::shared_texture_t sheet) = 0;
         virtual void feed_costume_region(SDL_Rect* costume, size_t idx) = 0;
 
     protected:
         void feed_costume_extent(size_t idx, float* width, float* height) override;
-        void draw_costume(GYDM::dc_t* renderer, size_t idx, SDL_Rect* src, SpriteRenderArguments* argv) override;
+        void draw_costume(Plteen::dc_t* renderer, size_t idx, SDL_Rect* src, SpriteRenderArguments* argv) override;
         
     private:
-        GYDM::shared_texture_t sprite_sheet;
+        Plteen::shared_texture_t sprite_sheet;
         SDL_Rect costume_region;
 
     private:
         std::string _pathname;
     };
 
-    class __lambda__ SpriteGridSheet : public GYDM::ISpriteSheet {
+    class __lambda__ SpriteGridSheet : public Plteen::ISpriteSheet {
     public:
         SpriteGridSheet(const char* pathname, int row, int col, int xgap = 0, int ygap = 0, bool inset = false);
         SpriteGridSheet(const std::string& pathname, int row, int col, int xgap = 0, int ygap = 0, bool inset = false);
@@ -40,7 +40,7 @@ namespace GYDM {
         int grid_cell_index(float x, float y, int* r = nullptr, int* c = nullptr);
         
     protected:
-        void on_sheet_load(GYDM::shared_texture_t sheet) override;
+        void on_sheet_load(Plteen::shared_texture_t sheet) override;
         void feed_costume_region(SDL_Rect* costume, size_t idx) override;
         const char* costume_index_to_name(size_t idx) override;
     

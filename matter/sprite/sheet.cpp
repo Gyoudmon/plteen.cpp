@@ -5,16 +5,16 @@
 #include "../../datum/fixnum.hpp"
 #include "../../datum/flonum.hpp"
 
-using namespace GYDM;
+using namespace Plteen;
 
 /*************************************************************************************************/
-GYDM::ISpriteSheet::ISpriteSheet(const char* pathname) : ISpriteSheet(std::string(pathname)) {}
+Plteen::ISpriteSheet::ISpriteSheet(const char* pathname) : ISpriteSheet(std::string(pathname)) {}
 
-GYDM::ISpriteSheet::ISpriteSheet(const std::string& pathname) : _pathname(pathname) {
+Plteen::ISpriteSheet::ISpriteSheet(const std::string& pathname) : _pathname(pathname) {
     this->enable_resize(true);
 }
 
-const char* GYDM::ISpriteSheet::name() {
+const char* Plteen::ISpriteSheet::name() {
     static std::string _name;
 
     _name = file_basename_from_path(this->_pathname.c_str());
@@ -22,7 +22,7 @@ const char* GYDM::ISpriteSheet::name() {
     return _name.c_str();
 }
 
-void GYDM::ISpriteSheet::construct(GYDM::dc_t* dc) {
+void Plteen::ISpriteSheet::construct(Plteen::dc_t* dc) {
     this->sprite_sheet = imgdb_ref(this->_pathname, dc->self());
 
     if (this->sprite_sheet->okay()) {
@@ -31,14 +31,14 @@ void GYDM::ISpriteSheet::construct(GYDM::dc_t* dc) {
     }
 }
 
-void GYDM::ISpriteSheet::feed_costume_extent(size_t idx, float* width, float* height) {
+void Plteen::ISpriteSheet::feed_costume_extent(size_t idx, float* width, float* height) {
     this->feed_costume_region(&this->costume_region, idx);
 
     SET_BOX(width, float(this->costume_region.w));
     SET_BOX(height, float(this->costume_region.h));
 }
 
-void GYDM::ISpriteSheet::draw_costume(GYDM::dc_t* dc, size_t idx, SDL_Rect* src, SpriteRenderArguments* argv) {
+void Plteen::ISpriteSheet::draw_costume(Plteen::dc_t* dc, size_t idx, SDL_Rect* src, SpriteRenderArguments* argv) {
     this->feed_costume_region(&this->costume_region, idx);
     
     if (src == nullptr) {
@@ -52,14 +52,14 @@ void GYDM::ISpriteSheet::draw_costume(GYDM::dc_t* dc, size_t idx, SDL_Rect* src,
 }
 
 /*************************************************************************************************/
-GYDM::SpriteGridSheet::SpriteGridSheet(const char* pathname, int row, int col, int xgap, int ygap, bool inset)
+Plteen::SpriteGridSheet::SpriteGridSheet(const char* pathname, int row, int col, int xgap, int ygap, bool inset)
     : SpriteGridSheet(std::string(pathname), row, col, xgap, ygap) {}
 
-GYDM::SpriteGridSheet::SpriteGridSheet(const std::string& pathname, int row, int col, int xgap, int ygap, bool inset)
+Plteen::SpriteGridSheet::SpriteGridSheet(const std::string& pathname, int row, int col, int xgap, int ygap, bool inset)
     : ISpriteSheet(pathname), row(fxmax(row, 1)), col(fxmax(col, 1))
     , cell_inset(inset), cell_xgap(xgap), cell_ygap(ygap) {}
 
-void GYDM::SpriteGridSheet::on_sheet_load(shared_texture_t sprite_sheet) {
+void Plteen::SpriteGridSheet::on_sheet_load(shared_texture_t sprite_sheet) {
     int w, h;
 
     sprite_sheet->feed_extent(&w, &h);
@@ -73,11 +73,11 @@ void GYDM::SpriteGridSheet::on_sheet_load(shared_texture_t sprite_sheet) {
     this->cell_height = (h - ((this->row - 1) * this->cell_ygap)) / this->row;
 }
 
-size_t GYDM::SpriteGridSheet::costume_count() {
+size_t Plteen::SpriteGridSheet::costume_count() {
     return (this->cell_width == 0) ? 0 : this->row * this->col;
 }
 
-int GYDM::SpriteGridSheet::grid_cell_index(int x, int y, int* r,  int* c) {
+int Plteen::SpriteGridSheet::grid_cell_index(int x, int y, int* r,  int* c) {
     int xoff = (this->cell_inset ? this->cell_xgap : 0);
     int yoff = (this->cell_inset ? this->cell_ygap : 0);
     int cl = 0;
@@ -93,11 +93,11 @@ int GYDM::SpriteGridSheet::grid_cell_index(int x, int y, int* r,  int* c) {
     return rw * this->col + cl;
 }
 
-int GYDM::SpriteGridSheet::grid_cell_index(float x, float y, int* r, int* c) {
+int Plteen::SpriteGridSheet::grid_cell_index(float x, float y, int* r, int* c) {
     return this->grid_cell_index(fl2fxi(x), fl2fxi(y), r, c);
 }
 
-void GYDM::SpriteGridSheet::feed_costume_region(SDL_Rect* region, size_t idx) {
+void Plteen::SpriteGridSheet::feed_costume_region(SDL_Rect* region, size_t idx) {
     int r = int(idx) / this->col;
     int c = int(idx) % this->col;
     int xoff = 0;
@@ -114,7 +114,7 @@ void GYDM::SpriteGridSheet::feed_costume_region(SDL_Rect* region, size_t idx) {
     region->h = this->cell_height;
 }
 
-const char* GYDM::SpriteGridSheet::costume_index_to_name(size_t idx) {
+const char* Plteen::SpriteGridSheet::costume_index_to_name(size_t idx) {
     this->__virtual_name = std::to_string(idx);
     
     return this->__virtual_name.c_str();

@@ -4,7 +4,7 @@
 
 #include <string>
 
-namespace GYDM {
+namespace Plteen {
     __lambda__ void imgdb_setup(const char* rootdir);
     __lambda__ void imgdb_setup(const std::string& rootdir);
     __lambda__ void imgdb_teardown();

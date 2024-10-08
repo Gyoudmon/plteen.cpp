@@ -8,7 +8,7 @@
 
 #include <optional>
 
-using namespace GYDM;
+using namespace Plteen;
 
 /*************************************************************************************************/
 static const std::vector<AgentAction> RestPoseFrames = {
@@ -1494,10 +1494,10 @@ static bool is_ending_frame(std::vector<AgentFrameBranch>& branches, std::option
 }
 
 /*************************************************************************************************/
-GYDM::Linkmon::Linkmon()
+Plteen::Linkmon::Linkmon()
     : AgentSpriteSheet(digimon_mascot_path("agent/linkmon", ".png"), 31, 24) {}
 
-int GYDM::Linkmon::submit_action_frames(std::vector<std::pair<int, int>>& frame_refs, const std::string& action) {
+int Plteen::Linkmon::submit_action_frames(std::vector<std::pair<int, int>>& frame_refs, const std::string& action) {
     int next_branch = -1;
     
     if (the_agent_link.frames.find(action) != the_agent_link.frames.end()) {
@@ -1507,14 +1507,14 @@ int GYDM::Linkmon::submit_action_frames(std::vector<std::pair<int, int>>& frame_
     return next_branch;
 }
 
-int GYDM::Linkmon::submit_idle_frames(std::vector<std::pair<int, int>>& frame_refs, int& times) {
+int Plteen::Linkmon::submit_idle_frames(std::vector<std::pair<int, int>>& frame_refs, int& times) {
     static int idle_count = int(sizeof(idles) / sizeof(std::string));
     int idx = random_uniform(0, idle_count - 1);
 
     return this->push_action_frames(frame_refs, idles[idx], 0);
 }
 
-int GYDM::Linkmon::update_action_frames(std::vector<std::pair<int, int>>& frame_refs, int next_branch) {
+int Plteen::Linkmon::update_action_frames(std::vector<std::pair<int, int>>& frame_refs, int next_branch) {
     int selection_idx = this->find_agent_frames_by_index(next_branch);
 
     frame_refs.clear();
@@ -1530,7 +1530,7 @@ int GYDM::Linkmon::update_action_frames(std::vector<std::pair<int, int>>& frame_
     return next_branch;
 }
 
-int GYDM::Linkmon::find_agent_frames_by_index(int frame_idx) {
+int Plteen::Linkmon::find_agent_frames_by_index(int frame_idx) {
     int selection_idx = -1;
 
     if (the_frames.find(frame_idx) == the_frames.end()) {    
@@ -1556,7 +1556,7 @@ int GYDM::Linkmon::find_agent_frames_by_index(int frame_idx) {
     return selection_idx;
 }
 
-int GYDM::Linkmon::push_action_frames(std::vector<std::pair<int, int>>& frame_refs, const std::string& action, int idx0) {
+int Plteen::Linkmon::push_action_frames(std::vector<std::pair<int, int>>& frame_refs, const std::string& action, int idx0) {
     auto frames = the_agent_link.frames.at(action);
     size_t frame_size = frames.size();
     std::vector<int> indices(frame_size, -1);

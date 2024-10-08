@@ -3,10 +3,10 @@
 
 #include "../../datum/time.hpp"
 
-using namespace GYDM;
+using namespace Plteen;
 
 /*************************************************************************************************/
-GYDM::IUDPDaemon::IUDPDaemon(IUDPLocalPeer* peer, uint16_t port, int packet_size) {
+Plteen::IUDPDaemon::IUDPDaemon(IUDPLocalPeer* peer, uint16_t port, int packet_size) {
     network_initialize();
 
     this->peer = peer;
@@ -28,7 +28,7 @@ GYDM::IUDPDaemon::IUDPDaemon(IUDPLocalPeer* peer, uint16_t port, int packet_size
     }
 }
 
-GYDM::IUDPDaemon::~IUDPDaemon() noexcept {
+Plteen::IUDPDaemon::~IUDPDaemon() noexcept {
     if (this->self != nullptr) {
         SDLNet_UDP_Close(this->self);
         this->self = nullptr;
@@ -41,19 +41,19 @@ GYDM::IUDPDaemon::~IUDPDaemon() noexcept {
     /* `this->peer` is managed by itself */
 }
 
-bool GYDM::IUDPDaemon::okay() {
+bool Plteen::IUDPDaemon::okay() {
     return (this->self != nullptr);
 }
 
-const char* GYDM::IUDPDaemon::hostname() {
+const char* Plteen::IUDPDaemon::hostname() {
     return SDLNet_ResolveIP(&this->addrv4);
 }
 
-uint16_t GYDM::IUDPDaemon::service() {
+uint16_t Plteen::IUDPDaemon::service() {
     return this->addrv4.port;
 }
 
-bool GYDM::IUDPDaemon::register_to(SDLNet_SocketSet master) {
+bool Plteen::IUDPDaemon::register_to(SDLNet_SocketSet master) {
     bool okay = false;
 
     if (this->okay()) {
@@ -63,14 +63,14 @@ bool GYDM::IUDPDaemon::register_to(SDLNet_SocketSet master) {
     return okay;
 }
 
-void GYDM::IUDPDaemon::unregister_from(SDLNet_SocketSet master) {
+void Plteen::IUDPDaemon::unregister_from(SDLNet_SocketSet master) {
     if (this->okay()) {
         SDLNet_UDP_DelSocket(master, this->self);
     }
 }
 
 /*************************************************************************************************/
-size_t GYDM::IUDPDaemon::packet_capacity() {
+size_t Plteen::IUDPDaemon::packet_capacity() {
     if (this->packet != nullptr) {
         return this->packet->capacity();
     } else {
@@ -78,7 +78,7 @@ size_t GYDM::IUDPDaemon::packet_capacity() {
     }
 }
 
-size_t GYDM::IUDPDaemon::packet_resize(size_t new_size) {
+size_t Plteen::IUDPDaemon::packet_resize(size_t new_size) {
     if (this->packet != nullptr) {
         return this->packet->resize(new_size);
     } else {
@@ -86,11 +86,11 @@ size_t GYDM::IUDPDaemon::packet_resize(size_t new_size) {
     }
 }
 
-bool GYDM::IUDPDaemon::ready() {
+bool Plteen::IUDPDaemon::ready() {
     return this->okay() && SDLNet_SocketReady(this->self);
 }
 
-bool GYDM::IUDPDaemon::recv_packet() {
+bool Plteen::IUDPDaemon::recv_packet() {
     if (this->okay() && (this->packet != nullptr)) {
         return this->packet->recv(this->self);
     } else {
@@ -99,7 +99,7 @@ bool GYDM::IUDPDaemon::recv_packet() {
 }
 
 /*************************************************************************************************/
-void GYDM::IUDPDaemon::dispatch_packet() {
+void Plteen::IUDPDaemon::dispatch_packet() {
     if ((this->peer != nullptr) && (!this->peer->absent())) {    
         if (this->packet != nullptr) {
             shared_datagram_t datagram = std::make_shared<Datagram>();
@@ -117,7 +117,7 @@ void GYDM::IUDPDaemon::dispatch_packet() {
 }
 
 /*************************************************************************************************/
-GYDM::IUDPClient::IUDPClient(int packet_size, uint16_t port) {
+Plteen::IUDPClient::IUDPClient(int packet_size, uint16_t port) {
     network_initialize();
 
     this->self = SDLNet_UDP_Open(port);
@@ -129,7 +129,7 @@ GYDM::IUDPClient::IUDPClient(int packet_size, uint16_t port) {
     }
 }
 
-GYDM::IUDPClient::~IUDPClient() noexcept {
+Plteen::IUDPClient::~IUDPClient() noexcept {
     if (this->self != nullptr) {
         SDLNet_UDP_Close(this->self);
         this->self = nullptr;
@@ -140,11 +140,11 @@ GYDM::IUDPClient::~IUDPClient() noexcept {
     }
 }
 
-bool GYDM::IUDPClient::okay() {
+bool Plteen::IUDPClient::okay() {
     return (this->self != nullptr);
 }
 
-size_t GYDM::IUDPClient::packet_capacity() {
+size_t Plteen::IUDPClient::packet_capacity() {
     if (this->packet != nullptr) {
         return this->packet->capacity();
     } else {
@@ -152,7 +152,7 @@ size_t GYDM::IUDPClient::packet_capacity() {
     }
 }
 
-size_t GYDM::IUDPClient::packet_resize(size_t new_size) {
+size_t Plteen::IUDPClient::packet_resize(size_t new_size) {
     if (this->packet != nullptr) {
         return this->packet->resize(new_size);
     } else {

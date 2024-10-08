@@ -2,15 +2,15 @@
 
 #include "game.hpp"
 
-namespace GYDM {
+namespace Plteen {
     /* Constants */
     static const char* unknown_plane_name = "冒险越来越深入了";
 
     /*********************************************************************************************/
-    class __lambda__ TheBigBang : public GYDM::Plane {
+    class __lambda__ TheBigBang : public Plteen::Plane {
     public:
         TheBigBang(const char* name = unknown_plane_name, uint32_t title_color = BLACK)
-            : GYDM::Plane(name), title_color(title_color) {}
+            : Plteen::Plane(name), title_color(title_color) {}
         virtual ~TheBigBang() {}
 
     public:
@@ -25,9 +25,9 @@ namespace GYDM {
         float get_titlebar_height();
 
     protected:
-        GYDM::Linkmon* agent = nullptr;
-        GYDM::Labellet* title = nullptr;
-        GYDM::Labellet* tooltip = nullptr;
+        Plteen::Linkmon* agent = nullptr;
+        Plteen::Labellet* title = nullptr;
+        Plteen::Labellet* tooltip = nullptr;
 
     private:
         uint32_t title_color;

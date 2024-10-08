@@ -6,7 +6,7 @@
 
 #include "../virtualization/screen/pasteboard.hpp"
 
-using namespace GYDM;
+using namespace Plteen;
 
 /*************************************************************************************************/
 namespace {
@@ -16,7 +16,7 @@ namespace {
 		PlaceholderPlane() : Plane("_") {}
 	};
 
-	class PlaneInfo : public GYDM::IPlaneInfo {
+	class PlaneInfo : public Plteen::IPlaneInfo {
 	public:
 		PlaneInfo(IScreen* master) : IPlaneInfo(master) {};
 	};
@@ -42,10 +42,10 @@ static void construct_subplane(IPlane* plane, float width, float height) {
 }
 
 /**************************************************************************************************/
-GYDM::Continent::Continent(IPlane* plane, const GYDM::RGBA& background)
+Plteen::Continent::Continent(IPlane* plane, const Plteen::RGBA& background)
 	: Continent(plane, 0.0F, 0.0F, background) {}
 
-GYDM::Continent::Continent(IPlane* plane, float width, float height, const GYDM::RGBA& background)
+Plteen::Continent::Continent(IPlane* plane, float width, float height, const Plteen::RGBA& background)
 		: plane(plane), background(background), border(transparent), width(width), height(height) {
 	if (this->plane == nullptr) {
 		this->plane = new PlaceholderPlane();
@@ -58,22 +58,22 @@ GYDM::Continent::Continent(IPlane* plane, float width, float height, const GYDM:
 	// this->enable_events(true, true);
 }
 
-GYDM::Continent::~Continent() noexcept {
+Plteen::Continent::~Continent() noexcept {
 	delete this->plane;
 	delete this->screen;
 }
 
-const char* GYDM::Continent::name() {
+const char* Plteen::Continent::name() {
 	return this->plane->name();
 }
 
 /*************************************************************************************************/
-void GYDM::Continent::construct(GYDM::dc_t* dc) {
+void Plteen::Continent::construct(Plteen::dc_t* dc) {
 	bind_subplane_owership(this->screen, this->plane);
 	construct_subplane(this->plane, this->width, this->height);
 }
 
-Box GYDM::Continent::get_bounding_box() {
+Box Plteen::Continent::get_bounding_box() {
 	Box box;
 
 	if ((this->width > 0.0F) && (this->height > 0.0F)) {
@@ -89,7 +89,7 @@ Box GYDM::Continent::get_bounding_box() {
 	return box;
 }
 
-int GYDM::Continent::update(uint64_t count, uint32_t interval, uint64_t uptime) {
+int Plteen::Continent::update(uint64_t count, uint32_t interval, uint64_t uptime) {
 	this->plane->begin_update_sequence();
 	this->plane->on_elapse(count, interval, uptime);
 	this->plane->end_update_sequence();
@@ -97,7 +97,7 @@ int GYDM::Continent::update(uint64_t count, uint32_t interval, uint64_t uptime) 
 	return 0;
 }
 
-void GYDM::Continent::draw(GYDM::dc_t* dc, float x, float y, float Width, float Height) {
+void Plteen::Continent::draw(Plteen::dc_t* dc, float x, float y, float Width, float Height) {
 	if (this->background.is_opacity()) {
         dc->fill_rect(x, y, Width, Height, this->background);
     }
@@ -110,14 +110,14 @@ void GYDM::Continent::draw(GYDM::dc_t* dc, float x, float y, float Width, float 
 }
 
 /**************************************************************************************************/
-void GYDM::Continent::set_background_color(const RGBA& color) {
+void Plteen::Continent::set_background_color(const RGBA& color) {
 	if (this->background != color) {
 		this->background = color;
 		this->notify_updated();
 	}
 }
 
-void GYDM::Continent::set_border_color(const RGBA& color) {
+void Plteen::Continent::set_border_color(const RGBA& color) {
 	if (this->border != color) {
 		this->border = color;
 		this->notify_updated();
@@ -125,14 +125,14 @@ void GYDM::Continent::set_border_color(const RGBA& color) {
 }
 
 /**************************************************************************************************/
-bool GYDM::Continent::on_pointer_pressed(uint8_t button, float local_x, float local_y, uint8_t clicks) {
+bool Plteen::Continent::on_pointer_pressed(uint8_t button, float local_x, float local_y, uint8_t clicks) {
 	return this->plane->on_pointer_pressed(button, local_x, local_y, clicks);
 }
 
-bool GYDM::Continent::on_pointer_move(uint32_t state, float local_x, float local_y, float dx, float dy, bool bye) {
+bool Plteen::Continent::on_pointer_move(uint32_t state, float local_x, float local_y, float dx, float dy, bool bye) {
 	return this->plane->on_pointer_move(state, local_x, local_y, dx, dy);
 }
 
-bool GYDM::Continent::on_pointer_released(uint8_t button, float local_x, float local_y, uint8_t clicks) {
+bool Plteen::Continent::on_pointer_released(uint8_t button, float local_x, float local_y, uint8_t clicks) {
 	return this->plane->on_pointer_released(button, local_x, local_y, clicks);
 }

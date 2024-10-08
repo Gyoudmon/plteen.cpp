@@ -4,16 +4,16 @@
 #include "../../../../datum/string.hpp"
 #include "../../../../physics/random.hpp"
 
-using namespace GYDM;
+using namespace Plteen;
 
 /*************************************************************************************************/
-Bracer* GYDM::Bracer::randomly_create(const char* nickname) {
+Bracer* Plteen::Bracer::randomly_create(const char* nickname) {
     size_t idx = random_uniform(0, int(Bracer::name_count()) - 1);
 
     return Bracer::create(idx, nickname);
 }
 
-Bracer* GYDM::Bracer::create(const char* name, const char* nickname) {
+Bracer* Plteen::Bracer::create(const char* name, const char* nickname) {
     Bracer* bracer = nullptr;
 
     if (string_ci_equal(name, "Estelle")) {
@@ -39,7 +39,7 @@ Bracer* GYDM::Bracer::create(const char* name, const char* nickname) {
     return bracer;
 }
 
-Bracer* GYDM::Bracer::create(size_t seq, const char* nickname) {
+Bracer* Plteen::Bracer::create(size_t seq, const char* nickname) {
     Bracer* bracer = nullptr;
 
     switch (seq % Bracer::name_count()) {
@@ -58,21 +58,21 @@ Bracer* GYDM::Bracer::create(size_t seq, const char* nickname) {
 }
 
 /*************************************************************************************************/
-GYDM::Bracer::Bracer(const char* name, const char* nickname)
+Plteen::Bracer::Bracer(const char* name, const char* nickname)
     : Citizen(digimon_mascot_path(name, "", TRAIL_BRACERS_PATH), nickname) {}
 
-void GYDM::Bracer::on_costumes_load() {
+void Plteen::Bracer::on_costumes_load() {
     Citizen::on_costumes_load();
     this->do_mode_switching(BracerMode::Walk, MatterPort::CC);
 }
 
-void GYDM::Bracer::try_switch_mode(BracerMode mode, int repeat, MatterPort anchor) {
+void Plteen::Bracer::try_switch_mode(BracerMode mode, int repeat, MatterPort anchor) {
     if (this->mode != mode) {
         this->switch_mode(mode, repeat, anchor);
     }
 }
 
-void GYDM::Bracer::switch_mode(BracerMode mode, int repeat, MatterPort anchor) {
+void Plteen::Bracer::switch_mode(BracerMode mode, int repeat, MatterPort anchor) {
     if (this->mode != mode) {
         this->do_mode_switching(mode, anchor);
     }
@@ -86,14 +86,14 @@ void GYDM::Bracer::switch_mode(BracerMode mode, int repeat, MatterPort anchor) {
     }
 }
 
-void GYDM::Bracer::retrigger_heading_change_event() {
+void Plteen::Bracer::retrigger_heading_change_event() {
     double vx, vy, vr;
 
     this->get_velocity(&vr, &vx, &vy);
     this->dispatch_heading_event(vr, vx, vy, vr);
 }
 
-void GYDM::Bracer::do_mode_switching(BracerMode mode, MatterPort anchor) {
+void Plteen::Bracer::do_mode_switching(BracerMode mode, MatterPort anchor) {
     float cwidth, cheight;
 
     this->mode = mode;
@@ -105,24 +105,24 @@ void GYDM::Bracer::do_mode_switching(BracerMode mode, MatterPort anchor) {
 }
 
 /*************************************************************************************************/
-void GYDM::Bracer::on_walk_mode(int repeat) {
+void Plteen::Bracer::on_walk_mode(int repeat) {
     this->retrigger_heading_change_event();
 }
 
-void GYDM::Bracer::on_run_mode(int repeat) {
+void Plteen::Bracer::on_run_mode(int repeat) {
     this->retrigger_heading_change_event();
 }
 
-void GYDM::Bracer::on_win_mode(int repeat) {
+void Plteen::Bracer::on_win_mode(int repeat) {
     this->play("win", repeat);
 }
 
-void GYDM::Bracer::on_lose_mode(int repeat) {
+void Plteen::Bracer::on_lose_mode(int repeat) {
     this->stop();
     this->retrigger_heading_change_event();
 }
 
-void GYDM::Bracer::feed_canvas_size(BracerMode mode, float* width, float* height) {
+void Plteen::Bracer::feed_canvas_size(BracerMode mode, float* width, float* height) {
     switch (mode) {
     case BracerMode::Walk: SET_VALUES(width, 36.0F, height, 72.0F); break;
     case BracerMode::Run:  SET_VALUES(width, 48.0F, height, 72.0F); break;
@@ -132,7 +132,7 @@ void GYDM::Bracer::feed_canvas_size(BracerMode mode, float* width, float* height
 }
 
 /*************************************************************************************************/
-void GYDM::Estelle::feed_canvas_size(BracerMode mode, float* width, float* height) {
+void Plteen::Estelle::feed_canvas_size(BracerMode mode, float* width, float* height) {
     if (mode == BracerMode::Win) {
         SET_VALUES(width, 96.0F, height, 96.0F);
     } else {
@@ -140,7 +140,7 @@ void GYDM::Estelle::feed_canvas_size(BracerMode mode, float* width, float* heigh
     }
 }
 
-void GYDM::Tita::feed_canvas_size(BracerMode mode, float* width, float* height) {
+void Plteen::Tita::feed_canvas_size(BracerMode mode, float* width, float* height) {
     switch (mode) {
     case BracerMode::Walk: SET_VALUES(width, 48.0F, height, 72.0F); break;
     case BracerMode::Run:  SET_VALUES(width, 50.0F, height, 72.0F); break;
@@ -148,7 +148,7 @@ void GYDM::Tita::feed_canvas_size(BracerMode mode, float* width, float* height) 
     }
 }
 
-void GYDM::Zin::feed_canvas_size(BracerMode mode, float* width, float* height) {
+void Plteen::Zin::feed_canvas_size(BracerMode mode, float* width, float* height) {
     switch (mode) {
     case BracerMode::Walk: case BracerMode::Run: SET_VALUES(width, 64.0F, height, 96.0F); break;
     default: Bracer::feed_canvas_size(mode, width, height);
@@ -156,7 +156,7 @@ void GYDM::Zin::feed_canvas_size(BracerMode mode, float* width, float* height) {
 }
 
 /*************************************************************************************************/
-void GYDM::Bracer::on_eward(double theta_rad, double vx, double vy) {
+void Plteen::Bracer::on_eward(double theta_rad, double vx, double vy) {
     switch (this->mode) {
     case BracerMode::Run: this->play("run_e_"); break;
     case BracerMode::Lose: this->switch_to_costume("lose_e"); break;
@@ -164,7 +164,7 @@ void GYDM::Bracer::on_eward(double theta_rad, double vx, double vy) {
     }
 }
 
-void GYDM::Bracer::on_wward(double theta_rad, double vx, double vy) {
+void Plteen::Bracer::on_wward(double theta_rad, double vx, double vy) {
     switch (this->mode) {
     case BracerMode::Run: this->play("run_w_"); break;
     case BracerMode::Lose: this->switch_to_costume("lose_w"); break;
@@ -172,7 +172,7 @@ void GYDM::Bracer::on_wward(double theta_rad, double vx, double vy) {
     }
 }
 
-void GYDM::Bracer::on_sward(double theta_rad, double vx, double vy) {
+void Plteen::Bracer::on_sward(double theta_rad, double vx, double vy) {
     switch (this->mode) {
     case BracerMode::Run: this->play("run_s_"); break;
     case BracerMode::Lose: this->switch_to_costume("lose_s"); break;
@@ -180,7 +180,7 @@ void GYDM::Bracer::on_sward(double theta_rad, double vx, double vy) {
     }
 }
 
-void GYDM::Bracer::on_nward(double theta_rad, double vx, double vy) {
+void Plteen::Bracer::on_nward(double theta_rad, double vx, double vy) {
     switch (this->mode) {
     case BracerMode::Run: this->play("run_n_"); break;
     case BracerMode::Lose: this->switch_to_costume("lose_n"); break;
@@ -188,7 +188,7 @@ void GYDM::Bracer::on_nward(double theta_rad, double vx, double vy) {
     }
 }
 
-void GYDM::Bracer::on_esward(double theta_rad, double vx, double vy) {
+void Plteen::Bracer::on_esward(double theta_rad, double vx, double vy) {
     switch (this->mode) {
     case BracerMode::Run: this->play("run_es_"); break;
     case BracerMode::Lose: this->switch_to_costume("lose_es"); break;
@@ -196,7 +196,7 @@ void GYDM::Bracer::on_esward(double theta_rad, double vx, double vy) {
     }
 }
 
-void GYDM::Bracer::on_enward(double theta_rad, double vx, double vy) {
+void Plteen::Bracer::on_enward(double theta_rad, double vx, double vy) {
     switch (this->mode) {
     case BracerMode::Run: this->play("run_en_"); break;
     case BracerMode::Lose: this->switch_to_costume("lose_en"); break;
@@ -204,7 +204,7 @@ void GYDM::Bracer::on_enward(double theta_rad, double vx, double vy) {
     }
 }
 
-void GYDM::Bracer::on_wsward(double theta_rad, double vx, double vy) {
+void Plteen::Bracer::on_wsward(double theta_rad, double vx, double vy) {
     switch (this->mode) {
     case BracerMode::Run: this->play("run_ws_"); break;
     case BracerMode::Lose: this->switch_to_costume("lose_ws"); break;
@@ -212,7 +212,7 @@ void GYDM::Bracer::on_wsward(double theta_rad, double vx, double vy) {
     }
 }
 
-void GYDM::Bracer::on_wnward(double theta_rad, double vx, double vy) {
+void Plteen::Bracer::on_wnward(double theta_rad, double vx, double vy) {
     switch (this->mode) {
     case BracerMode::Run: this->play("run_wn_"); break;
     case BracerMode::Lose: this->switch_to_costume("lose_wn"); break;

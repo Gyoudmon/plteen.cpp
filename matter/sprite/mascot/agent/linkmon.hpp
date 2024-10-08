@@ -2,8 +2,8 @@
 
 #include "../agent.hpp"
 
-namespace GYDM {
-    class __lambda__ Linkmon : public GYDM::AgentSpriteSheet {
+namespace Plteen {
+    class __lambda__ Linkmon : public Plteen::AgentSpriteSheet {
     public:
         Linkmon();
 

@@ -5,7 +5,7 @@
 
 #include <memory>
 
-using namespace GYDM;
+using namespace Plteen;
 
 /*************************************************************************************************/
 template<typename BYTE>
@@ -159,65 +159,65 @@ static void natural_modular_expt(Natural* self, Natural* me, uint64_t b, N n) {
 }
 
 /*************************************************************************************************/
-GYDM::Natural::~Natural() noexcept {
+Plteen::Natural::~Natural() noexcept {
 	if (this->natural != nullptr) {
 		delete [] this->natural;
 	}
 }
 
-GYDM::Natural::Natural() : Natural(0ULL) {}
+Plteen::Natural::Natural() : Natural(0ULL) {}
 
-GYDM::Natural::Natural(uint64_t n) : natural(nullptr), capacity(sizeof(uint64_t)), payload(0U) {
+Plteen::Natural::Natural(uint64_t n) : natural(nullptr), capacity(sizeof(uint64_t)), payload(0U) {
 	this->natural = this->malloc(this->capacity);
 	this->replaced_by_fixnum(n);
 }
 
-GYDM::Natural::Natural(const bytes& nstr, size_t nstart, size_t nend)
+Plteen::Natural::Natural(const bytes& nstr, size_t nstart, size_t nend)
 	: Natural(nstr.c_str(), nstart, ((nend <= nstart) ? nstr.size() : nend)) {}
 
-GYDM::Natural::Natural(const std::string& nstr, size_t nstart, size_t nend)
+Plteen::Natural::Natural(const std::string& nstr, size_t nstart, size_t nend)
 	: Natural(reinterpret_cast<const uint8_t*>(nstr.c_str()), nstart, ((nend <= nstart) ? nstr.size() : nend)) {}
 
-GYDM::Natural::Natural(const std::wstring& nstr, size_t nstart, size_t nend)
+Plteen::Natural::Natural(const std::wstring& nstr, size_t nstart, size_t nend)
 	: Natural(reinterpret_cast<const uint16_t*>(nstr.c_str()), nstart, ((nend <= nstart) ? nstr.size() : nend)) {}
 
-GYDM::Natural::Natural(uintptr_t base, const bytes& nstr, size_t nstart, size_t nend)
+Plteen::Natural::Natural(uintptr_t base, const bytes& nstr, size_t nstart, size_t nend)
 	: Natural(base, nstr.c_str(), nstart, ((nend <= nstart) ? nstr.size() : nend)) {}
 
-GYDM::Natural::Natural(uintptr_t base, const std::string& nstr, size_t nstart, size_t nend)
+Plteen::Natural::Natural(uintptr_t base, const std::string& nstr, size_t nstart, size_t nend)
 	: Natural(base, reinterpret_cast<const uint8_t*>(nstr.c_str()), nstart, ((nend <= nstart) ? nstr.size() : nend)) {}
 
-GYDM::Natural::Natural(uintptr_t base, const std::wstring& nstr, size_t nstart, size_t nend)
+Plteen::Natural::Natural(uintptr_t base, const std::wstring& nstr, size_t nstart, size_t nend)
 	: Natural(base, reinterpret_cast<const uint16_t*>(nstr.c_str()), nstart, ((nend <= nstart) ? nstr.size() : nend)) {}
 
-bool GYDM::Natural::is_zero() const {
+bool Plteen::Natural::is_zero() const {
 	return ((this->payload == 0)
 		|| ((this->payload == 1) // redundant checking
 			&& (this->natural[this->capacity - 1] == 0)));
 }
 
-bool GYDM::Natural::is_one() const {
+bool Plteen::Natural::is_one() const {
 	return ((this->payload == 1)
 		&& (this->natural[this->capacity - 1] == 1));
 }
 
-bool GYDM::Natural::is_fixnum() const {
+bool Plteen::Natural::is_fixnum() const {
 	return (this->payload <= sizeof(uint64_t));
 }
 
-bool GYDM::Natural::is_odd() const {
+bool Plteen::Natural::is_odd() const {
 	return ((this->payload > 0U) && ((this->natural[this->capacity - 1U] & 0x1U) == 0x1U));
 }
 
-bool GYDM::Natural::is_even() const {
+bool Plteen::Natural::is_even() const {
 	return ((this->payload == 0U) || ((this->natural[this->capacity - 1U] & 0x1U) == 0x0U));
 }
 
-size_t GYDM::Natural::length() const {
+size_t Plteen::Natural::length() const {
 	return this->payload;
 }
 
-size_t GYDM::Natural::integer_length(uint8_t alignment) const {
+size_t Plteen::Natural::integer_length(uint8_t alignment) const {
 	size_t s = 0;
 
 	if (this->payload > 0) {
@@ -240,11 +240,11 @@ size_t GYDM::Natural::integer_length(uint8_t alignment) const {
 	return s;
 }
 
-bytes GYDM::Natural::to_bytes() const {
+bytes Plteen::Natural::to_bytes() const {
 	return bytes(this->natural + (this->capacity - this->payload), this->payload);
 }
 
-bytes GYDM::Natural::to_hexstring(char ten) const {
+bytes Plteen::Natural::to_hexstring(char ten) const {
 	bytes hex(fxmax(_U32(this->payload), 1U) * 2, '0');
 	size_t payload_idx = this->capacity - this->payload;
 	size_t msb_idx = 0U;
@@ -264,7 +264,7 @@ bytes GYDM::Natural::to_hexstring(char ten) const {
 	return hex;
 }
 
-bytes GYDM::Natural::to_binstring(uint8_t alignment) const {
+bytes Plteen::Natural::to_binstring(uint8_t alignment) const {
 	size_t bsize = this->integer_length(alignment);
 	bytes bin(bsize, '0');
 	size_t lsb_idx = bsize - 1U;
@@ -289,7 +289,7 @@ bytes GYDM::Natural::to_binstring(uint8_t alignment) const {
 }
 
 /*************************************************************************************************/
-GYDM::Natural::Natural(const Natural& n) : natural(nullptr), capacity(fxmax(n.payload, sizeof(uint64_t))), payload(n.payload) { // copy constructor
+Plteen::Natural::Natural(const Natural& n) : natural(nullptr), capacity(fxmax(n.payload, sizeof(uint64_t))), payload(n.payload) { // copy constructor
 	this->natural = this->malloc(this->capacity);
 
 	if (this->payload > 0) {
@@ -299,17 +299,17 @@ GYDM::Natural::Natural(const Natural& n) : natural(nullptr), capacity(fxmax(n.pa
 	}
 }
 
-GYDM::Natural::Natural(Natural&& n) : natural(n.natural), capacity(n.capacity), payload(n.payload) { // move constructor
+Plteen::Natural::Natural(Natural&& n) : natural(n.natural), capacity(n.capacity), payload(n.payload) { // move constructor
 	n.on_moved();
 }
 
-Natural& GYDM::Natural::operator=(uint64_t n) {
+Natural& Plteen::Natural::operator=(uint64_t n) {
 	this->replaced_by_fixnum(n);
 
 	return (*this);
 }
 
-Natural& GYDM::Natural::operator=(const Natural& n) { // copy assignment operator
+Natural& Plteen::Natural::operator=(const Natural& n) { // copy assignment operator
 	if (this != &n) {
 		if (n.payload > this->capacity) {
 			if (this->natural != nullptr) {
@@ -332,7 +332,7 @@ Natural& GYDM::Natural::operator=(const Natural& n) { // copy assignment operato
 	return (*this);
 }
 
-Natural& GYDM::Natural::operator=(Natural&& n) noexcept { // move assignment operator
+Natural& Plteen::Natural::operator=(Natural&& n) noexcept { // move assignment operator
 	if (this->natural != nullptr) {
 		delete[] this->natural;
 	}
@@ -346,14 +346,14 @@ Natural& GYDM::Natural::operator=(Natural&& n) noexcept { // move assignment ope
 	return (*this);
 }
 
-void GYDM::Natural::on_moved() {
+void Plteen::Natural::on_moved() {
 	this->capacity = 0U;
 	this->payload = 0U;
 	this->natural = nullptr;
 }
 
 /*************************************************************************************************/
-int GYDM::Natural::compare(uint64_t rhs) const {
+int Plteen::Natural::compare(uint64_t rhs) const {
 	int cmp = 0;
 
 	if (this->is_fixnum()) {
@@ -375,7 +375,7 @@ int GYDM::Natural::compare(uint64_t rhs) const {
 	return cmp;
 }
 
-int GYDM::Natural::compare(const Natural& rhs) const {
+int Plteen::Natural::compare(const Natural& rhs) const {
 	int cmp = ((this->payload < rhs.payload) ? -1 : +1);
 
 	if (this->payload == rhs.payload) {
@@ -388,19 +388,19 @@ int GYDM::Natural::compare(const Natural& rhs) const {
 }
 
 /*************************************************************************************************/
-Natural& GYDM::Natural::operator++() {
+Natural& Plteen::Natural::operator++() {
 	this->add_digit(1U);
 
 	return (*this);
 }
 
-Natural& GYDM::Natural::operator--() {
+Natural& Plteen::Natural::operator--() {
 	this->decrease_from_slot(1U);
 
 	return (*this);
 }
 
-Natural& GYDM::Natural::operator+=(uint64_t rhs) {
+Natural& Plteen::Natural::operator+=(uint64_t rhs) {
 	if (rhs > 0xFFU) {
 		size_t digits = fxmax(this->payload, sizeof(uint64_t));
 		size_t addend_idx = this->capacity - 1;
@@ -432,7 +432,7 @@ Natural& GYDM::Natural::operator+=(uint64_t rhs) {
 	return (*this);
 }
 
-Natural& GYDM::Natural::operator+=(const Natural& rhs) {
+Natural& Plteen::Natural::operator+=(const Natural& rhs) {
 	// NOTE: the rhs may refer to (*this)
 
 	if (rhs.payload > 1U) {
@@ -491,7 +491,7 @@ Natural& GYDM::Natural::operator+=(const Natural& rhs) {
 	return (*this);
 }
 
-Natural& GYDM::Natural::operator-=(uint64_t rhs) {
+Natural& Plteen::Natural::operator-=(uint64_t rhs) {
 	if ((!this->is_zero()) && (rhs > 0U)) {
 		size_t rhs_payloadp1 = 1U;
 		uint8_t borrowed = 0U;
@@ -529,7 +529,7 @@ Natural& GYDM::Natural::operator-=(uint64_t rhs) {
 	return (*this);
 }
 
-Natural& GYDM::Natural::operator-=(const Natural& rhs) {
+Natural& Plteen::Natural::operator-=(const Natural& rhs) {
 	if (!rhs.is_zero()) {
 		if (this->payload >= rhs.payload) {
 			uint8_t borrowed = 0U;
@@ -565,7 +565,7 @@ Natural& GYDM::Natural::operator-=(const Natural& rhs) {
 	return (*this);
 }
 
-Natural& GYDM::Natural::operator*=(uint64_t rhs) {
+Natural& Plteen::Natural::operator*=(uint64_t rhs) {
 	if (!this->is_zero()) {
 		if (rhs > 0xFFU) {
 			size_t digits = this->payload + sizeof(uint64_t);
@@ -617,7 +617,7 @@ Natural& GYDM::Natural::operator*=(uint64_t rhs) {
 	return (*this);
 }
 
-Natural& GYDM::Natural::operator*=(const Natural& rhs) {
+Natural& Plteen::Natural::operator*=(const Natural& rhs) {
 	// NOTE: the rhs may refer to (*this)
 
 	if (!this->is_zero()) {
@@ -668,7 +668,7 @@ Natural& GYDM::Natural::operator*=(const Natural& rhs) {
 	return (*this);
 }
 
-Natural& GYDM::Natural::quotient_remainder(uint64_t rhs, Natural* oremainder) {
+Natural& Plteen::Natural::quotient_remainder(uint64_t rhs, Natural* oremainder) {
 	// WARNING: `rhs` may refer to `(*this)`, `oremainder` may point to `this`.
 	
 	if (!this->is_zero()) {
@@ -719,7 +719,7 @@ Natural& GYDM::Natural::quotient_remainder(uint64_t rhs, Natural* oremainder) {
 	return (*this);
 }
 
-Natural& GYDM::Natural::quotient_remainder(const Natural& rhs, Natural* oremainder) {
+Natural& Plteen::Natural::quotient_remainder(const Natural& rhs, Natural* oremainder) {
 	// Algorithm: classic method that to estimate the pencil-and-paper long division.
 	
 	/** Theorem
@@ -882,7 +882,7 @@ Natural& GYDM::Natural::quotient_remainder(const Natural& rhs, Natural* oremaind
 	return (*this);
 }
 
-Natural& GYDM::Natural::expt(uint64_t n) {
+Natural& Plteen::Natural::expt(uint64_t n) {
 	Natural Z = (*this);
 	
 	(*this) = 1U;
@@ -899,7 +899,7 @@ Natural& GYDM::Natural::expt(uint64_t n) {
 	return (*this);
 }
 
-Natural& GYDM::Natural::expt(const Natural& n) {
+Natural& Plteen::Natural::expt(const Natural& n) {
 	// Algorithm: Right-to-Left binary method (also known as "Russian Peasant Method")
 	Natural Z = (*this);
 	Natural N = n;
@@ -918,7 +918,7 @@ Natural& GYDM::Natural::expt(const Natural& n) {
 	return (*this);
 }
 
-Natural& GYDM::Natural::modular_expt(uint64_t b, uint64_t n) {
+Natural& Plteen::Natural::modular_expt(uint64_t b, uint64_t n) {
 	if (b > 0U) {
 		size_t product_size = sizeof(uint64_t) * 2U;
 		Natural me = 1U;
@@ -936,7 +936,7 @@ Natural& GYDM::Natural::modular_expt(uint64_t b, uint64_t n) {
 	return (*this);
 }
 
-Natural& GYDM::Natural::modular_expt(const Natural& b, uint64_t n) {
+Natural& Plteen::Natural::modular_expt(const Natural& b, uint64_t n) {
 	if (b.is_fixnum()) {
 		this->modular_expt(b.fixnum64_ref(0U), n);
 	} else {
@@ -951,7 +951,7 @@ Natural& GYDM::Natural::modular_expt(const Natural& b, uint64_t n) {
 	return (*this);
 }
 
-Natural& GYDM::Natural::modular_expt(const Natural& b, const Natural& n) {
+Natural& Plteen::Natural::modular_expt(const Natural& b, const Natural& n) {
 	// Algorithm: repeated modular multiplication and squaring (the idea is the same as `expt`)
 
 	/** Theorem
@@ -985,7 +985,7 @@ Natural& GYDM::Natural::modular_expt(const Natural& b, const Natural& n) {
 	return (*this);
 }
 
-Natural& GYDM::Natural::modular_expt(uint64_t b, const Natural& n) {
+Natural& Plteen::Natural::modular_expt(uint64_t b, const Natural& n) {
 	if (b > 0U) {
 		if (n.is_fixnum()) {
 			this->modular_expt(b, n.fixnum64_ref(0));
@@ -1008,7 +1008,7 @@ Natural& GYDM::Natural::modular_expt(uint64_t b, const Natural& n) {
 }
 
 /*************************************************************************************************/
-Natural GYDM::Natural::operator~() {
+Natural Plteen::Natural::operator~() {
 	Natural ones_complement(*this);
 
 	
@@ -1021,7 +1021,7 @@ Natural GYDM::Natural::operator~() {
 	return ones_complement;
 }
 
-Natural& GYDM::Natural::operator<<=(uint64_t rhs) {	
+Natural& Plteen::Natural::operator<<=(uint64_t rhs) {	
 	if ((!this->is_zero()) && (rhs > 0U)) {
 		size_t shift_byts = (size_t)(rhs / 8);
 		size_t shift_bits = (size_t)(rhs % 8);
@@ -1087,7 +1087,7 @@ Natural& GYDM::Natural::operator<<=(uint64_t rhs) {
 	return (*this);
 }
 
-Natural& GYDM::Natural::operator>>=(uint64_t rhs) {
+Natural& Plteen::Natural::operator>>=(uint64_t rhs) {
 	if ((!this->is_zero()) && (rhs != 0U)) {
 		size_t shift_byts = (size_t)(rhs / 8);
 		
@@ -1137,7 +1137,7 @@ Natural& GYDM::Natural::operator>>=(uint64_t rhs) {
 	return (*this);
 }
 
-Natural& GYDM::Natural::operator&=(uint64_t rhs) {
+Natural& Plteen::Natural::operator&=(uint64_t rhs) {
 	size_t idx0 = this->capacity - fxmin(this->payload, sizeof(uint64_t));
 
 	this->payload = 0U;
@@ -1156,7 +1156,7 @@ Natural& GYDM::Natural::operator&=(uint64_t rhs) {
 	return (*this);
 }
 
-Natural& GYDM::Natural::operator&=(const Natural& rhs) {
+Natural& Plteen::Natural::operator&=(const Natural& rhs) {
 	size_t upsize = fxmin(this->payload, rhs.payload);
 
 	this->payload = 0U;
@@ -1173,7 +1173,7 @@ Natural& GYDM::Natural::operator&=(const Natural& rhs) {
 	return (*this);
 }
 
-Natural& GYDM::Natural::operator|=(uint64_t rhs) {
+Natural& Plteen::Natural::operator|=(uint64_t rhs) {
 	if (rhs > 0U) {
 		size_t digits = fxmax(this->payload, sizeof(uint64_t));
 		size_t nidx = this->capacity - 1;
@@ -1196,7 +1196,7 @@ Natural& GYDM::Natural::operator|=(uint64_t rhs) {
 	return (*this);
 }
 
-Natural& GYDM::Natural::operator|=(const Natural& rhs) {
+Natural& Plteen::Natural::operator|=(const Natural& rhs) {
 	if (!rhs.is_zero()) {
 		size_t digits = fxmax(this->payload, rhs.payload);
 		size_t cdigits = fxmin(this->payload, rhs.payload);
@@ -1231,7 +1231,7 @@ Natural& GYDM::Natural::operator|=(const Natural& rhs) {
 	return (*this);
 }
 
-Natural& GYDM::Natural::operator^=(uint64_t rhs) {
+Natural& Plteen::Natural::operator^=(uint64_t rhs) {
 	if (rhs > 0U) {
 		size_t digits = fxmax(this->payload, sizeof(uint64_t));
 		size_t nidx = this->capacity - 1;
@@ -1262,7 +1262,7 @@ Natural& GYDM::Natural::operator^=(uint64_t rhs) {
 	return (*this);
 }
 
-Natural& GYDM::Natural::operator^=(const Natural& rhs) {
+Natural& Plteen::Natural::operator^=(const Natural& rhs) {
 	if (!rhs.is_zero()) {
 		size_t digits = fxmax(this->payload, rhs.payload);
 		size_t cdigits = fxmin(this->payload, rhs.payload);
@@ -1299,7 +1299,7 @@ Natural& GYDM::Natural::operator^=(const Natural& rhs) {
 	return (*this);
 }
 
-bool GYDM::Natural::is_bit_set(uint64_t m) {
+bool Plteen::Natural::is_bit_set(uint64_t m) {
 	bool set = false;
 
 	if (m <= (this->payload * 8U)) {
@@ -1313,7 +1313,7 @@ bool GYDM::Natural::is_bit_set(uint64_t m) {
 	return set;
 }
 
-Natural GYDM::Natural::bit_field(uint64_t start, uint64_t endp1) { // counting from right side
+Natural Plteen::Natural::bit_field(uint64_t start, uint64_t endp1) { // counting from right side
 	size_t startq = size_t(start / 8);
 	size_t endq = size_t(endp1) / 8;
 	size_t endr = size_t(endp1 % 8);
@@ -1347,7 +1347,7 @@ Natural GYDM::Natural::bit_field(uint64_t start, uint64_t endp1) { // counting f
 	return sub;
 }
 
-uint64_t GYDM::Natural::bitfield(uint64_t start, uint64_t endp1) { // counting from right side
+uint64_t Plteen::Natural::bitfield(uint64_t start, uint64_t endp1) { // counting from right side
 	uint64_t sub = 0x0U;
 	
 	endp1 = fxmin(start + 64ULL, fxmin(endp1, this->payload * 8ULL + 1ULL));
@@ -1383,7 +1383,7 @@ uint64_t GYDM::Natural::bitfield(uint64_t start, uint64_t endp1) { // counting f
 	return sub;
 }
 
-int64_t GYDM::Natural::signed_bitfield(uint64_t start, uint64_t endp1) { // counting from right side
+int64_t Plteen::Natural::signed_bitfield(uint64_t start, uint64_t endp1) { // counting from right side
 	uint64_t mask_length = fxmin(endp1 - start, 64ULL) - 1;
 	uint64_t raw = this->bitfield(start, endp1);
 	int64_t sint = 0LL;
@@ -1400,7 +1400,7 @@ int64_t GYDM::Natural::signed_bitfield(uint64_t start, uint64_t endp1) { // coun
 }
 
 /*************************************************************************************************/
-uint8_t& GYDM::Natural::operator[](int idx) {
+uint8_t& Plteen::Natural::operator[](int idx) {
 	size_t bidx = 0U;
 
 	if (this->payload == 0U) {
@@ -1418,7 +1418,7 @@ uint8_t& GYDM::Natural::operator[](int idx) {
 	return this->natural[bidx];
 }
 
-size_t GYDM::Natural::fixnum_count(Fixnum type) const {
+size_t Plteen::Natural::fixnum_count(Fixnum type) const {
 	size_t modulus = 8U;
 
 	switch (type) {
@@ -1430,20 +1430,20 @@ size_t GYDM::Natural::fixnum_count(Fixnum type) const {
 	return fixnum_length(this->payload, modulus);
 }
 
-uint16_t GYDM::Natural::fixnum16_ref(int slot_idx, size_t offset) const {
+uint16_t Plteen::Natural::fixnum16_ref(int slot_idx, size_t offset) const {
 	return fixnum_ref<uint16_t>(this->natural, this->payload, this->capacity, slot_idx, offset, 2U);
 }
 
-uint32_t GYDM::Natural::fixnum32_ref(int slot_idx, size_t offset) const {
+uint32_t Plteen::Natural::fixnum32_ref(int slot_idx, size_t offset) const {
 	return fixnum_ref<uint32_t>(this->natural, this->payload, this->capacity, slot_idx, offset, 4U);
 }
 
-uint64_t GYDM::Natural::fixnum64_ref(int slot_idx, size_t offset) const {
+uint64_t Plteen::Natural::fixnum64_ref(int slot_idx, size_t offset) const {
 	return fixnum_ref<uint64_t>(this->natural, this->payload, this->capacity, slot_idx, offset, 8U);
 }
 
 /*************************************************************************************************/
-size_t GYDM::Natural::expand(size_t size) {
+size_t Plteen::Natural::expand(size_t size) {
 	if (size > 0) {
 		if (this->natural != nullptr) {
 			this->recalloc(this->capacity + size);
@@ -1457,12 +1457,12 @@ size_t GYDM::Natural::expand(size_t size) {
 }
 
 /*************************************************************************************************/
-GYDM::Natural::Natural(void* null, int64_t capacity) : natural(nullptr), capacity(0L), payload(0L) {
+Plteen::Natural::Natural(void* null, int64_t capacity) : natural(nullptr), capacity(0L), payload(0L) {
 	this->capacity = ((capacity > 0) ? _SZ(capacity) : sizeof(uint64_t));
 	this->natural = this->malloc(this->capacity);
 }
 
-void GYDM::Natural::replaced_by_fixnum(uint64_t n) {
+void Plteen::Natural::replaced_by_fixnum(uint64_t n) {
 	this->payload = 0U;
 
 	while (n > 0U) {
@@ -1473,7 +1473,7 @@ void GYDM::Natural::replaced_by_fixnum(uint64_t n) {
 	}
 }
 
-void GYDM::Natural::from_memory(const uint8_t nbytes[], size_t nstart, size_t nend) {
+void Plteen::Natural::from_memory(const uint8_t nbytes[], size_t nstart, size_t nend) {
 	if (nend > nstart) {
 		this->capacity = nend - nstart;
 		this->natural = this->malloc(this->capacity);
@@ -1492,7 +1492,7 @@ void GYDM::Natural::from_memory(const uint8_t nbytes[], size_t nstart, size_t ne
 	}
 }
 
-void GYDM::Natural::from_memory(const uint16_t nchars[], size_t nstart, size_t nend) {
+void Plteen::Natural::from_memory(const uint16_t nchars[], size_t nstart, size_t nend) {
 	if (nend > nstart) {
 		this->capacity = (nend - nstart) * 2;
 		this->natural = this->malloc(this->capacity);
@@ -1515,7 +1515,7 @@ void GYDM::Natural::from_memory(const uint16_t nchars[], size_t nstart, size_t n
 	}
 }
 
-void GYDM::Natural::from_base16(const uint8_t nbytes[], size_t nstart, size_t nend) {
+void Plteen::Natural::from_base16(const uint8_t nbytes[], size_t nstart, size_t nend) {
 	if (nend > nstart) {
 		size_t span = nend - nstart;
 		
@@ -1525,7 +1525,7 @@ void GYDM::Natural::from_base16(const uint8_t nbytes[], size_t nstart, size_t ne
 	}
 }
 
-void GYDM::Natural::from_base16(const uint16_t nchars[], size_t nstart, size_t nend) {
+void Plteen::Natural::from_base16(const uint16_t nchars[], size_t nstart, size_t nend) {
 	if (nend > nstart) {
 		size_t span = nend - nstart;
 		
@@ -1535,7 +1535,7 @@ void GYDM::Natural::from_base16(const uint16_t nchars[], size_t nstart, size_t n
 	}
 }
 
-void GYDM::Natural::from_base10(const uint8_t nbytes[], size_t nstart, size_t nend) {
+void Plteen::Natural::from_base10(const uint8_t nbytes[], size_t nstart, size_t nend) {
 	if (nend > nstart) {
 		this->capacity = nend - nstart;
 		this->natural = this->malloc(this->capacity);
@@ -1543,7 +1543,7 @@ void GYDM::Natural::from_base10(const uint8_t nbytes[], size_t nstart, size_t ne
 	}
 }
 
-void GYDM::Natural::from_base10(const uint16_t nchars[], size_t nstart, size_t nend) {
+void Plteen::Natural::from_base10(const uint16_t nchars[], size_t nstart, size_t nend) {
 	if (nend > nstart) {
 		this->capacity = nend - nstart;
 		this->natural = this->malloc(this->capacity);
@@ -1551,7 +1551,7 @@ void GYDM::Natural::from_base10(const uint16_t nchars[], size_t nstart, size_t n
 	}
 }
 
-void GYDM::Natural::from_base8(const uint8_t nbytes[], size_t nstart, size_t nend) {
+void Plteen::Natural::from_base8(const uint8_t nbytes[], size_t nstart, size_t nend) {
 	if (nend > nstart) {
 		size_t span = nend - nstart;
 		
@@ -1561,7 +1561,7 @@ void GYDM::Natural::from_base8(const uint8_t nbytes[], size_t nstart, size_t nen
 	}
 }
 
-void GYDM::Natural::from_base8(const uint16_t nchars[], size_t nstart, size_t nend) {
+void Plteen::Natural::from_base8(const uint16_t nchars[], size_t nstart, size_t nend) {
 	if (nend > nstart) {
 		size_t span = nend - nstart;
 		
@@ -1572,7 +1572,7 @@ void GYDM::Natural::from_base8(const uint16_t nchars[], size_t nstart, size_t ne
 }
 
 /*************************************************************************************************/
-void GYDM::Natural::add_digit(uint8_t digit) {
+void Plteen::Natural::add_digit(uint8_t digit) {
 	size_t idx = this->capacity - 1U;
 	
 	if (this->payload == 0) {
@@ -1610,7 +1610,7 @@ void GYDM::Natural::add_digit(uint8_t digit) {
 	}
 }
 
-void GYDM::Natural::times_digit(uint8_t rhs) {
+void Plteen::Natural::times_digit(uint8_t rhs) {
 	if (rhs > 1ULL) {
 		uint16_t carry = 0U;
 
@@ -1639,7 +1639,7 @@ void GYDM::Natural::times_digit(uint8_t rhs) {
 	}
 }
 
-void GYDM::Natural::divide_digit(uint8_t divisor, Natural* oremainder) {
+void Plteen::Natural::divide_digit(uint8_t divisor, Natural* oremainder) {
 	if (divisor > 1ULL) {
 		uint16_t remainder = 0U;
 
@@ -1667,7 +1667,7 @@ void GYDM::Natural::divide_digit(uint8_t divisor, Natural* oremainder) {
 	}
 }
 
-int GYDM::Natural::compare_to_one() const {
+int Plteen::Natural::compare_to_one() const {
 	int cmp = int(this->payload) - 1;
 
 	if (cmp == 0) {
@@ -1678,7 +1678,7 @@ int GYDM::Natural::compare_to_one() const {
 }
 
 /*************************************************************************************************/
-void GYDM::Natural::bzero() {
+void Plteen::Natural::bzero() {
 	this->payload = 0U;
 
 	// Method should not assume zeroed memory.
@@ -1690,7 +1690,7 @@ void GYDM::Natural::bzero() {
 #endif
 }
 
-void GYDM::Natural::skip_leading_zeros(size_t new_payload) {
+void Plteen::Natural::skip_leading_zeros(size_t new_payload) {
 	uint8_t* cursor = this->natural + (this->capacity - new_payload);
 
 	// WARNING: Invokers take responsibilities to ensure that `payload` is not out of index.
@@ -1701,7 +1701,7 @@ void GYDM::Natural::skip_leading_zeros(size_t new_payload) {
 	}
 }
 
-void GYDM::Natural::decrease_from_slot(size_t slot) {
+void Plteen::Natural::decrease_from_slot(size_t slot) {
 	while (slot <= this->payload) {
 		uint8_t digit = this->natural[this->capacity - slot];
 
@@ -1725,7 +1725,7 @@ void GYDM::Natural::decrease_from_slot(size_t slot) {
 	}
 }
 
-uint8_t* GYDM::Natural::malloc(size_t size) {
+uint8_t* Plteen::Natural::malloc(size_t size) {
 	uint8_t* memory = new uint8_t[size];
 
 	// NOTE: Method should not assume zeroed memory.
@@ -1737,7 +1737,7 @@ uint8_t* GYDM::Natural::malloc(size_t size) {
 	return memory;
 }
 
-void GYDM::Natural::recalloc(size_t newsize, size_t shift) {
+void Plteen::Natural::recalloc(size_t newsize, size_t shift) {
 	uint8_t* src = this->natural;
 	size_t zero_size = (this->capacity - this->payload);
 
@@ -1754,7 +1754,7 @@ void GYDM::Natural::recalloc(size_t newsize, size_t shift) {
 	delete[] src;
 }
 
-void GYDM::Natural::smart_prealloc(size_t size) {
+void Plteen::Natural::smart_prealloc(size_t size) {
 	if (size + this->payload > this->capacity) {
 		this->expand(size + this->payload - this->capacity);
 	}

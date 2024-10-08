@@ -2,10 +2,10 @@
 
 #include "../../datum/flonum.hpp"
 
-using namespace GYDM;
+using namespace Plteen;
 
 /*************************************************************************************************/
-void GYDM::IPlatformMotion::dispatch_heading_event(double theta_rad, double vx, double vy, double pvr) {
+void Plteen::IPlatformMotion::dispatch_heading_event(double theta_rad, double vx, double vy, double pvr) {
     double hsgn, vsgn;
 
     this->feed_flip_signs(&hsgn, &vsgn);

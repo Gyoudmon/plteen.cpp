@@ -2,7 +2,7 @@
 
 #include "../forward.hpp"
 
-namespace GYDM {
+namespace Plteen {
     class __lambda__ IMovable {
     public:
         IMovable();
@@ -47,8 +47,8 @@ namespace GYDM {
         void heading_rotate(double theta, bool is_radian = false);
 
     public:
-        void set_border_strategy(GYDM::BorderStrategy s);
-        void set_border_strategy(GYDM::BorderStrategy vs, GYDM::BorderStrategy hs);
+        void set_border_strategy(Plteen::BorderStrategy s);
+        void set_border_strategy(Plteen::BorderStrategy vs, Plteen::BorderStrategy hs);
         void set_border_strategy(BorderStrategy ts, BorderStrategy rs, BorderStrategy bs, BorderStrategy ls);
 
     public:
@@ -74,7 +74,7 @@ namespace GYDM {
         void on_velocity_changed(bool always_trigger_heading_event);
 
     private:
-        GYDM::BorderStrategy border_strategies[4];
+        Plteen::BorderStrategy border_strategies[4];
         bool bounce_acc = false;
         double ar = 0.0;
         double ax = 0.0;

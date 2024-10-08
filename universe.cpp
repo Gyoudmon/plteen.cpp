@@ -13,7 +13,7 @@
 
 #include <filesystem>
 
-using namespace GYDM;
+using namespace Plteen;
 using namespace std::filesystem;
 
 /*************************************************************************************************/
@@ -161,7 +161,7 @@ static void game_create_world(int width, int height, SDL_Window** window, SDL_Re
 }
 
 /*************************************************************************************************/
-GYDM::IUniverse::IUniverse(uint32_t fps, const RGBA& fgc, const RGBA& bgc) : _fgc(fgc), _bgc(bgc), _fps(fps), _mfgc(fgc) {
+Plteen::IUniverse::IUniverse(uint32_t fps, const RGBA& fgc, const RGBA& bgc) : _fgc(fgc), _bgc(bgc), _fps(fps), _mfgc(fgc) {
     SDL_Renderer* renderer;
 
     // 初始化游戏系统
@@ -173,7 +173,7 @@ GYDM::IUniverse::IUniverse(uint32_t fps, const RGBA& fgc, const RGBA& bgc) : _fg
     this->echo.h = 0;
 }
 
-GYDM::IUniverse::~IUniverse() {
+Plteen::IUniverse::~IUniverse() {
     if (this->timer > 0) {
         SDL_RemoveTimer(this->timer);
     }
@@ -186,7 +186,7 @@ GYDM::IUniverse::~IUniverse() {
     SDL_DestroyWindow(this->window);
 }
 
-void GYDM::IUniverse::big_bang() {
+void Plteen::IUniverse::big_bang() {
     uint32_t quit_time = 0UL;           // 游戏退出时的在线时间
     timer_parcel_t parcel;              // 时间轴包裹
     SDL_Event e;                        // SDL 事件
@@ -258,7 +258,7 @@ void GYDM::IUniverse::big_bang() {
     }
 }
 
-void GYDM::IUniverse::on_mouse_event(SDL_MouseButtonEvent &mouse, bool pressed) {
+void Plteen::IUniverse::on_mouse_event(SDL_MouseButtonEvent &mouse, bool pressed) {
     if (!pressed) {
         if (mouse.clicks == 1) {
             switch (mouse.button) {
@@ -273,11 +273,11 @@ void GYDM::IUniverse::on_mouse_event(SDL_MouseButtonEvent &mouse, bool pressed) 
     }
 }
 
-void GYDM::IUniverse::on_mouse_event(SDL_MouseMotionEvent &mouse) {
+void Plteen::IUniverse::on_mouse_event(SDL_MouseMotionEvent &mouse) {
     this->on_mouse_move(mouse.state, mouse.x, mouse.y, mouse.xrel, mouse.yrel);
 }
 
-void GYDM::IUniverse::on_mouse_event(SDL_MouseWheelEvent &mouse) {
+void Plteen::IUniverse::on_mouse_event(SDL_MouseWheelEvent &mouse) {
     int horizon = mouse.x;
     int vertical = mouse.y;
     float hprecise = float(horizon);  // mouse.preciseX;
@@ -293,7 +293,7 @@ void GYDM::IUniverse::on_mouse_event(SDL_MouseWheelEvent &mouse) {
     this->on_scroll(horizon, vertical, hprecise, vprecise);
 }
 
-void GYDM::IUniverse::on_keyboard_event(SDL_KeyboardEvent &keyboard, bool pressed) {
+void Plteen::IUniverse::on_keyboard_event(SDL_KeyboardEvent &keyboard, bool pressed) {
     SDL_Keysym key = keyboard.keysym;
     int ctrl_mod = KMOD_LCTRL | KMOD_RCTRL;
 
@@ -331,7 +331,7 @@ void GYDM::IUniverse::on_keyboard_event(SDL_KeyboardEvent &keyboard, bool presse
     }
 }
 
-void GYDM::IUniverse::on_resize(int width, int height) {
+void Plteen::IUniverse::on_resize(int width, int height) {
     this->window_width = width;
     this->window_height = height;
 
@@ -353,7 +353,7 @@ void GYDM::IUniverse::on_resize(int width, int height) {
     this->end_update_sequence();
 }
 
-void GYDM::IUniverse::on_user_input(const char* text) {
+void Plteen::IUniverse::on_user_input(const char* text) {
     if (this->in_editing) {
         this->usrin.append(text);
         this->current_usrin = nullptr;
@@ -366,12 +366,12 @@ void GYDM::IUniverse::on_user_input(const char* text) {
     this->on_text(text, strlen(text), false);
 }
 
-void GYDM::IUniverse::on_editing(const char* text, int pos, int span) {
+void Plteen::IUniverse::on_editing(const char* text, int pos, int span) {
     this->current_usrin = text;
     this->on_editing_text(text, pos, span);
 }
 
-void GYDM::IUniverse::do_redraw(dc_t* device, int x, int y, int width, int height) {
+void Plteen::IUniverse::do_redraw(dc_t* device, int x, int y, int width, int height) {
     /**
      * Even if the subclass has its own background,
      *   resetting the renderer is also meaningful,
@@ -392,11 +392,11 @@ void GYDM::IUniverse::do_redraw(dc_t* device, int x, int y, int width, int heigh
     }
 }
 
-void GYDM::IUniverse::draw_cmdwin(dc_t* device, int x, int y, int width, int height) {
+void Plteen::IUniverse::draw_cmdwin(dc_t* device, int x, int y, int width, int height) {
     device->draw_line(x, y, width, y, 0x888888U);
 }
 
-bool GYDM::IUniverse::display_usr_message(dc_t* device) {
+bool Plteen::IUniverse::display_usr_message(dc_t* device) {
     bool updated = (this->echo.h > 0);
 
     if (updated) {
@@ -419,7 +419,7 @@ bool GYDM::IUniverse::display_usr_message(dc_t* device) {
     return updated;
 }
 
-bool GYDM::IUniverse::display_usr_input_and_caret(dc_t* device, bool yes) {
+bool Plteen::IUniverse::display_usr_input_and_caret(dc_t* device, bool yes) {
     bool updated = false;
 
     if (this->echo.h > 0) {
@@ -443,7 +443,7 @@ bool GYDM::IUniverse::display_usr_input_and_caret(dc_t* device, bool yes) {
     return updated;
 }
 
-int GYDM::IUniverse::cmdline_message_yposition() {
+int Plteen::IUniverse::cmdline_message_yposition() {
     int yoff = 0;
 
     if (this->echo_font->okay()) {
@@ -458,20 +458,20 @@ int GYDM::IUniverse::cmdline_message_yposition() {
 }
 
 /*************************************************************************************************/
-void GYDM::IUniverse::set_window_title(std::string& title) {
+void Plteen::IUniverse::set_window_title(std::string& title) {
     SDL_SetWindowTitle(this->window, title.c_str());
 }
 
-void GYDM::IUniverse::set_window_title(const char* fmt, ...) {
+void Plteen::IUniverse::set_window_title(const char* fmt, ...) {
     VSNPRINT(title, fmt);
     this->set_window_title(title);
 }
 
-dc_t* GYDM::IUniverse::drawing_context() {
+dc_t* Plteen::IUniverse::drawing_context() {
     return this->device;
 }
 
-void GYDM::IUniverse::set_window_size(int width, int height, bool centerize) {
+void Plteen::IUniverse::set_window_size(int width, int height, bool centerize) {
     if ((width <= 0) || (height <= 0)) {
         int oldw, oldh;
 
@@ -500,7 +500,7 @@ void GYDM::IUniverse::set_window_size(int width, int height, bool centerize) {
     }
 }
 
-void GYDM::IUniverse::feed_window_size(int* width, int* height, bool logical) {
+void Plteen::IUniverse::feed_window_size(int* width, int* height, bool logical) {
     if (logical) {
         this->device->feed_output_size(width, height);
     } else {
@@ -508,7 +508,7 @@ void GYDM::IUniverse::feed_window_size(int* width, int* height, bool logical) {
     }
 }
 
-void GYDM::IUniverse::set_window_fullscreen(bool yes) {
+void Plteen::IUniverse::set_window_fullscreen(bool yes) {
     if (yes) {
         SDL_SetWindowFullscreen(this->window, SDL_WINDOW_FULLSCREEN_DESKTOP);
     } else {
@@ -516,19 +516,19 @@ void GYDM::IUniverse::set_window_fullscreen(bool yes) {
     }
 }
 
-void GYDM::IUniverse::refresh() {
+void Plteen::IUniverse::refresh() {
     this->do_redraw(this->device, 0, 0, this->window_width, this->window_height);
     this->device->refresh(this->texture);
 }
 
-void GYDM::IUniverse::feed_extent(float* width, float* height) {
+void Plteen::IUniverse::feed_extent(float* width, float* height) {
     int fxw, fxh;
 
     this->feed_window_size(&fxw, &fxh);
     SET_VALUES(width, float(fxw), height, float(fxh));
 }
 
-void GYDM::IUniverse::feed_client_extent(float* width, float* height) {
+void Plteen::IUniverse::feed_client_extent(float* width, float* height) {
     int fxw, fxh;
 
     this->feed_window_size(&fxw, &fxh);
@@ -537,7 +537,7 @@ void GYDM::IUniverse::feed_client_extent(float* width, float* height) {
 }
 
 /*************************************************************************************************/
-void GYDM::IUniverse::set_cmdwin_height(int cmdwinheight, int fgc, int bgc, shared_font_t font) {
+void Plteen::IUniverse::set_cmdwin_height(int cmdwinheight, int fgc, int bgc, shared_font_t font) {
     int width, height;
 
     this->feed_window_size(&width, &height);
@@ -552,7 +552,7 @@ void GYDM::IUniverse::set_cmdwin_height(int cmdwinheight, int fgc, int bgc, shar
     SDL_SetTextInputRect(&this->echo);
 }
 
-void GYDM::IUniverse::log_message(Log level, const std::string& msg) {
+void Plteen::IUniverse::log_message(Log level, const std::string& msg) {
     this->needs_termio_if_no_echo = true;
     this->message = msg;
     
@@ -570,12 +570,12 @@ void GYDM::IUniverse::log_message(Log level, const std::string& msg) {
     }
 }
 
-void GYDM::IUniverse::start_input_text(const char* fmt, ...) {
+void Plteen::IUniverse::start_input_text(const char* fmt, ...) {
     VSNPRINT(p, fmt);
     this->start_input_text(p);
 }
 
-void GYDM::IUniverse::start_input_text(const std::string& p) {
+void Plteen::IUniverse::start_input_text(const std::string& p) {
     if (p.size() > 0) {
         this->prompt = p;
     }
@@ -589,7 +589,7 @@ void GYDM::IUniverse::start_input_text(const std::string& p) {
     }
 }
 
-void GYDM::IUniverse::stop_input_text() {
+void Plteen::IUniverse::stop_input_text() {
     this->in_editing = false;
     SDL_StopTextInput();
     this->on_text(this->usrin.c_str(), this->usrin.size(), true);
@@ -601,7 +601,7 @@ void GYDM::IUniverse::stop_input_text() {
     }
 }
 
-void GYDM::IUniverse::enter_input_text() {
+void Plteen::IUniverse::enter_input_text() {
     if (this->current_usrin != nullptr) {
         this->on_user_input(this->current_usrin);
         this->current_usrin = nullptr;
@@ -610,7 +610,7 @@ void GYDM::IUniverse::enter_input_text() {
     }
 }
 
-void GYDM::IUniverse::popback_input_text() {
+void Plteen::IUniverse::popback_input_text() {
     if (string_popback_utf8_char(this->usrin)) {
         if (this->display_usr_input_and_caret(this->device, true)) {
             this->notify_updated();
@@ -619,7 +619,7 @@ void GYDM::IUniverse::popback_input_text() {
 }
 
 /*************************************************************************************************/
-SDL_Surface* GYDM::IUniverse::snapshot() {
+SDL_Surface* Plteen::IUniverse::snapshot() {
     SDL_Surface* photograph = this->device->snapshot(this->window_width, this->window_height);
 
     if (photograph == nullptr) {
@@ -629,7 +629,7 @@ SDL_Surface* GYDM::IUniverse::snapshot() {
     return photograph;
 }
 
-void GYDM::IUniverse::take_snapshot() {
+void Plteen::IUniverse::take_snapshot() {
     const char* basename = SDL_GetWindowTitle(this->window);
     path snapshot_png = (this->snapshot_rootdir.empty() ? current_path() : path(this->snapshot_rootdir))
         / path(make_nstring("%s-%s.png", basename, make_now_timestamp_utc(true).c_str()));
@@ -641,15 +641,15 @@ void GYDM::IUniverse::take_snapshot() {
     }
 }
 
-void GYDM::IUniverse::set_snapshot_folder(const char* dir) {
+void Plteen::IUniverse::set_snapshot_folder(const char* dir) {
     this->set_snapshot_folder(std::string(dir));
 }
 
-void GYDM::IUniverse::set_snapshot_folder(const std::string& dir) {
+void Plteen::IUniverse::set_snapshot_folder(const std::string& dir) {
     this->snapshot_rootdir = path(dir).make_preferred().string();
 }
 
-void GYDM::IUniverse::save_file(bool is_save_as) {
+void Plteen::IUniverse::save_file(bool is_save_as) {
     const char* ext = this->usrdata_extension();
 
     if (ext != nullptr) {
@@ -677,21 +677,21 @@ void GYDM::IUniverse::save_file(bool is_save_as) {
     }
 }
 
-void GYDM::IUniverse::set_usrdata_folder(const char* dir) {
+void Plteen::IUniverse::set_usrdata_folder(const char* dir) {
     this->set_usrdata_folder(std::string(dir));
 }
 
-void GYDM::IUniverse::set_usrdata_folder(const std::string& dir) {
+void Plteen::IUniverse::set_usrdata_folder(const std::string& dir) {
     this->usrdata_rootdir = path(dir).make_preferred().string();
 }
 
 /*************************************************************************************************/
-GYDM::Universe::Universe() : Universe("The Big Bang!") {}
-GYDM::Universe::Universe(const char *title, uint32_t fps, const RGBA& fgc, const RGBA& bgc) : IUniverse(fps, fgc, bgc) {
+Plteen::Universe::Universe() : Universe("The Big Bang!") {}
+Plteen::Universe::Universe(const char *title, uint32_t fps, const RGBA& fgc, const RGBA& bgc) : IUniverse(fps, fgc, bgc) {
     this->set_window_title("%s", title);
 }
 
-void GYDM::Universe::on_elapse(uint64_t count, uint32_t interval, uint64_t uptime) {
+void Plteen::Universe::on_elapse(uint64_t count, uint32_t interval, uint64_t uptime) {
     this->update(count, interval, uptime);
     this->notify_updated();
 }

@@ -8,26 +8,26 @@
 #include <vector>
 #include <string>
 
-namespace GYDM {
+namespace Plteen {
     struct SpriteRenderArguments {
         SDL_FRect dst;
         SDL_RendererFlip flip;
     };
 
     /*********************************************************************************************/
-    class __lambda__ ISprite : public GYDM::IMatter {
+    class __lambda__ ISprite : public Plteen::IMatter {
     public:
         ISprite() {}
         virtual ~ISprite() {}
 
-        void construct(GYDM::dc_t* renderer) override;
+        void construct(Plteen::dc_t* renderer) override;
 
     public:
-        GYDM::Box get_bounding_box() override;
-        GYDM::Box get_original_bounding_box() override;
-        GYDM::Margin get_margin() override;
+        Plteen::Box get_bounding_box() override;
+        Plteen::Box get_original_bounding_box() override;
+        Plteen::Margin get_margin() override;
         int update(uint64_t count, uint32_t interval, uint64_t uptime) override;
-        void draw(GYDM::dc_t* dc, float x, float y, float Width, float Height) override;
+        void draw(Plteen::dc_t* dc, float x, float y, float Width, float Height) override;
 
     public:
         virtual size_t costume_count() = 0;
@@ -66,10 +66,10 @@ namespace GYDM {
         void say(IMatter* message, double sec) { this->say(message, sec, SpeechBubble::Default); }
         void think(IMatter* message, double sec) { this->say(message, sec, SpeechBubble::Thought); }
         
-        void say(const std::string& sentence, const GYDM::RGBA& color = BLACK);
-        void say(double sec, const std::string& sentence, const GYDM::RGBA& color = BLACK);
-        void think(const std::string& sentence, const GYDM::RGBA& color = DIMGRAY);
-        void think(double sec, const std::string& sentence, const GYDM::RGBA& color = DIMGRAY);
+        void say(const std::string& sentence, const Plteen::RGBA& color = BLACK);
+        void say(double sec, const std::string& sentence, const Plteen::RGBA& color = BLACK);
+        void think(const std::string& sentence, const Plteen::RGBA& color = DIMGRAY);
+        void think(double sec, const std::string& sentence, const Plteen::RGBA& color = DIMGRAY);
         
     public:
         virtual void play_speaking(int repeat = 1) {}
@@ -82,7 +82,7 @@ namespace GYDM {
         virtual void feed_costume_extent(size_t idx, float* width, float* height) = 0;
         virtual const char* costume_index_to_name(size_t idx) = 0;
         virtual int costume_name_to_index(const char* name);
-        virtual void draw_costume(GYDM::dc_t* renderer, size_t idx, SDL_Rect* src, SpriteRenderArguments* argv) = 0;
+        virtual void draw_costume(Plteen::dc_t* renderer, size_t idx, SDL_Rect* src, SpriteRenderArguments* argv) = 0;
 
     protected:
         virtual int get_initial_costume_index() { return 0; }

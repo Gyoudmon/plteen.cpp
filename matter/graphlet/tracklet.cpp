@@ -6,10 +6,10 @@
 // https://www.ferzkopp.net/Software/SDL2_gfx/Docs/html/index.html
 #include <SDL2/SDL2_gfxPrimitives.h>
 
-using namespace GYDM;
+using namespace Plteen;
 
 /*************************************************************************************************/
-GYDM::Tracklet::Tracklet(float width, float height, uint32_t hex, double alpha)
+Plteen::Tracklet::Tracklet(float width, float height, uint32_t hex, double alpha)
         : width(flabs(width)), height(flabs(height)), line_width(1) {
     if (this->height == 0.0F) {
         this->height = this->width;
@@ -21,11 +21,11 @@ GYDM::Tracklet::Tracklet(float width, float height, uint32_t hex, double alpha)
     this->camouflage(true);
 }
 
-Box GYDM::Tracklet::get_bounding_box() {
+Box Plteen::Tracklet::get_bounding_box() {
     return { this->width, this->height };
 }
 
-void GYDM::Tracklet::add_line(float x1, float y1, float x2, float y2) {
+void Plteen::Tracklet::add_line(float x1, float y1, float x2, float y2) {
     if (this->is_drawing()) {
         if (this->canvas->okay()) {
             auto master = this->drawing_context();
@@ -63,7 +63,7 @@ void GYDM::Tracklet::add_line(float x1, float y1, float x2, float y2) {
     }
 }
 
-void GYDM::Tracklet::stamp(GYDM::IMatter* matter, float x, float y) {
+void Plteen::Tracklet::stamp(Plteen::IMatter* matter, float x, float y) {
     if (this->canvas->okay()) {
         auto master = this->drawing_context();
 
@@ -86,7 +86,7 @@ void GYDM::Tracklet::stamp(GYDM::IMatter* matter, float x, float y) {
 }
 
 /*************************************************************************************************/
-void GYDM::Tracklet::erase() {
+void Plteen::Tracklet::erase() {
     if (this->xmax != -infinity) {
         this->xmax = this->ymax = -infinity;
         this->xmin = this->ymin = +infinity;
@@ -94,13 +94,13 @@ void GYDM::Tracklet::erase() {
     }
 }
 
-void GYDM::Tracklet::set_pen_width(uint8_t lwidth) {
+void Plteen::Tracklet::set_pen_width(uint8_t lwidth) {
     if (this->line_width != lwidth) {
         this->line_width = lwidth;
     }
 }
 
-void GYDM::Tracklet::resolve_boundary(float x, float y) {
+void Plteen::Tracklet::resolve_boundary(float x, float y) {
     // don't merge with `else if`
     if (x < this->xmin) this->xmin = x;
     if (x > this->xmax) this->xmax = x;

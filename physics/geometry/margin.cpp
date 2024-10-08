@@ -1,9 +1,9 @@
 #include "margin.hpp"
 
-using namespace GYDM;
+using namespace Plteen;
 
 /*************************************************************************************************/
-GYDM::Margin& GYDM::Margin::scale(float sx, float sy) {
+Plteen::Margin& Plteen::Margin::scale(float sx, float sy) {
     if (sx >= 0.0F) {
         this->left *= sx;
         this->right *= sx;

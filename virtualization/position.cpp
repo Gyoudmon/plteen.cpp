@@ -3,15 +3,15 @@
 
 #include "position.hpp"
 
-using namespace GYDM;
+using namespace Plteen;
 
 /*************************************************************************************************/
-GYDM::Position::Position(const GYDM::Position& pos) : dot(pos.dot), offset(pos.offset) {
+Plteen::Position::Position(const Plteen::Position& pos) : dot(pos.dot), offset(pos.offset) {
     this->xtarget = pos.xtarget;
     this->ytarget = pos.ytarget;
 }
 
-Position& GYDM::Position::operator=(const GYDM::Position& pos) {
+Position& Plteen::Position::operator=(const Plteen::Position& pos) {
     this->dot = pos.dot;
     this->xtarget = pos.xtarget;
     this->ytarget = pos.ytarget;
@@ -21,7 +21,7 @@ Position& GYDM::Position::operator=(const GYDM::Position& pos) {
 }
 
 /*************************************************************************************************/
-Point<float> GYDM::Position::calculate_point() const {
+Point<float> Plteen::Position::calculate_point() const {
     Point<float> pos;
 
     if (this->xtarget == nullptr) {
@@ -56,7 +56,7 @@ Point<float> GYDM::Position::calculate_point() const {
     return pos;
 }
 
-std::string GYDM::Position::desc() const {
+std::string Plteen::Position::desc() const {
     std::string description;
 
     if (this->xtarget == nullptr) {

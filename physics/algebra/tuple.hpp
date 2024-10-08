@@ -5,7 +5,7 @@
 #include "../../datum/flonum.hpp"
 #include "../../datum/except.hpp"
 
-namespace GYDM {
+namespace Plteen {
     template<template<typename> class Child, typename T>
     class __lambda__ Tuple {
     public:

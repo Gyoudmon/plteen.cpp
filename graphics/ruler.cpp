@@ -5,7 +5,7 @@
 #include "../datum/flonum.hpp"
 #include "../datum/fixnum.hpp"
 
-using namespace GYDM;
+using namespace Plteen;
 
 /*************************************************************************************************/
 static const float hatch_long_ratio = 0.618F;
@@ -97,7 +97,7 @@ static float resolve_interval(uint32_t* step, double vmin, double vmax, float le
 	return interval;
 }
 
-static void draw_hthatch(GYDM::dc_t* dc, float x0, float y0
+static void draw_hthatch(Plteen::dc_t* dc, float x0, float y0
 		, HHatchMarkMetrics* metrics, float interval, uint32_t step, uint32_t color, bool no_short) {
 	float x = x0 + metrics->hatch_x;
 	float y = y0 + metrics->height - 1.0F /* thickness */;
@@ -113,7 +113,7 @@ static void draw_hthatch(GYDM::dc_t* dc, float x0, float y0
 	}
 }
 
-static void draw_hbhatch(GYDM::dc_t* dc, float x0, float y0
+static void draw_hbhatch(Plteen::dc_t* dc, float x0, float y0
 		, HHatchMarkMetrics* metrics, float interval, uint32_t step, uint32_t color, bool no_short) {
 	float x = x0 + metrics->hatch_x;
 	float y = y0 + metrics->hatch_y;
@@ -129,7 +129,7 @@ static void draw_hbhatch(GYDM::dc_t* dc, float x0, float y0
 	}
 }
 
-static void draw_vlhatch(GYDM::dc_t* dc, float x0, float y0
+static void draw_vlhatch(Plteen::dc_t* dc, float x0, float y0
 		, VHatchMarkMetrics* metrics, float interval, uint32_t step, uint32_t color, bool no_short) {
 	float x = x0 + metrics->hatch_x;
 	float y = y0 + metrics->hatch_y;
@@ -146,7 +146,7 @@ static void draw_vlhatch(GYDM::dc_t* dc, float x0, float y0
 	}
 }
 
-static void draw_vrhatch(GYDM::dc_t* dc, float x0, float y0
+static void draw_vrhatch(Plteen::dc_t* dc, float x0, float y0
 		, VHatchMarkMetrics* metrics, float interval, uint32_t step, uint32_t color, bool no_short) {
 	float x = x0 + metrics->hatch_x;
 	float y = y0 + metrics->hatch_y;
@@ -163,21 +163,21 @@ static void draw_vrhatch(GYDM::dc_t* dc, float x0, float y0
 }
 
 /*************************************************************************************************/
-HHatchMarkMetrics GYDM::Ruler::hhatchmark_metrics(double vmin, double vmax, uint8_t precision) {
+HHatchMarkMetrics Plteen::Ruler::hhatchmark_metrics(double vmin, double vmax, uint8_t precision) {
 	return hhatchmark_metrics(hatchmark_default_font(), vmin, vmax, precision);
 }
 
-void GYDM::Ruler::draw_ht_hatchmark(GYDM::dc_t* dc, float x, float y, float width, double vmin, double vmax
+void Plteen::Ruler::draw_ht_hatchmark(Plteen::dc_t* dc, float x, float y, float width, double vmin, double vmax
 		, uint32_t step, uint32_t color, HHatchMarkMetrics* metrics, uint8_t precision, bool no_short) {
 	Ruler::draw_ht_hatchmark(hatchmark_default_font(), dc, x, y, width, vmin, vmax, step, color, metrics, precision, no_short);
 }
 
-void GYDM::Ruler::draw_hb_hatchmark(GYDM::dc_t* dc, float x, float y, float width, double vmin, double vmax
+void Plteen::Ruler::draw_hb_hatchmark(Plteen::dc_t* dc, float x, float y, float width, double vmin, double vmax
 		, uint32_t step, uint32_t color, HHatchMarkMetrics* metrics, uint8_t precision, bool no_short) {
 	Ruler::draw_hb_hatchmark(hatchmark_default_font(), dc, x, y, width, vmin, vmax, step, color, metrics, precision, no_short);
 }
 
-HHatchMarkMetrics GYDM::Ruler::hhatchmark_metrics(shared_font_t font, double vmin, double vmax, uint8_t precision) {
+HHatchMarkMetrics Plteen::Ruler::hhatchmark_metrics(shared_font_t font, double vmin, double vmax, uint8_t precision) {
 	HHatchMarkMetrics metrics;
 	std::string min_mark = make_mark_string(vmin, precision);
 	std::string max_mark = make_mark_string(vmax, precision);
@@ -201,8 +201,8 @@ HHatchMarkMetrics GYDM::Ruler::hhatchmark_metrics(shared_font_t font, double vmi
 	return metrics;
 }
 
-void GYDM::Ruler::draw_ht_hatchmark(shared_font_t font
-		, GYDM::dc_t* dc, float x, float y, float width, double vmin, double vmax, uint32_t step0
+void Plteen::Ruler::draw_ht_hatchmark(shared_font_t font
+		, Plteen::dc_t* dc, float x, float y, float width, double vmin, double vmax, uint32_t step0
 		, uint32_t color, HHatchMarkMetrics* maybe_metrics, uint8_t precision, bool no_short) {
 	uint32_t skip;
 	double diff;
@@ -224,8 +224,8 @@ void GYDM::Ruler::draw_ht_hatchmark(shared_font_t font
 	SET_BOX(maybe_metrics, metrics);
 }
 
-void GYDM::Ruler::draw_hb_hatchmark(shared_font_t font
-		, GYDM::dc_t* dc, float x, float y, float width, double vmin, double vmax, uint32_t step0
+void Plteen::Ruler::draw_hb_hatchmark(shared_font_t font
+		, Plteen::dc_t* dc, float x, float y, float width, double vmin, double vmax, uint32_t step0
 		, uint32_t color, HHatchMarkMetrics* maybe_metrics, uint8_t precision, bool no_short) {
 	uint32_t skip;
 	double diff;
@@ -248,21 +248,21 @@ void GYDM::Ruler::draw_hb_hatchmark(shared_font_t font
 }
 
 /*************************************************************************************************/
-VHatchMarkMetrics GYDM::Ruler::vhatchmark_metrics(double vmin, double vmax, uint8_t precision) {
+VHatchMarkMetrics Plteen::Ruler::vhatchmark_metrics(double vmin, double vmax, uint8_t precision) {
 	return vhatchmark_metrics(hatchmark_default_font(), vmin, vmax, precision);
 }
 
-void GYDM::Ruler::draw_vl_hatchmark(GYDM::dc_t* dc, float x, float y, float width, double vmin, double vmax
+void Plteen::Ruler::draw_vl_hatchmark(Plteen::dc_t* dc, float x, float y, float width, double vmin, double vmax
 		, uint32_t step, uint32_t color, VHatchMarkMetrics* metrics, uint8_t precision, bool no_short) {
 	Ruler::draw_vl_hatchmark(hatchmark_default_font(), dc, x, y, width, vmin, vmax, step, color, metrics, precision, no_short);
 }
 
-void GYDM::Ruler::draw_vr_hatchmark(GYDM::dc_t* dc, float x, float y, float width, double vmin, double vmax
+void Plteen::Ruler::draw_vr_hatchmark(Plteen::dc_t* dc, float x, float y, float width, double vmin, double vmax
 		, uint32_t step, uint32_t color, VHatchMarkMetrics* metrics, uint8_t precision, bool no_short) {
 	Ruler::draw_vr_hatchmark(hatchmark_default_font(), dc, x, y, width, vmin, vmax, step, color, metrics, precision, no_short);
 }
 
-VHatchMarkMetrics GYDM::Ruler::vhatchmark_metrics(shared_font_t font, double vmin, double vmax, uint8_t precision) {
+VHatchMarkMetrics Plteen::Ruler::vhatchmark_metrics(shared_font_t font, double vmin, double vmax, uint8_t precision) {
 	VHatchMarkMetrics metrics;
 	std::string min_mark = make_mark_string(vmin, precision);
 	std::string max_mark = make_mark_string(vmax, precision);
@@ -287,8 +287,8 @@ VHatchMarkMetrics GYDM::Ruler::vhatchmark_metrics(shared_font_t font, double vmi
 	return metrics;
 }
 
-void GYDM::Ruler::draw_vl_hatchmark(shared_font_t font
-		, GYDM::dc_t* dc, float x, float y, float height, double vmin, double vmax, uint32_t step0
+void Plteen::Ruler::draw_vl_hatchmark(shared_font_t font
+		, Plteen::dc_t* dc, float x, float y, float height, double vmin, double vmax, uint32_t step0
 		, uint32_t color, VHatchMarkMetrics* maybe_metrics, uint8_t precision, bool no_short) {
 	uint32_t skip;
 	float mark_span_off;
@@ -311,8 +311,8 @@ void GYDM::Ruler::draw_vl_hatchmark(shared_font_t font
 	SET_BOX(maybe_metrics, metrics);
 }
 
-void GYDM::Ruler::draw_vr_hatchmark(shared_font_t font
-		, GYDM::dc_t* dc, float x, float y, float height, double vmin, double vmax, uint32_t step0
+void Plteen::Ruler::draw_vr_hatchmark(shared_font_t font
+		, Plteen::dc_t* dc, float x, float y, float height, double vmin, double vmax, uint32_t step0
 		, uint32_t color, VHatchMarkMetrics* maybe_metrics, uint8_t precision, bool no_short) {
 	unsigned int skip;
 	double diff;

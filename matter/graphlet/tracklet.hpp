@@ -5,14 +5,14 @@
 #include "../canvaslet.hpp"
 #include "../../physics/geometry/aabox.hpp"
 
-namespace GYDM {
-    class __lambda__ Tracklet : public GYDM::ICanvaslet {
+namespace Plteen {
+    class __lambda__ Tracklet : public Plteen::ICanvaslet {
     public:
         Tracklet(float size, uint32_t hex = 0x0U, double alpha = 1.0) : Tracklet(size, size, hex, alpha) {}
         Tracklet(float width, float height, uint32_t hex = 0x0U, double alpha = 1.0);
 
     public:
-        GYDM::Box get_bounding_box() override;
+        Plteen::Box get_bounding_box() override;
         
     public:
         void pen_down() { this->in_drawing = true; }
@@ -24,7 +24,7 @@ namespace GYDM {
 
     public:
         void add_line(float x1, float y1, float x2, float y2);
-        void stamp(GYDM::IMatter* matter, float x, float y);
+        void stamp(Plteen::IMatter* matter, float x, float y);
         void erase();
 
     private:

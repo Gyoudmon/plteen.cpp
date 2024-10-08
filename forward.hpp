@@ -1,6 +1,6 @@
 #pragma once
 
-namespace GYDM {
+namespace Plteen {
     class IPlane;
     class IMatter;
     class ISprite;
