@@ -34,7 +34,6 @@ namespace Plteen {
         virtual void flip(bool horizontal = true, bool vertical = false);
         
     public:
-        void set_virtual_canvas(float width, float height);
         void switch_to_costume(int idx);
         void switch_to_costume(const char* name);
         void switch_to_costume(const std::string& name) { this->switch_to_costume(name.c_str()); }
@@ -44,6 +43,10 @@ namespace Plteen {
         void switch_to_random_costume(int idx0 = 0) { this->switch_to_random_costume(idx0, int(this->costume_count()) - 1); }
         size_t current_costume_index() { return this->current_costume_idx; }
         const char* current_costume_name() { return this->costume_index_to_name(this->current_costume_index()); };
+
+    public:
+        void set_virtual_canvas(float width, float height);
+        void extend_virtual_canvas(float width, float height);
         void auto_virtual_canvas(const char* action_name = nullptr);
         void auto_virtual_canvas(const std::string& action_name) { this->auto_virtual_canvas(action_name.c_str()); }
 

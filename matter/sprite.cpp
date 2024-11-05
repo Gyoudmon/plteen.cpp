@@ -85,7 +85,7 @@ void Plteen::ISprite::draw(Plteen::dc_t* dc, float x, float y, float Width, floa
             float width, height, xoff, yoff;
             float sx = flabs(this->xscale);
             float sy = flabs(this->yscale);
-            float cwidth = this->canvas_width;
+            float cwidth  = this->canvas_width;
             float cheight = this->canvas_height;
 
             this->feed_costume_extent(this->current_costume_idx, &width, &height);
@@ -136,6 +136,14 @@ void Plteen::ISprite::set_virtual_canvas(float width, float height) {
     if ((this->canvas_width != width) || (this->canvas_height != height)) {
         this->canvas_width = width;
         this->canvas_height = height;
+        this->notify_updated();
+    }
+}
+
+void Plteen::ISprite::extend_virtual_canvas(float width, float height) {
+    if ((width != 0.0F) || (height != 0.0F)) {
+        this->canvas_width  += width;
+        this->canvas_height += height;
         this->notify_updated();
     }
 }
