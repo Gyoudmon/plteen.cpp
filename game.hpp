@@ -49,6 +49,7 @@
 #include "matter/graphlet/chromalet.hpp"
 
 #include "matter/graphlet/plot/historylet.hpp"
+#include "matter/graphlet/plot/radarlet.hpp"
 
 #include "physics/random.hpp"
 #include "physics/mathematics.hpp"

@@ -8,6 +8,9 @@ using namespace Plteen;
 void Plteen::Texture::feed_extent(int* width, int* height) {
     if (this->_self != nullptr) {
         SDL_QueryTexture(this->_self, nullptr, nullptr, width, height);
+    } else {
+        SET_BOX(width,  0);
+        SET_BOX(height, 0);
     }
 }
 

@@ -302,7 +302,7 @@ RGBA Plteen::Chromalet::get_color_at(double mx, double my, bool after_special) {
             for (size_t idx = 0; idx < PseudoPrimaryColorCount; idx ++) {
                 double pcmx, pcmy;
 
-                line_point(pcxs[idx], pcys[idx], pcxs[idx + 1], pcys[idx + 1], 0.5, &pcmx, &pcmy);
+                linear_lerp(pcxs[idx], pcys[idx], pcxs[idx + 1], pcys[idx + 1], 0.5, &pcmx, &pcmy);
                 if (point_distance(pcmx, pcmy, mx, my) <= triangle_vertice_radius) {
                     c = this->get_color_at(pcmx, pcmy, false);
                     break;
@@ -418,7 +418,7 @@ void Plteen::Chromalet::draw_color_triangle(Plteen::dc_t* dc, double dx, double 
         if ((pts[idx].x != pts[idx + 1].x) || (pts[idx].y != pts[idx + 1].y)) {
             float mx, my;
 
-            line_point(pts[idx].x, pts[idx].y, pts[idx + 1].x, pts[idx + 1].y, 0.5, &mx, &my);
+            linear_lerp(pts[idx].x, pts[idx].y, pts[idx + 1].x, pts[idx + 1].y, 0.5, &mx, &my);
             this->render_special_dot(dc, this->pseudo_primaries[idx], pts[idx].x, pts[idx].y);
             this->render_special_dot(dc, this->get_color_at(double(mx) - dx, double(my) - dy), mx, my);
         }

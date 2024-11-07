@@ -53,7 +53,7 @@ static void feed_rgb_from_hue(double hue, double chroma, double m, double* red, 
     double g = m;
     double b = m;
 
-    hue = degrees_normalize(hue);
+    hue = degrees_wrap(hue);
     
     if (!flisnan(hue)) {
         double hue_60 = hue / 60.0f;

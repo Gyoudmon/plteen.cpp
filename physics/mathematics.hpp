@@ -8,6 +8,11 @@
 namespace Plteen {
     /*********************************************************************************************/
     template<typename Fl>
+    inline Fl lerp(Fl v0, Fl v1, double t) {
+	    return v0 + (v1 - v0) * Fl(t);
+    }
+
+    template<typename Fl>
     inline Fl clamp(Fl v, Fl min, Fl max) {
         if (v > max) {
             v = max;
@@ -19,17 +24,7 @@ namespace Plteen {
     }
 
     template<typename Fl>
-    inline Fl radians_to_degrees(Fl radians) {
-        return (radians / Fl(pi)) * Fl(180.0);
-    }
-
-    template<typename Fl>
-    inline Fl degrees_to_radians(Fl degrees) {
-        return (degrees * Fl(pi)) / Fl(180.0);
-    }
-
-    template<typename Fl>
-    Fl degrees_normalize(Fl degrees, Fl degrees_start = Fl(0.0)) {
+    Fl degrees_wrap(Fl degrees, Fl degrees_start = Fl(0.0)) {
 	    Fl degrees_end = degrees_start + Fl(360.0);
 
 	    while (degrees < degrees_start) degrees += Fl(360.0);
@@ -39,7 +34,7 @@ namespace Plteen {
     }
 
     template<typename Fl>
-    Fl radians_normalize(Fl radians, Fl degrees_start = Fl(0.0)) {
+    Fl radians_wrap(Fl radians, Fl degrees_start = Fl(0.0)) {
 	    Fl radians_start = degrees_to_radians(degrees_start);
 	    Fl radians_end = radians_start + Fl(d_pi);
 
@@ -47,6 +42,16 @@ namespace Plteen {
 	    while (radians >= radians_end) radians -= Fl(d_pi);
 
 	    return radians;
+    }
+
+    template<typename Fl>
+    inline Fl radians_to_degrees(Fl radians) {
+        return (radians / Fl(pi)) * Fl(180.0);
+    }
+
+    template<typename Fl>
+    inline Fl degrees_to_radians(Fl degrees) {
+        return (degrees * Fl(pi)) / Fl(180.0);
     }
 
     template<typename Fl>
@@ -136,16 +141,24 @@ namespace Plteen {
     }
 
     template<typename Fl>
-    inline void line_point(Fl x0, Fl y0, Fl x1, Fl y1, double t, Fl* x, Fl* y) {
-	    Fl flt = Fl(t);
-
-	    SET_BOX(x, (x0 - x1) * flt + x1);
-	    SET_BOX(y, (y0 - y1) * flt + y1);
+    inline Fl line_slope(Fl x0, Fl y0, Fl x1, Fl y1) {
+	    return (x1 == x0) ? Fl(flnan) : (y1 - y0) / (x1 - x0);
     }
 
     template<typename Fl>
-    inline Fl line_slope(Fl x0, Fl y0, Fl x1, Fl y1) {
-	    return (x1 == x0) ? Fl(flnan) : (y1 - y0) / (x1 - x0);
+    inline void linear_lerp(Fl x0, Fl y0, Fl x1, Fl y1, double t, Fl* x, Fl* y) {
+	    Fl flt = Fl(t);
+
+	    SET_BOX(x, x0 + (x1 - x0) * flt);
+	    SET_BOX(y, y0 + (y1 - y0) * flt);
+    }
+
+    template<typename Fl>
+    inline void linear_lerp(Fl x1, Fl y1, double t, Fl* x, Fl* y) {
+	    Fl flt = Fl(t);
+
+	    SET_BOX(x, x1 * flt);
+	    SET_BOX(y, y1 * flt);
     }
 
     /*********************************************************************************************/

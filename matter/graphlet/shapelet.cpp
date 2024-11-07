@@ -6,9 +6,6 @@
 #include "../../datum/box.hpp"
 #include "../../datum/flonum.hpp"
 
-// https://www.ferzkopp.net/Software/SDL2_gfx/Docs/html/index.html
-#include <SDL2/SDL2_gfxPrimitives.h>
-
 using namespace Plteen;
 
 // WARNING: SDL_Surface needs special proceeding as it might cause weird distorted shapes
@@ -48,20 +45,20 @@ Box Plteen::Linelet::get_bounding_box() {
 }
 
 void Plteen::Linelet::fill_shape(Plteen::dc_t* dc, int width, int height, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
-    int x = 0;
-    int y = 0;
-    int xn = fl2fxi(this->epx);
-    int yn = fl2fxi(this->epy);
+    float x = 0.0F;
+    float y = 0.0F;
+    float xn = this->epx;
+    float yn = this->epy;
 
-    if (xn < 0) {
+    if (xn < 0.0F) {
         x = x - xn;
     }
 
-    if (yn < 0) {
+    if (yn < 0.0F) {
         y = y - yn;
     }
 
-    aalineRGBA(dc->self(), x, y, x + xn, y + yn, r, g, b, a);
+    dc->draw_line(x, y, x + xn, y + yn, r, g, b, a);
 }
 
 /*************************************************************************************************/
@@ -74,7 +71,7 @@ Plteen::Rectanglet::Rectanglet(float width, float height, const RGBA& color, con
 void Plteen::Rectanglet::on_resize(float w, float h, float width, float height) {
     IShapelet::on_resize(w, h, width, height);
     
-    this->width = w;
+    this->width  = w;
     this->height = h;
 }
 
@@ -83,11 +80,11 @@ Box Plteen::Rectanglet::get_bounding_box() {
 }
 
 void Plteen::Rectanglet::draw_shape(Plteen::dc_t* dc, int width, int height, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
-    rectangleRGBA(dc->self(), width, 0, 0, height, r, g, b, a);
+    dc->draw_rect(0, 0, width, height, r, g, b, a);
 }
 
 void Plteen::Rectanglet::fill_shape(Plteen::dc_t* dc, int width, int height, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
-    boxRGBA(dc->self(), width, 0, 0, height, r, g, b, a);
+    dc->fill_rect(0, 0, width, height, r, g, b, a);
 }
 
 /*************************************************************************************************/
@@ -115,7 +112,7 @@ void Plteen::RoundedRectanglet::draw_shape(Plteen::dc_t* dc, int width, int heig
         rad = -flmin(this->width, this->height) * rad;
     }
 
-    roundedRectangleRGBA(dc->self(), 0, 0, width, height, fl2fxi(rad), r, g, b, a);
+    dc->draw_rounded_rect(0, 0, width, height, rad, r, g, b, a);
 }
 
 void Plteen::RoundedRectanglet::fill_shape(Plteen::dc_t* dc, int width, int height, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
@@ -125,7 +122,7 @@ void Plteen::RoundedRectanglet::fill_shape(Plteen::dc_t* dc, int width, int heig
         rad = -flmin(this->width, this->height) * rad;
     }
     
-    roundedBoxRGBA(dc->self(), 0, 0, width, height, fl2fxi(rad), r, g, b, a);
+    dc->fill_rounded_rect(0, 0, width, height, rad, r, g, b, a);
 }
 
 /*************************************************************************************************/
@@ -153,9 +150,9 @@ void Plteen::Ellipselet::draw_shape(Plteen::dc_t* dc, int width, int height, uin
     short cy = short(ry) + 1;
 
     if (rx == ry) {
-        aacircleRGBA(dc->self(), cx, cy, rx, r, g, b, a);
+        dc->draw_circle(cx, cy, rx, r, g, b, a);
     } else {
-        aaellipseRGBA(dc->self(), cx, cy, rx, ry, r, g, b, a);
+        dc->draw_ellipse(cx, cy, rx, ry, r, g, b, a);
     }
 }
 
@@ -166,11 +163,11 @@ void Plteen::Ellipselet::fill_shape(Plteen::dc_t* dc, int width, int height, uin
     short cy = short(ry) + 1;
 
     if (rx == ry) {
-        filledCircleRGBA(dc->self(), cx, cy, rx, r, g, b, a);
-        aacircleRGBA(dc->self(), cx, cy, rx, r, g, b, a);
+        dc->fill_circle(cx, cy, rx, r, g, b, a);
+        dc->draw_circle(cx, cy, rx, r, g, b, a);
     } else {
-        filledEllipseRGBA(dc->self(), cx, cy, rx, ry, r, g, b, a);
-        aaellipseRGBA(dc->self(), cx, cy, rx, ry, r, g, b, a);
+        dc->fill_ellipse(cx, cy, rx, ry, r, g, b, a);
+        dc->draw_ellipse(cx, cy, rx, ry, r, g, b, a);
     }
 }
 
@@ -243,7 +240,7 @@ Box Plteen::Polygonlet::get_bounding_box() {
 
 void Plteen::Polygonlet::draw_shape(Plteen::dc_t* dc, int width, int height, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
     if (this->n > 2) {
-        aapolygonRGBA(dc->self(), this->txs, this->tys, int(this->n), r, g, b, a);
+        dc->draw_polygon(this->txs, this->tys, this->n, r, g, b, a);
     } else {
         // line and dot have no borders
     }
@@ -251,12 +248,12 @@ void Plteen::Polygonlet::draw_shape(Plteen::dc_t* dc, int width, int height, uin
 
 void Plteen::Polygonlet::fill_shape(Plteen::dc_t* dc, int width, int height, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
     if (this->n > 2) {
-        filledPolygonRGBA(dc->self(), this->txs, this->tys, int(this->n), r, g, b, a);
-        aapolygonRGBA(dc->self(), this->txs, this->tys, int(this->n), r, g, b, a);
+        dc->fill_polygon(this->txs, this->tys, this->n, r, g, b, a);
+        dc->draw_polygon(this->txs, this->tys, this->n, r, g, b, a);
     } else if (this->n == 2) {
-        aalineRGBA(dc->self(), this->txs[0], this->tys[0], this->txs[1], this->tys[1], r, g, b, a);
+        dc->draw_line(this->txs[0], this->tys[0], this->txs[1], this->tys[1], r, g, b, a);
     } else if (this->n == 1) {
-        pixelRGBA(dc->self(), this->txs[0], this->tys[0], r, g, b, a);
+        dc->draw_point(this->txs[0], this->tys[0], r, g, b, a);
     }
 }
 

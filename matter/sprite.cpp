@@ -134,16 +134,16 @@ void Plteen::ISprite::draw(Plteen::dc_t* dc, float x, float y, float Width, floa
 
 void Plteen::ISprite::set_virtual_canvas(float width, float height) {
     if ((this->canvas_width != width) || (this->canvas_height != height)) {
-        this->canvas_width = width;
-        this->canvas_height = height;
+        if (!flisnan(width))  this->canvas_width  = width;
+        if (!flisnan(height)) this->canvas_height = height;
         this->notify_updated();
     }
 }
 
 void Plteen::ISprite::extend_virtual_canvas(float width, float height) {
     if ((width != 0.0F) || (height != 0.0F)) {
-        this->canvas_width  += width;
-        this->canvas_height += height;
+        if (!flisnan(width))  this->canvas_width  += width;
+        if (!flisnan(height)) this->canvas_height += height;
         this->notify_updated();
     }
 }
