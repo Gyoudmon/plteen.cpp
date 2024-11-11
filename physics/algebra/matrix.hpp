@@ -294,29 +294,51 @@ namespace Plteen {
         Plteen::matrix<M, N, T>& operator*=(T rhs) { array2d_scalar_multiply(this->entries, rhs, M, N); return (*this); }
         Plteen::matrix<M, N, T>& operator/=(T rhs) { array2d_divide(this->entries, rhs, M, N); return (*this); }
         
-        template<typename L, typename R>
-		friend inline Plteen::matrix<M, N, decltype(L{} + R{})> operator+(const Plteen::matrix<M, N, L>& lhs, const Plteen::matrix<M, N, R>& rhs)
-        { return Plteen::matrix<M, N, decltype(L{} + R{})>(lhs, rhs, true); }
+        /** WARNING
+         * Don't parameterize the `lhs`, as all instantiated classes would provide their own *non-special* specializations,
+         * then the compilation error occurs due to `redefintion of operator...`.
+         * 
+         * Say, both `Plteen::matrix<M, N, int>` and `Plteen::matrix<M, N, double>` would provide
+         *  `template<typename L, typename R>
+		 *  friend inline Plteen::matrix<M, N, decltype(L{} + R{})> operator+(const Plteen::matrix<M, N, L>& lhs, const Plteen::matrix<M, N, R>& rhs)`,
+         * 
+         * then resulting in ambiguities!!! 
+         * 
+         * By leaving the `lhs` not parameterized,
+         * `Plteen::matrix<M, N, int>` would provide
+         * `template<typename R>
+		 *  friend inline Plteen::matrix<M, N, decltype(int{} + R{})> operator+(const Plteen::matrix<M, N, int>& lhs, const Plteen::matrix<M, N, R>& rhs)`
+         * 
+         * while
+         * `Plteen::matrix<M, N, int>` would provide
+         * `template<typename R>
+		 *  friend inline Plteen::matrix<M, N, decltype(float{} + R{})> operator+(const Plteen::matrix<M, N, float>& lhs, const Plteen::matrix<M, N, R>& rhs)`
+         * 
+         * No ambiguity, without sacrificing the convenience.
+         */
+        template<typename R>
+		friend inline Plteen::matrix<M, N, decltype(T{} + R{})> operator+(const Plteen::matrix<M, N, T>& lhs, const Plteen::matrix<M, N, R>& rhs)
+        { return Plteen::matrix<M, N, decltype(T{} + R{})>(lhs, rhs, true); }
 
-        template<typename L, typename R>
-		friend inline Plteen::matrix<M, N, decltype(L{} - R{})> operator-(const Plteen::matrix<M, N, L>& lhs, const Plteen::matrix<M, N, R>& rhs)
-        { return Plteen::matrix<M, N, decltype(L{} - R{})>(lhs, rhs, false); }
+        template<typename R>
+		friend inline Plteen::matrix<M, N, decltype(T{} - R{})> operator-(const Plteen::matrix<M, N, T>& lhs, const Plteen::matrix<M, N, R>& rhs)
+        { return Plteen::matrix<M, N, decltype(T{} - R{})>(lhs, rhs, false); }
 		
-        template<typename L, typename R>
-        friend inline Plteen::matrix<M, N, decltype(L{} * R{})> operator*(const Plteen::matrix<M, N, L>& lhs, real_if_t<R> rhs)
-        { return Plteen::matrix<M, N, decltype(L{} * R{})>(lhs, rhs, true); }
+        template<typename R>
+        friend inline Plteen::matrix<M, N, decltype(T{} * R{})> operator*(const Plteen::matrix<M, N, T>& lhs, real_if_t<R> rhs)
+        { return Plteen::matrix<M, N, decltype(T{} * R{})>(lhs, rhs, true); }
         
-        template<typename L, typename R>
-        friend inline Plteen::matrix<M, N, decltype(L{} * R{})> operator*(real_if_t<L> lhs, const Plteen::matrix<M, N, R>& rhs)
-        { return Plteen::matrix<M, N, decltype(L{} * R{})>(rhs, lhs, true); }
+        template<typename L>
+        friend inline Plteen::matrix<M, N, decltype(L{} * T{})> operator*(real_if_t<L> lhs, const Plteen::matrix<M, N, T>& rhs)
+        { return Plteen::matrix<M, N, decltype(L{} * T{})>(rhs, lhs, true); }
 
-        template<typename L, typename R>
-        friend inline Plteen::matrix<M, N, decltype(L{} / R{})> operator/(const Plteen::matrix<M, N, L> lhs, real_if_t<R> rhs)
-        { return Plteen::matrix<M, N, decltype(L{} / R{})>(lhs, rhs, false); }
+        template<typename R>
+        friend inline Plteen::matrix<M, N, decltype(T{} / R{})> operator/(const Plteen::matrix<M, N, T> lhs, real_if_t<R> rhs)
+        { return Plteen::matrix<M, N, decltype(T{} / R{})>(lhs, rhs, false); }
 
-        template<size_t P, typename L, typename R>
-        friend inline Plteen::matrix<M, P, decltype(L{} * R{})> operator*(const Plteen::matrix<M, N, L>& lhs, const Plteen::matrix<N, P, R>& rhs)
-        { Plteen::matrix<M, P, decltype(L{} * R{})> self; array2d_multiply(self.entries, lhs.entries, rhs.entries, M, N, P); return self; }
+        template<size_t P, typename R>
+        friend inline Plteen::matrix<M, P, decltype(T{} * R{})> operator*(const Plteen::matrix<M, N, T>& lhs, const Plteen::matrix<N, P, R>& rhs)
+        { Plteen::matrix<M, P, decltype(T{} * R{})> self; array2d_multiply(self.entries, lhs.entries, rhs.entries, M, N, P); return self; }
 
     public:
         Plteen::matrix<N, M, T> transpose() const noexcept { Plteen::matrix<N, M, T> dest; this->transpose(&dest); return dest; }
