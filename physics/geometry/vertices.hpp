@@ -1,11 +1,10 @@
 #pragma once
 
 #include <vector>
-
-#include "../algebra/point.hpp"
+#include <complex>
 
 namespace Plteen {
-    typedef std::vector<Plteen::Dot> polygon_vertices;
+    typedef std::vector<std::complex<float>> Vertices;
 
-    __lambda__ Plteen::polygon_vertices regular_polygon_vertices(size_t n, float radius, float rotation);
+    __lambda__ Plteen::Vertices regular_polygon_vertices(size_t n, float radius, float rotation);
 }

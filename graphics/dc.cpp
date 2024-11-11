@@ -8,6 +8,7 @@
 
 #include "image.hpp"
 
+// https://www.ferzkopp.net/Software/SDL2_gfx/Docs/html/_s_d_l2__gfx_primitives_8h.html
 #include <SDL2/SDL2_gfxPrimitives.h>
 
 using namespace Plteen;
@@ -866,8 +867,6 @@ void Plteen::DrawingContext::fill_ellipse(float cx, float cy, float ar, float br
         aaellipseRGBA(this->device, CX, CY, AR, BR, r, g, b, a);
     }
 }
-
-
 
 void Plteen::DrawingContext::draw_regular_polygon(size_t n, float cx, float cy, float radius, float rotation, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
     SDL_SetRenderDrawColor(this->device, r, g, b, a);

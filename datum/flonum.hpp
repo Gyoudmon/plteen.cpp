@@ -3,6 +3,7 @@
 #include <cmath>
 #include <limits>
 #include <cstdlib>
+#include <complex>
 
 // TODO
 // check: http://www.plunk.org/~hatch/rightway.html
@@ -39,7 +40,7 @@ namespace Plteen {
         return (-epsilon <= diff) && (diff <= epsilon);
     }
     
-/*************************************************************************************************/    
+/*************************************************************************************************/
 #define flin(open, v, close) ((open <= v) && (v <= close))
 #define flout(open, v, close) ((v < open) || (v > close))
 
@@ -254,4 +255,15 @@ namespace Plteen {
     inline Super fl_safe_subtract_products(Fl1 a, Fl2 b, Fl3 c, Fl4 d) {
         return fl_subtract_products(Super(a), Super(b), Super(c), Super(d));
     }
+
+/*************************************************************************************************/
+    template<typename T>
+    std::complex<T> complex_scale(const std::complex<T>& c, T sx, T sy) {
+        return { c.real() * sx, c.imag() * sy };
+    }
+
+    template<typename T>
+    bool is_complex_okay(const std::complex<T>& c) {
+        return !(flisnan(c.real()) || flisnan(c.imag()));
+    } 
 }

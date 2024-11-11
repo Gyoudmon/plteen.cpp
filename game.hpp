@@ -56,7 +56,6 @@
 #include "physics/color/rgba.hpp"
 #include "physics/color/CIE.hpp"
 #include "physics/color/names.hpp"
-#include "physics/algebra/point.hpp"
 #include "physics/algebra/vector.hpp"
 #include "physics/algebra/matrix.hpp"
 #include "physics/geometry/port.hpp"

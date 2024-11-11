@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../canvaslet.hpp"
-#include "../../physics/algebra/point.hpp"
+#include "../../physics/algebra/vector.hpp"
 #include "../../physics/geometry/aabox.hpp"
 #include "../../physics/geometry/vertices.hpp"
 
@@ -124,7 +124,7 @@ namespace Plteen {
     /*********************************************************************************************/
     class __lambda__ Polygonlet : public Plteen::IShapelet {
     public:
-	    Polygonlet(const Plteen::polygon_vertices& vertices, const Plteen::RGBA& color, const Plteen::RGBA& border_color = transparent);
+	    Polygonlet(const Plteen::Vertices& vertices, const Plteen::RGBA& color, const Plteen::RGBA& border_color = transparent);
 	    virtual ~Polygonlet();
 
 	public:

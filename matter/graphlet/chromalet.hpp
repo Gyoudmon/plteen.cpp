@@ -2,7 +2,7 @@
 
 #include "../canvaslet.hpp"
 #include "../../physics/color/CIE.hpp"
-#include "../../physics/algebra/point.hpp"
+#include "../../physics/algebra/vector.hpp"
 #include "../../physics/geometry/aabox.hpp"
 
 namespace Plteen {
@@ -12,7 +12,7 @@ namespace Plteen {
         
     public:
         Plteen::Box get_bounding_box() override;
-        bool is_colliding(const Plteen::Dot& local_pt) override;
+        bool is_colliding(const Plteen::cPoint& local_pt) override;
 
     public:
         void set_standard(Plteen::CIE_Standard std = CIE_Standard::Primary);

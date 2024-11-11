@@ -9,7 +9,7 @@
 #include "matter/graphlet/tracklet.hpp"
 
 #include "physics/color/rgba.hpp"
-#include "physics/algebra/point.hpp"
+#include "physics/algebra/vector.hpp"
 #include "physics/mathematics.hpp"
 #include "physics/random.hpp"
 
@@ -255,9 +255,9 @@ static void unsafe_canvas_info_do_setting(IPlane* self, IMatter* m, MatterInfo* 
     case MotionActionType::Rotation: m->add_heading(op.theta, true); break;
     case MotionActionType::Heading: m->set_heading(op.direction, true); break;
     case MotionActionType::Stamp: {
-        Dot dot = self->get_matter_location(m, MatterPort::LT);
+        cPoint dot = self->get_matter_location(m, MatterPort::LT);
 
-        info->canvas->stamp(m, dot.x, dot.y);
+        info->canvas->stamp(m, _X(dot), _Y(dot));
      }; break;
     default: /* ignored */;
     }
@@ -277,9 +277,11 @@ static void unsafe_do_canvas_setting(Plane* self, IMatter* m, MatterInfo* info, 
 
 static void unsafe_canvas_do_drawing(IMatter* m, MatterInfo* info, float x1, float y1, float x2, float y2) {
     if (!info->draw_port.is_zero()) {
-        Dot dot = m->get_bounding_box().point_at(info->draw_port);
+        cPoint dot = m->get_bounding_box().point_at(info->draw_port);
+        float dx = _X(dot);
+        float dy = _Y(dot);
 
-        info->canvas->add_line(x1 + dot.x, y1 + dot.y, x2 + dot.x, y2 + dot.y);
+        info->canvas->add_line(x1 + dx, y1 + dy, x2 + dx, y2 + dy);
     } else {
         info->canvas->add_line(x1, y1, x2, y2);
     }
@@ -357,7 +359,7 @@ static inline bool is_matter_bubble_showing(IMatter* m, MatterInfo* info) {
 }
 
 static inline Box unsafe_get_matter_bound(IMatter* m, MatterInfo* info) {
-    return m->get_bounding_box() + Dot(info->x, info->y);
+    return m->get_bounding_box() + cPoint(info->x, info->y);
 }
 
 static inline void unsafe_add_selected(Plteen::IPlane* master, IMatter* m, MatterInfo* info, bool selected) {
@@ -504,7 +506,7 @@ void Plteen::Plane::send_backward(IMatter* m, int n) {
     }
 }
 
-void Plteen::Plane::insert_at(IMatter* m, const Position& pos, const Port& p, const Vector& vec) {
+void Plteen::Plane::insert_at(IMatter* m, const Position& pos, const Port& p, const cVector& vec) {
     if (m->info == nullptr) {
         MatterInfo* info = bind_matter_ownership(this, m);
         
@@ -522,7 +524,7 @@ void Plteen::Plane::insert_at(IMatter* m, const Position& pos, const Port& p, co
             head_info->prev = m;
         }
 
-        this->handle_new_matter(m, info, pos, p, vec.x, vec.y);
+        this->handle_new_matter(m, info, pos, p, _X(vec), _Y(vec));
     }
 }
 
@@ -639,7 +641,7 @@ void Plteen::Plane::move(IMatter* m, double length, bool ignore_gliding) {
     }
 }
 
-void Plteen::Plane::move(IMatter* m, const Vector& vec, bool ignore_gliding) {
+void Plteen::Plane::move(IMatter* m, const cVector& vec, bool ignore_gliding) {
     if (m != nullptr) {
         MatterInfo* info = plane_matter_info(this, m);
 
@@ -665,11 +667,11 @@ void Plteen::Plane::move(IMatter* m, const Vector& vec, bool ignore_gliding) {
     }
 }
 
-void Plteen::Plane::move_to(IMatter* m, const Position& pos, const Port& p, const Vector& vec) {
+void Plteen::Plane::move_to(IMatter* m, const Position& pos, const Port& p, const cVector& vec) {
     MatterInfo* info = plane_matter_info(this, m);
     
     if (info != nullptr) {
-        if (this->move_matter_to_location_via_info(m, info, pos, p, vec.x, vec.y)) {
+        if (this->move_matter_to_location_via_info(m, info, pos, p, _X(vec), _Y(vec))) {
             this->notify_updated();
         }
     }
@@ -697,7 +699,7 @@ void Plteen::Plane::glide(double sec, IMatter* m, double length) {
     }
 }
 
-void Plteen::Plane::glide(double sec, IMatter* m, const Vector& vec) {
+void Plteen::Plane::glide(double sec, IMatter* m, const cVector& vec) {
     if (m != nullptr) {
         MatterInfo* info = plane_matter_info(this, m);
 
@@ -719,11 +721,11 @@ void Plteen::Plane::glide(double sec, IMatter* m, const Vector& vec) {
     }
 }
 
-void Plteen::Plane::glide_to(double sec, IMatter* m, const Position& pos, const Port& p, const Vector& vec) {
+void Plteen::Plane::glide_to(double sec, IMatter* m, const Position& pos, const Port& p, const cVector& vec) {
     MatterInfo* info = plane_matter_info(this, m);
     
     if (info != nullptr) {
-        this->glide_matter_to_location_via_info(m, info, sec, pos, p, vec.x, vec.y, true);
+        this->glide_matter_to_location_via_info(m, info, sec, pos, p, _X(vec), _Y(vec), true);
     }
 }
 
@@ -742,7 +744,7 @@ IMatter* Plteen::Plane::find_matter(const Position& pos, IMatter* after) {
         MatterInfo* head_info = MATTER_INFO(this->head_matter);
         MatterInfo* aftr_info = plane_matter_info(this, after);
         IMatter* child = (aftr_info == nullptr) ? head_info->prev : aftr_info->prev;
-        Dot dot = pos.calculate_point();
+        cPoint dot = pos.calculate_point();
 
         do {
             MatterInfo* info = MATTER_INFO(child);
@@ -789,7 +791,7 @@ IMatter* Plteen::Plane::find_matter(IMatter* collided_matter, IMatter* after) {
     return found;
 }
 
-IMatter* Plteen::Plane::find_least_recent_matter(const Dot& pos) {
+IMatter* Plteen::Plane::find_least_recent_matter(const cPoint& pos) {
     IMatter* found = nullptr;
     uint32_t found_hit = 0xFFFFFFFFU;
 
@@ -827,7 +829,7 @@ IMatter* Plteen::Plane::find_least_recent_matter(const Dot& pos) {
 /**
  * TODO: if we need to check selected matters first? 
  */
-IMatter* Plteen::Plane::find_matter_for_tooltip(const Dot& pos) {
+IMatter* Plteen::Plane::find_matter_for_tooltip(const cPoint& pos) {
     IMatter* found = nullptr;
 
     if (this->head_matter != nullptr) {
@@ -869,9 +871,9 @@ IMatter* Plteen::Plane::find_next_selected_matter(IMatter* start) {
     return found;
 }
 
-Plteen::Dot Plteen::Plane::get_matter_location(IMatter* m, const Port& a) {
+Plteen::cPoint Plteen::Plane::get_matter_location(IMatter* m, const Port& a) {
     MatterInfo* info = plane_matter_info(this, m);
-    Dot dot(flnan_f, flnan_f);
+    cPoint dot(flnan_f, flnan_f);
     
     if (info != nullptr) {
         dot = unsafe_get_matter_bound(m, info).point_at(a);
@@ -1089,7 +1091,7 @@ bool Plteen::Plane::on_pointer_pressed(uint8_t button, float x, float y, uint8_t
 
     switch (button) {
     case SDL_BUTTON_LEFT: {
-        Dot pos = Dot(x, y) - this->translate;
+        cPoint pos = cPoint(x, y) - this->translate;
         IMatter* self_matter = this->find_matter(pos, static_cast<IMatter*>(nullptr));
 
         if (self_matter != nullptr) {
@@ -1115,7 +1117,7 @@ bool Plteen::Plane::on_pointer_move(uint32_t state, float x, float y, float dx, 
     bool handled = false;
 
     if (state == 0) {
-        Dot pos = Dot(x, y) - this->translate;
+        cPoint pos = cPoint(x, y) - this->translate;
         IMatter* self_matter = this->find_matter_for_tooltip(pos);
 
         if ((self_matter == nullptr) || (self_matter != this->hovering_matter)) {
@@ -1170,7 +1172,7 @@ bool Plteen::Plane::on_pointer_released(uint8_t button, float x, float y, uint8_
 
     switch (button) {
     case SDL_BUTTON_LEFT: {
-        Dot pos = Dot(x, y) - this->translate;
+        cPoint pos = cPoint(x, y) - this->translate;
         IMatter* self_matter = this->find_least_recent_matter(pos);
 
         if (self_matter != nullptr) {
@@ -1268,7 +1270,7 @@ bool Plteen::Plane::can_select(IMatter* m) {
     return this->sentry == m;
 }
 
-void Plteen::Plane::set_tooltip_matter(IMatter* m, const Vector& offset) {
+void Plteen::Plane::set_tooltip_matter(IMatter* m, const cVector& offset) {
     this->begin_update_sequence();
 
     if ((this->tooltip != nullptr) && !this->tooltip->visible()) {
@@ -1283,25 +1285,27 @@ void Plteen::Plane::set_tooltip_matter(IMatter* m, const Vector& offset) {
 }
 
 void Plteen::Plane::place_tooltip(Plteen::IMatter* target) {
-    float width, height;
-    Dot tt;
+    float x, y, width, height;
+    cPoint tt;
 
     this->move_to(this->tooltip, Position(target, MatterPort::LB), MatterPort::LT, this->tooltip_offset);
 
     this->master()->feed_client_extent(&width, &height);
     tt = this->get_matter_location(this->tooltip, MatterPort::LB);
+    x = _X(tt);
+    y = _Y(tt);
 
-    if (tt.y > height) {
+    if (y > height) {
         this->move_to(this->tooltip, Position(target, MatterPort::LT), MatterPort::LB, this->tooltip_offset);
     }
 
-    if (tt.x < 0.0F) {
-        this->move(this->tooltip, Vector(-tt.x, 0.0F));
+    if (x < 0.0F) {
+        this->move(this->tooltip, cVector(-x, 0.0F));
     } else {
         tt = this->get_matter_location(this->tooltip, MatterPort::RB);
 
-        if (tt.x > width) {
-            this->move(this->tooltip, Vector(width - tt.x, 0.0F));
+        if (x > width) {
+            this->move(this->tooltip, cVector(width - x, 0.0F));
         }
     }
 }
@@ -1367,7 +1371,7 @@ void Plteen::Plane::on_elapse(uint64_t count, uint32_t interval, uint64_t uptime
 
         if ((this->tooltip != nullptr) && this->tooltip->visible()) {
             if (this->hovering_matter != nullptr) {
-                this->update_tooltip(this->hovering_matter, this->hovering_lm.x, this->hovering_lm.y, this->hovering_gm.x, this->hovering_gm.y);
+                this->update_tooltip(this->hovering_matter, _X(this->hovering_lm), _Y(this->hovering_lm), _X(this->hovering_gm), _Y(this->hovering_gm));
                 this->place_tooltip(this->hovering_matter);
             }
         }
@@ -1448,8 +1452,8 @@ void Plteen::Plane::draw_matter(dc_t* dc, IMatter* child, MatterInfo* info, floa
         float mwidth = box.width();
         float mheight = box.height();
 
-        mx = (info->x + this->translate.x) + X;
-        my = (info->y + this->translate.y) + Y;
+        mx = (info->x + _X(this->translate)) + X;
+        my = (info->y + _Y(this->translate)) + Y;
                 
         if (rectangle_overlay(mx, my, mx + mwidth, my + mheight, dsX, dsY, dsWidth, dsHeight)) {
             clip.x = fl2fxi(flfloor(mx));
@@ -1491,8 +1495,8 @@ void Plteen::Plane::draw_speech(dc_t* dc, IMatter* child, MatterInfo* info, floa
         this->place_speech_bubble(child, bwidth, bheight, Width, Height, &mp, &bp, &dx, &dy);
         bx = info->x + mwidth  * mp.fx - bwidth  * bp.fx + dx;
         by = info->y + mheight * mp.fy - bheight * bp.fy + dy;
-        bx = (bx + this->translate.x) + X;
-        by = (by + this->translate.y) + Y;
+        bx = (bx + _X(this->translate)) + X;
+        by = (by + _Y(this->translate)) + Y;
 
         if (rectangle_overlay(bx, by, bx + bwidth, by + bheight, dsX, dsY, dsWidth, dsHeight)) {
             bx = flmax(bx, this->bubble_margin.left + X);
@@ -1525,9 +1529,9 @@ void Plteen::Plane::draw_speech(dc_t* dc, IMatter* child, MatterInfo* info, floa
 /*************************************************************************************************/
 bool Plteen::Plane::do_moving_via_info(IMatter* m, MatterInfo* info, const Position& pos, bool absolute, bool ignore_track, bool heading) {
     bool moved = false;
-    Dot dot = pos.calculate_point();
-    float x = dot.x;
-    float y = dot.y;
+    cPoint dot = pos.calculate_point();
+    float x = _X(dot);
+    float y = _Y(dot);
     
     if (!absolute) {
         x += info->x;
@@ -1555,9 +1559,9 @@ bool Plteen::Plane::do_moving_via_info(IMatter* m, MatterInfo* info, const Posit
 
 bool Plteen::Plane::do_gliding_via_info(IMatter* m, MatterInfo* info, const Position& pos, double sec, double sec_delta, bool absolute, bool ignore_track) {
     bool moved = false;
-    Dot dot = pos.calculate_point();
-    float x = dot.x;
-    float y = dot.y;
+    cPoint dot = pos.calculate_point();
+    float x = _X(dot);
+    float y = _Y(dot);
     
     if (!absolute) {
         x += info->x;
@@ -1813,14 +1817,15 @@ bool Plteen::Plane::do_vector_gliding(IMatter* m, MatterInfo* info, double lengt
     return this->glide_matter_via_info(m, info, sec, Position(x, y), false, true);
 }
 
-bool Plteen::Plane::is_matter_found(IMatter* m, MatterInfo* info, const Dot& dot) {
-    Dot lp = Dot(dot.x - info->x, dot.y - info->y);
+bool Plteen::Plane::is_matter_found(IMatter* m, MatterInfo* info, const cPoint& dot) {
+    float x = _X(dot) - info->x;
+    float y = _Y(dot) - info->y;
 
     /** NOTE:
      * the translation should only affect view poisition(say, mouse position for instance)
      */
     
-    return m->is_colliding(lp);
+    return m->is_colliding({ x, y });
 }
 
 /*************************************************************************************************/
@@ -2025,11 +2030,11 @@ void Plteen::Plane::delete_matter(IMatter* m) {
 
 /*************************************************************************************************/
 bool Plteen::Plane::is_colliding_with_mouse(IMatter* m) {
-    Dot mdot = this->get_matter_location(m, MatterPort::LT);
+    cPoint mdot = this->get_matter_location(m, MatterPort::LT);
     bool okay = false;
     
-    if (mdot.okay()) {
-        Dot mouse = get_current_mouse_location();
+    if (is_complex_okay(mdot)) {
+        cPoint mouse = get_current_mouse_location();
 
         okay = m->is_colliding(mouse - (mdot + this->translate));
     }
@@ -2043,7 +2048,7 @@ void Plteen::Plane::glide_to_random_location(double sec, IMatter* m) {
     if (info != nullptr) {
         IScreen* screen = this->master();
         float width, height;
-        Dot rpos;
+        cPoint rpos;
     
         if (screen != nullptr) {
             Box box = m->get_bounding_box();
@@ -2053,19 +2058,19 @@ void Plteen::Plane::glide_to_random_location(double sec, IMatter* m) {
             screen->feed_client_extent(&width, &height);
 
             // TODO: deal with translation
-            rpos.x = float(random_uniform(int(hinset), int(width - hinset)));
-            rpos.y = float(random_uniform(int(vinset), int(height - vinset)));
+            rpos = { float(random_uniform(int(hinset), int(width  - hinset))),
+                     float(random_uniform(int(vinset), int(height - vinset))) };
 
-            this->glide_to(sec, m, rpos, MatterPort::CC, Vector::O);
+            this->glide_to(sec, m, rpos, MatterPort::CC, cO);
         }
     }
 }
 
-void Plteen::Plane::glide_to_mouse(double sec, IMatter* m, const Port& p, const Vector& vec) {
+void Plteen::Plane::glide_to_mouse(double sec, IMatter* m, const Port& p, const cVector& vec) {
     MatterInfo* info = plane_matter_info(this, m);
     
     if (info != nullptr) {
-        Dot mouse = get_current_mouse_location();
+        cPoint mouse = get_current_mouse_location();
 
         this->glide_to(sec, m, mouse - this->translate, p, vec);
     }
@@ -2168,7 +2173,7 @@ bool Plteen::IPlane::is_colliding(IMatter* m, IMatter* target) {
 
 bool Plteen::IPlane::is_colliding(IMatter* m, IMatter* target, const Port& a) {
     Box sbox = this->get_matter_bounding_box(m);
-    Dot tdot = this->get_matter_location(target, a);
+    cPoint tdot = this->get_matter_location(target, a);
 
     return sbox.contain(tdot);
 }
@@ -2317,16 +2322,16 @@ int Plteen::IPlane::grid_cell_index(float x, float y, int* r, int* c) {
 }
 
 int Plteen::IPlane::grid_cell_index(IMatter* m, int* r, int* c, const Port& a) {
-    Dot dot = this->get_matter_location(m, a);
+    cPoint dot = this->get_matter_location(m, a);
     
-    return this->grid_cell_index(dot.x, dot.y, r, c);    
+    return this->grid_cell_index(_X(dot), _Y(dot), r, c);    
 }
 
 Plteen::Box Plteen::IPlane::get_grid_cell_bounding_box() {
     return { this->cell_width, this->cell_height };
 }
 
-Dot Plteen::IPlane::get_grid_cell_location(int idx, const Port& a) {
+cPoint Plteen::IPlane::get_grid_cell_location(int idx, const Port& a) {
     if (idx < 0) {
         idx += this->column * this->row;
     }
@@ -2341,8 +2346,7 @@ Dot Plteen::IPlane::get_grid_cell_location(int idx, const Port& a) {
     }
 }
 
-Dot Plteen::IPlane::get_grid_cell_location(int row, int col, const Port& a) {
-    Dot dot;
+cPoint Plteen::IPlane::get_grid_cell_location(int row, int col, const Port& a) {
     /** NOTE
      * Both `row` and `col` are just hints,
      *   and they are therefore allowed to be outside the grid,
@@ -2357,33 +2361,31 @@ Dot Plteen::IPlane::get_grid_cell_location(int row, int col, const Port& a) {
         col += this->column;
     }
     
-    dot.x = this->grid_x + this->cell_width * (float(col) + a.fx);
-    dot.y = this->grid_y + this->cell_height * (float(row) + a.fy);
-    
-    return dot;
+    return { this->grid_x + this->cell_width  * (float(col) + a.fx),
+             this->grid_y + this->cell_height * (float(row) + a.fy) };
 }
 
-void Plteen::IPlane::insert_at_grid(IMatter* m, int idx, const Port& p, const Vector& vec) {
+void Plteen::IPlane::insert_at_grid(IMatter* m, int idx, const Port& p, const cVector& vec) {
     this->insert_at(m, this->get_grid_cell_location(idx, p), p, vec);
 }
 
-void Plteen::IPlane::insert_at_grid(IMatter* m, int row, int col, const Port& p, const Vector& vec) {
+void Plteen::IPlane::insert_at_grid(IMatter* m, int row, int col, const Port& p, const cVector& vec) {
     this->insert_at(m, this->get_grid_cell_location(row, col, p), p, vec);
 }
 
-void Plteen::IPlane::move_to_grid(IMatter* m, int idx, const Port& p, const Vector& vec) {
+void Plteen::IPlane::move_to_grid(IMatter* m, int idx, const Port& p, const cVector& vec) {
     this->move_to(m, this->get_grid_cell_location(idx, p), p, vec);
 }
 
-void Plteen::IPlane::move_to_grid(IMatter* m, int row, int col, const Port& p, const Vector& vec) {
+void Plteen::IPlane::move_to_grid(IMatter* m, int row, int col, const Port& p, const cVector& vec) {
     this->move_to(m, this->get_grid_cell_location(row, col, p), p, vec);
 }
 
-void Plteen::IPlane::glide_to_grid(double sec, IMatter* m, int idx, const Port& p, const Vector& vec) {
+void Plteen::IPlane::glide_to_grid(double sec, IMatter* m, int idx, const Port& p, const cVector& vec) {
     this->glide_to(sec, m, this->get_grid_cell_location(idx, p), p, vec);
 }
 
-void Plteen::IPlane::glide_to_grid(double sec, IMatter* m, int row, int col, const Port& p, const Vector& vec) {
+void Plteen::IPlane::glide_to_grid(double sec, IMatter* m, int row, int col, const Port& p, const cVector& vec) {
     this->glide_to(sec, m, this->get_grid_cell_location(row, col, p), p, vec);
 }
 

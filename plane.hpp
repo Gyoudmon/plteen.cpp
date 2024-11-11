@@ -4,7 +4,6 @@
 #include "graphics/font.hpp"
 #include "physics/color/rgba.hpp"
 #include "physics/color/names.hpp"
-#include "physics/algebra/point.hpp"
 #include "physics/algebra/vector.hpp"
 #include "physics/geometry/port.hpp"
 #include "physics/geometry/aabox.hpp"
@@ -58,21 +57,21 @@ namespace Plteen {
     public:
         virtual Plteen::IMatter* find_matter(const Position& pos, Plteen::IMatter* after) = 0;
         virtual Plteen::IMatter* find_matter(Plteen::IMatter* collided_matter, Plteen::IMatter* after) = 0;
-        virtual Plteen::Dot get_matter_location(Plteen::IMatter* m, const Plteen::Port& a) = 0;
+        virtual Plteen::cPoint get_matter_location(Plteen::IMatter* m, const Plteen::Port& a) = 0;
         virtual Plteen::Box get_matter_bounding_box(Plteen::IMatter* m) = 0;
         virtual Plteen::Box get_bounding_box() = 0;
-        virtual void insert_at(IMatter* m, const Plteen::Position& pos, const Plteen::Port& p, const Plteen::Vector& vec) = 0;
+        virtual void insert_at(IMatter* m, const Plteen::Position& pos, const Plteen::Port& p, const Plteen::cVector& vec) = 0;
         virtual void insert_as_speech_bubble(IMatter* m) = 0;
         virtual void bring_to_front(IMatter* m, IMatter* target) = 0;
         virtual void bring_forward(IMatter* m, int n) = 0;
         virtual void send_to_back(IMatter* m, IMatter* target) = 0;
         virtual void send_backward(IMatter* m, int n) = 0;
         virtual void move(IMatter* m, double length, bool ignore_gliding) = 0;
-        virtual void move(IMatter* m, const Plteen::Vector& vec, bool ignore_gliding) = 0;
-        virtual void move_to(IMatter* m, const Plteen::Position& pos, const Plteen::Port& p, const Plteen::Vector& vec) = 0;
+        virtual void move(IMatter* m, const Plteen::cVector& vec, bool ignore_gliding) = 0;
+        virtual void move_to(IMatter* m, const Plteen::Position& pos, const Plteen::Port& p, const Plteen::cVector& vec) = 0;
         virtual void glide(double sec, IMatter* m, double length) = 0;
-        virtual void glide(double sec, IMatter* m, const Plteen::Vector& vec) = 0;
-        virtual void glide_to(double sec, IMatter* m, const Plteen::Position& pos, const Plteen::Port& p, const Plteen::Vector& vec) = 0;
+        virtual void glide(double sec, IMatter* m, const Plteen::cVector& vec) = 0;
+        virtual void glide_to(double sec, IMatter* m, const Plteen::Position& pos, const Plteen::Port& p, const Plteen::cVector& vec) = 0;
         virtual void remove(IMatter* m, bool needs_delete) = 0;
         virtual void erase() = 0;
 
@@ -130,14 +129,14 @@ namespace Plteen {
         int grid_cell_index(float x, float y, int* r = nullptr, int* c = nullptr);
         int grid_cell_index(IMatter* m, int* r = nullptr, int* c = nullptr, const Plteen::Port& p = 0.5F);
         Plteen::Box get_grid_cell_bounding_box();
-        Plteen::Dot get_grid_cell_location(int idx, const Plteen::Port& p = 0.5F);
-        Plteen::Dot get_grid_cell_location(int row, int col, const Plteen::Port& p = 0.5F);
-        void insert_at_grid(IMatter* m, int idx, const Plteen::Port& p = 0.5F, const Plteen::Vector& vec = Vector::O);
-        void insert_at_grid(IMatter* m, int row, int col, const Plteen::Port& p = 0.5F, const Plteen::Vector& vec = Vector::O);
-        void move_to_grid(IMatter* m, int idx, const Plteen::Port& p = 0.5F, const Plteen::Vector& vec = Vector::O);
-        void move_to_grid(IMatter* m, int row, int col, const Plteen::Port& p = 0.5F, const Plteen::Vector& vec = Vector::O);
-        void glide_to_grid(double sec, IMatter* m, int idx, const Plteen::Port& p = 0.5F, const Plteen::Vector& vec = Vector::O);
-        void glide_to_grid(double sec, IMatter* m, int row, int col, const Plteen::Port& p = 0.5F, const Plteen::Vector& vec = Vector::O);
+        Plteen::cPoint get_grid_cell_location(int idx, const Plteen::Port& p = 0.5F);
+        Plteen::cPoint get_grid_cell_location(int row, int col, const Plteen::Port& p = 0.5F);
+        void insert_at_grid(IMatter* m, int idx, const Plteen::Port& p = 0.5F, const Plteen::cVector& vec = Plteen::cO);
+        void insert_at_grid(IMatter* m, int row, int col, const Plteen::Port& p = 0.5F, const Plteen::cVector& vec = Plteen::cO);
+        void move_to_grid(IMatter* m, int idx, const Plteen::Port& p = 0.5F, const Plteen::cVector& vec = Plteen::cO);
+        void move_to_grid(IMatter* m, int row, int col, const Plteen::Port& p = 0.5F, const Plteen::cVector& vec = Plteen::cO);
+        void glide_to_grid(double sec, IMatter* m, int idx, const Plteen::Port& p = 0.5F, const Plteen::cVector& vec = Plteen::cO);
+        void glide_to_grid(double sec, IMatter* m, int row, int col, const Plteen::Port& p = 0.5F, const Plteen::cVector& vec = Plteen::cO);
         void set_grid_color(const Plteen::RGBA& color) { this->grid_color = color; }
 
     public:
@@ -208,21 +207,21 @@ namespace Plteen {
         }
         
         template<class M>
-        M* insert(M* m, const Plteen::Position& pos = {}, const Plteen::Port& p = 0.0F, const Plteen::Vector& vec = Vector::O) {
+        M* insert(M* m, const Plteen::Position& pos = {}, const Plteen::Port& p = 0.0F, const Plteen::cVector& vec = Plteen::cO) {
             this->insert_at(m, pos, p, vec);
 
             return m;
         }
         
         template<class M>
-        M* insert(M* m, int idx, const Plteen::Port& p = 0.5F, const Plteen::Vector& vec = Vector::O) {
+        M* insert(M* m, int idx, const Plteen::Port& p = 0.5F, const Plteen::cVector& vec = Plteen::cO) {
             this->insert_at_grid(m, idx, p, vec);
 
             return m;
         }
 
         template<class M>
-        M* insert(M* m, int row, int col, const Plteen::Port& p = 0.5F, const Plteen::Vector& vec = Vector::O) {
+        M* insert(M* m, int row, int col, const Plteen::Port& p = 0.5F, const Plteen::cVector& vec = Plteen::cO) {
             this->insert_at_grid(m, row, col, p, vec);
 
             return m;
@@ -256,7 +255,7 @@ namespace Plteen {
     public:
         bool has_mission_completed() override;
         void set_sentry_sprite(Plteen::ISprite* sentry) { this->sentry = sentry; }
-        void set_tooltip_matter(Plteen::IMatter* m, const Plteen::Vector& vec = Vector::O);
+        void set_tooltip_matter(Plteen::IMatter* m, const Plteen::cVector& vec = Plteen::cO);
         void set_bubble_color(const Plteen::RGBA& border, const Plteen::RGBA& background);
         void set_bubble_font(shared_font_t font) { this->bubble_font = font; }
         void set_bubble_duration(double second = 3600.0);
@@ -268,26 +267,26 @@ namespace Plteen {
     public:
         bool is_colliding_with_mouse(IMatter* m);
         void glide_to_random_location(double sec, IMatter* m);
-        void glide_to_mouse(double sec, IMatter* m, const Plteen::Port& p = 0.5F, const Plteen::Vector& vec = Vector::O);
+        void glide_to_mouse(double sec, IMatter* m, const Plteen::Port& p = 0.5F, const Plteen::cVector& vec = Plteen::cO);
 
     public:
         Plteen::IMatter* find_matter(const Position& pos, Plteen::IMatter* after = nullptr) override;
         Plteen::IMatter* find_matter(Plteen::IMatter* collided_matter, Plteen::IMatter* after = nullptr) override;
-        Plteen::Dot get_matter_location(Plteen::IMatter* m, const Plteen::Port& p = 0.0F) override;
+        Plteen::cPoint get_matter_location(Plteen::IMatter* m, const Plteen::Port& p = 0.0F) override;
         Plteen::Box get_matter_bounding_box(Plteen::IMatter* m) override;
         Plteen::Box get_bounding_box() override;
-        void insert_at(IMatter* m, const Plteen::Position& pos, const Plteen::Port& p, const Plteen::Vector& vec) override;
+        void insert_at(IMatter* m, const Plteen::Position& pos, const Plteen::Port& p, const Plteen::cVector& vec) override;
         void insert_as_speech_bubble(IMatter* m) override;
         void bring_to_front(IMatter* m, IMatter* target = nullptr) override;
         void bring_forward(IMatter* m, int n = 1) override;
         void send_to_back(IMatter* m, IMatter* target = nullptr) override;
         void send_backward(IMatter* m, int n = 1) override;
         void move(IMatter* m, double length, bool ignore_gliding = false) override;
-        void move(IMatter* m, const Plteen::Vector& vec, bool ignore_gliding = false) override;
-        void move_to(IMatter* m, const Plteen::Position& pos, const Plteen::Port& p = 0.0F, const Plteen::Vector& vec = Vector::O) override;
+        void move(IMatter* m, const Plteen::cVector& vec, bool ignore_gliding = false) override;
+        void move_to(IMatter* m, const Plteen::Position& pos, const Plteen::Port& p = 0.0F, const Plteen::cVector& vec = Plteen::cO) override;
         void glide(double sec, IMatter* m, double length) override;
-        void glide(double sec, IMatter* m, const Plteen::Vector& vec) override;
-        void glide_to(double sec, IMatter* m, const Plteen::Position& pos, const Plteen::Port& p = 0.0F, const Plteen::Vector& vec = Vector::O) override;
+        void glide(double sec, IMatter* m, const Plteen::cVector& vec) override;
+        void glide_to(double sec, IMatter* m, const Plteen::Position& pos, const Plteen::Port& p = 0.0F, const Plteen::cVector& vec = Plteen::cO) override;
         void remove(IMatter* m, bool needs_delete = true) override;
         void erase() override;
         void size_cache_invalid();
@@ -384,9 +383,9 @@ namespace Plteen {
         void draw_speech(Plteen::dc_t* renderer, IMatter* self, MatterInfo* info, float Width, float Height, float X, float Y, float dsX, float dsY, float dsWidth, float dsHeight);
         void recalculate_matters_extent_when_invalid();
         bool say_goodbye_to_hover_matter(uint32_t state, float x, float y, float dx, float dy);
-        bool is_matter_found(IMatter* m, MatterInfo* info, const Dot& dot);
-        Plteen::IMatter* find_matter_for_tooltip(const Plteen::Dot& pos);
-        Plteen::IMatter* find_least_recent_matter(const Plteen::Dot& pos);
+        bool is_matter_found(IMatter* m, MatterInfo* info, const cPoint& dot);
+        Plteen::IMatter* find_matter_for_tooltip(const Plteen::cPoint& pos);
+        Plteen::IMatter* find_least_recent_matter(const Plteen::cPoint& pos);
         void place_tooltip(IMatter* target);
         void no_selected_except(IMatter* m);
         void delete_matter(IMatter* m);
@@ -402,12 +401,12 @@ namespace Plteen {
         uint32_t local_frame_delta = 0U;
         uint32_t local_frame_count = 1U;
         uint32_t local_elapse = 0U;
-        Plteen::Dot hovering_gm;
-        Plteen::Dot hovering_lm;
+        Plteen::cPoint hovering_gm;
+        Plteen::cPoint hovering_lm;
 
     private:
         // TODO: implement other transformation
-        Plteen::Dot translate = {};
+        Plteen::cPoint translate = {};
     
     private:
         Plteen::ISprite* sentry = nullptr;
@@ -415,7 +414,7 @@ namespace Plteen {
 
     private:
         Plteen::IMatter* tooltip = nullptr;
-        Plteen::Vector tooltip_offset = Vector::O;
+        Plteen::cVector tooltip_offset = Plteen::cO;
 
     private:
         Plteen::RGBA bubble_border = GAINSBORO;

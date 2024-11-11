@@ -8,7 +8,7 @@
 #include "forward.hpp"
 #include "physics/motion.hpp"
 #include "physics/color/names.hpp"
-#include "physics/algebra/point.hpp"
+#include "physics/algebra/vector.hpp"
 #include "physics/geometry/port.hpp"
 #include "physics/geometry/aabox.hpp"
 #include "physics/geometry/margin.hpp"
@@ -58,7 +58,7 @@ namespace Plteen {
         virtual const char* name();
         
     public:
-        virtual bool is_colliding(const Plteen::Dot& local_pt);
+        virtual bool is_colliding(const Plteen::cPoint& local_pt);
 
     public:
         virtual void on_location_changed(float x, float y, float old_x, float old_y) {}
@@ -106,7 +106,7 @@ namespace Plteen {
     public:
         void notify_updated();
         void notify_timeline_restart(uint32_t count0 = 0, int duration = 0);
-        Plteen::Dot get_location(const Plteen::Port& p = 0.0F);
+        Plteen::cPoint get_location(const Plteen::Port& p = 0.0F);
         void log_message(Plteen::Log level, const std::string& msg);
         
     public:
@@ -130,7 +130,7 @@ namespace Plteen {
     
     private:
         Plteen::Port port;
-        Plteen::Dot port_dot;
+        Plteen::cPoint port_dot;
 
     private:
         Plteen::IMatterMetadata* _metatdata = nullptr;

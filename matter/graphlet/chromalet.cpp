@@ -272,8 +272,8 @@ void Plteen::Chromalet::draw_after_canvas(Plteen::dc_t* dc, float flx, float fly
     }
 }
 
-bool Plteen::Chromalet::is_colliding(const Dot& local_pt) {
-    return this->is_point_inside_the_spectrum(double(local_pt.x), double(local_pt.y));
+bool Plteen::Chromalet::is_colliding(const cPoint& local_pt) {
+    return this->is_point_inside_the_spectrum(double(_X(local_pt)), double(_Y(local_pt)));
 }
 
 /*************************************************************************************************/

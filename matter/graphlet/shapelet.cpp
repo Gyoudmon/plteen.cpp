@@ -172,7 +172,7 @@ void Plteen::Ellipselet::fill_shape(Plteen::dc_t* dc, int width, int height, uin
 }
 
 /*************************************************************************************************/
-Plteen::Polygonlet::Polygonlet(const polygon_vertices& vertices, const RGBA& color, const RGBA& border_color)
+Plteen::Polygonlet::Polygonlet(const Vertices& vertices, const RGBA& color, const RGBA& border_color)
     : IShapelet(color, border_color) {
     this->n = vertices.size();
 
@@ -183,8 +183,8 @@ Plteen::Polygonlet::Polygonlet(const polygon_vertices& vertices, const RGBA& col
         this->tys = new short[this->n];
 
         for (size_t idx = 0; idx < this->n; idx++) {
-            this->xs[idx] = vertices[idx].x;
-            this->ys[idx] = vertices[idx].y;
+            this->xs[idx] = vertices[idx].real();
+            this->ys[idx] = vertices[idx].imag();
         }
 
         this->initialize_vertices(1.0F, 1.0F);

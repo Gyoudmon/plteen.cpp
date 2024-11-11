@@ -1,7 +1,6 @@
 #include "CIE.hpp"
 
 #include "../../datum/box.hpp"
-
 #include "../mathematics.hpp"
 
 using namespace Plteen;

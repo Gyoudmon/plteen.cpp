@@ -1,11 +1,11 @@
 #pragma once
 
-#include "../algebra/point.hpp"
-#include "../algebra/vector.hpp"
 #include "port.hpp"
 
 #include "../../datum/flonum.hpp"
 #include "../mathematics.hpp"
+
+#include <complex>
 
 namespace Plteen {
     class __lambda__ Margin {
@@ -29,14 +29,20 @@ namespace Plteen {
         ~Margin() noexcept {}
 
     public:
-        Plteen::Dot ltdot() const { return { this->left, this->top }; }
-        Plteen::Dot rtdot() const { return { this->right, this->top }; }
-        Plteen::Dot lbdot() const { return { this->left, this->bottom }; }
-        Plteen::Dot rbdot() const { return { this->right, this->top }; }
+        std::complex<float> ltdot() const { return { this->left, this->top }; }
+        std::complex<float> rtdot() const { return { this->right, this->top }; }
+        std::complex<float> lbdot() const { return { this->left, this->bottom }; }
+        std::complex<float> rbdot() const { return { this->right, this->top }; }
 
         float vertical() const { return this->top + this->bottom; }
         float horizon() const { return this->left + this->right; }
 
+        bool is_point_inside(float x, float y, float w, float h) const
+        { return (x >= this->left) && (y >= this->top) && (x <= (w - this->right)) && (y <= (h - this->bottom)); }
+        bool is_point_inside(const std::complex<float>& pt, float w, float h) const
+        { return this->is_point_inside(pt.real(), pt.imag(), w, h); }
+
+        
     public:
         bool is_zero() const {
             return (this->left == 0.0F) && (this->right == 0.0F)

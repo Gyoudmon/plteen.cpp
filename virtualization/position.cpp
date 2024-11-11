@@ -21,12 +21,12 @@ Position& Plteen::Position::operator=(const Plteen::Position& pos) {
 }
 
 /*************************************************************************************************/
-Point<float> Plteen::Position::calculate_point() const {
-    Point<float> pos;
+std::complex<float> Plteen::Position::calculate_point() const {
+    std::complex<float> pos;
 
     if (this->xtarget == nullptr) {
-        pos.x = this->dot.fx;
-        pos.y = this->dot.fy;
+        pos.real(this->dot.fx);
+        pos.imag(this->dot.fy);
     } else if (this->ytarget == nullptr) {
         IPlane* master = this->xtarget->master();
 
@@ -36,7 +36,7 @@ Point<float> Plteen::Position::calculate_point() const {
     } else {
         IPlane* xmaster = this->xtarget->master();
         IPlane* ymaster = this->ytarget->master();
-        Dot xdot, ydot;
+        std::complex<float> xdot, ydot;
 
         if (xmaster != nullptr) {
             xdot = xmaster->get_matter_location(const_cast<IMatter*>(this->xtarget), this->dot);
@@ -46,12 +46,11 @@ Point<float> Plteen::Position::calculate_point() const {
             ydot = ymaster->get_matter_location(const_cast<IMatter*>(this->ytarget), this->dot);
         }
 
-        pos.x = xdot.x;
-        pos.y = ydot.y;
+        pos.real(xdot.real());
+        pos.imag(ydot.imag());
     }
 
-    pos.x += this->offset.x;
-    pos.y += this->offset.y;
+    pos += this->offset;
 
     return pos;
 }
@@ -64,8 +63,8 @@ std::string Plteen::Position::desc() const {
     } else if (this->ytarget == nullptr) {
         description = this->dot.desc() + "@" + const_cast<IMatter*>(this->xtarget)->name();
     } else {
-        description = "(" + std::to_string(this->dot.fx) + "@" + const_cast<IMatter*>(this->xtarget)->name()
-                    + ", " + std::to_string(this->dot.fy) + "@" + const_cast<IMatter*>(this->ytarget)->name() + ")";
+        description = "(" + std::to_string(this->dot.fx) + "@" + const_cast<IMatter*>(this->xtarget)->name() + ", "
+                          + std::to_string(this->dot.fy) + "@" + const_cast<IMatter*>(this->ytarget)->name() + ")";
     }
 
     return description; 

@@ -80,8 +80,8 @@ Box Plteen::Continent::get_bounding_box() {
 		box = { this->width, this->height };
 	} else {
 		Box sub = this->plane->get_bounding_box();
-		float w = (this->width > 0.0F) ? this->width : sub.rbdot.x;
-		float h = (this->height > 0.0F) ? this->height : sub.rbdot.y;
+		float w = (this->width > 0.0F) ?  this->width  : sub.rx();
+		float h = (this->height > 0.0F) ? this->height : sub.by();
 
 		box = { w, h };
 	}

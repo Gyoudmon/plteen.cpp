@@ -3,27 +3,16 @@
 #include <complex>
 
 namespace Plteen {
-    template<typename T>
-    class __lambda__ Point : public std::complex<T> {
-    public:
-        static const Plteen::Point<T> O;
+    #define _X(c) c.real()
+    #define _Y(c) c.imag()
+    #define set_X(c, v) c.real(v)
+    #define set_Y(c, v) c.imag(v)
 
-    public:
-        Point() = default;
-        Point(T x, T y) noexcept : Plteen::Tuple<Plteen::Point, T>(x, y) {}
+    template<class T> using Point  = std::complex<T>;
+    template<class T> using Vector = std::complex<T>;
 
-        template<typename U>
-        explicit Point(const Plteen::Point<U>& v) noexcept
-            : Plteen::Tuple<Plteen::Point, T>(T(v.x), T(v.y)) {}
+    typedef Plteen::Point<float>  cPoint;
+    typedef Plteen::Vector<float> cVector;
 
-        template<typename U>
-        explicit Point(const Plteen::Point<U>& v, T sx, T sy) noexcept
-            : Plteen::Tuple<Plteen::Point, T>(T(v.x * sx), T(v.y * sy)) {}
-
-        ~Point() noexcept {}
-    };
-
-    typedef Plteen::Point<float> Dot;
-
-    template<typename T> const Plteen::Point<T> Plteen::Point<T>::O = {};
+    static const std::complex<float> cO(0.0F, 0.0F);
 }
