@@ -258,12 +258,57 @@ namespace Plteen {
 
 /*************************************************************************************************/
     template<typename T>
-    std::complex<T> complex_scale(const std::complex<T>& c, T sx, T sy) {
+    constexpr inline std::complex<T> flr_unbox(const std::complex<T>& c) {
+        return { c.real(), T() };
+    }
+
+    template<typename T>
+    constexpr inline std::complex<T> fli_unbox(const std::complex<T>& c) {
+        return { T(), c.imag() };
+    }
+
+    template<typename T>
+    constexpr inline std::complex<T> flr_set(const std::complex<T>& c, T x) {
+        return { x, c.imag() };
+    }
+
+    template<typename T>
+    constexpr inline std::complex<T> fli_set(const std::complex<T>& c, T y) {
+        return { c.real(), y };
+    }
+
+    template<typename T>
+    constexpr inline std::complex<T> flr_translate(const std::complex<T>& c, T tx) {
+        return { c.real() + tx, c.imag() };
+    }
+
+    template<typename T>
+    constexpr inline std::complex<T> fli_translate(const std::complex<T>& c, T ty) {
+        return { c.real(), c.imag() + ty };
+    }
+
+    template<typename T>
+    constexpr inline std::complex<T> flc_translate(const std::complex<T>& c, T tx, T ty) {
+        return { c.real() + tx, c.imag() + ty };
+    }
+
+    template<typename T>
+    constexpr inline std::complex<T> flr_scale(const std::complex<T>& c, T sx) {
+        return { c.real() * sx, c.imag() };
+    }
+
+    template<typename T>
+    constexpr inline std::complex<T> fli_scale(const std::complex<T>& c, T sy) {
+        return { c.real(), c.imag() * sy };
+    }
+
+    template<typename T>
+    constexpr inline std::complex<T> flc_scale(const std::complex<T>& c, T sx, T sy) {
         return { c.real() * sx, c.imag() * sy };
     }
 
     template<typename T>
-    bool is_complex_okay(const std::complex<T>& c) {
+    constexpr inline bool is_complex_okay(const std::complex<T>& c) {
         return !(flisnan(c.real()) || flisnan(c.imag()));
     } 
 }

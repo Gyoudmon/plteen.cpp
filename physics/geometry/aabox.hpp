@@ -35,8 +35,8 @@ namespace Plteen {
         T height() const { return this->rbdot.imag() - this->ltdot.imag(); }
 
         void scale(T sx, T sy) {
-            this->ltdot = complex_scale(this->ltdot, sx, sy);
-            this->rbdot = complex_scale(this->rbdot, sx, sy);
+            this->ltdot = flc_scale(this->ltdot, sx, sy);
+            this->rbdot = flc_scale(this->rbdot, sx, sy);
         }
         
         std::complex<T> point_at(const Plteen::Port& port) const { return this->point_at(port.fx, port.fy); }
