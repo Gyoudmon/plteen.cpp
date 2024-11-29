@@ -433,6 +433,10 @@ int Plteen::GameFont::height() {
     return this->okay() ? TTF_FontHeight(this->font) : 0;
 }
 
+float Plteen::GameFont::line_height(float multiple) {
+    return float(GameFont::height()) * multiple;
+}
+
 int Plteen::GameFont::ascent() {
     return this->okay() ? TTF_FontAscent(this->font) : 0;
 }

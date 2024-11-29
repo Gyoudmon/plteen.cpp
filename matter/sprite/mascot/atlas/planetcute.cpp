@@ -38,8 +38,8 @@ Margin Plteen::PlanetCuteAtlas::get_original_map_overlay() {
 }
 
 void Plteen::PlanetCuteAtlas::set_tile_type(int r, int c, GroundBlockType type) {
-    r = safe_index(r, this->map_row);
-    c = safe_index(c, this->map_col);
+    r = wrap_index(r, this->map_row);
+    c = wrap_index(c, this->map_col);
 
     if (this->tiles[r][c] != type) {
         this->tiles[r][c] = type;

@@ -269,3 +269,6 @@ Plteen::Trianglet::Trianglet(float side_length, const RGBA& color, const RGBA& b
 
 Plteen::Trianglet::Trianglet(float side_length, float rotation, const RGBA& color, const RGBA& border_color)
 	: RegularPolygonlet(3, side_length / (2.0F * flsin(pi_f / 3.0F)), rotation, color, border_color) {}
+
+Plteen::HexagonTilelet::HexagonTilelet(float width, float height, const RGBA& color, const RGBA& border_color)
+	: Polygonlet(hexagon_tile_vertice(width, height), color, border_color) {}

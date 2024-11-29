@@ -143,7 +143,7 @@ static void game_create_world(int width, int height, SDL_Window** window, SDL_Re
      * TODO:
      *   Without `SDL_WINDOW_ALLOW_HIGHDPI`,
      *   onscreen text looks either aliasing or blur
-     *   as TTF_Font has its own strategy of antialiasing...
+     *   as TTF_Font has its own strategy for antialiasing...
      */
 
     uint32_t flags = SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE;
@@ -238,7 +238,7 @@ void Plteen::IUniverse::big_bang() {
             case SDL_TEXTEDITING: this->on_editing(e.edit.text, e.edit.start, e.edit.length); break;
             case SDL_WINDOWEVENT: {
                 switch (e.window.event) {
-                    case SDL_WINDOWEVENT_RESIZED: this->on_resize(e.window.data1, e.window.data2); break;
+                case SDL_WINDOWEVENT_RESIZED: this->on_resize(e.window.data1, e.window.data2); break;
                 }
             }; break;
             case SDL_QUIT: {
@@ -262,12 +262,12 @@ void Plteen::IUniverse::on_mouse_event(SDL_MouseButtonEvent &mouse, bool pressed
     if (!pressed) {
         if (mouse.clicks == 1) {
             switch (mouse.button) {
-                case SDL_BUTTON_LEFT: this->on_click(mouse.x, mouse.y); break;
-                case SDL_BUTTON_RIGHT: this->on_right_click(mouse.x, mouse.y); break;
+            case SDL_BUTTON_LEFT: this->on_click(mouse.x, mouse.y); break;
+            case SDL_BUTTON_RIGHT: this->on_right_click(mouse.x, mouse.y); break;
             }
         } else if (mouse.clicks == 2) {
             switch (mouse.button) {
-                case SDL_BUTTON_LEFT: this->on_double_click(mouse.x, mouse.y); break;
+            case SDL_BUTTON_LEFT: this->on_double_click(mouse.x, mouse.y); break;
             }
         }
     }
@@ -508,11 +508,13 @@ void Plteen::IUniverse::feed_window_size(int* width, int* height, bool logical) 
     }
 }
 
-void Plteen::IUniverse::set_window_fullscreen(bool yes) {
-    if (yes) {
-        SDL_SetWindowFullscreen(this->window, SDL_WINDOW_FULLSCREEN_DESKTOP);
-    } else {
+void Plteen::IUniverse::toggle_window_fullscreen() {
+    uint32_t flags = SDL_GetWindowFlags(this->window);
+
+    if ((flags & SDL_WINDOW_FULLSCREEN_DESKTOP) || (flags & SDL_WINDOW_FULLSCREEN)) { 
         SDL_SetWindowFullscreen(this->window, 0);
+    } else {
+        SDL_SetWindowFullscreen(this->window, SDL_WINDOW_FULLSCREEN_DESKTOP);
     }
 }
 

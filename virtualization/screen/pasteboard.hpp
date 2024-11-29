@@ -16,6 +16,7 @@ namespace Plteen {
         void feed_extent(float* width, float* height) override;
         void feed_client_extent(float* width, float* height) override;
         uint32_t frame_rate() override;
+        void toggle_window_fullscreen() override { /* disabled for subwindows */ }
     
     public:
         void begin_update_sequence() override;

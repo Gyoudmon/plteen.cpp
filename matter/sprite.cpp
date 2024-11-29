@@ -179,7 +179,7 @@ void Plteen::ISprite::switch_to_costume(int idx) {
     long maxsize = long(this->costume_count());
 
     if (maxsize > 0) {
-        long actual_idx = safe_index(long(idx), maxsize);
+        long actual_idx = wrap_index(long(idx), maxsize);
         
         if (actual_idx != this->current_costume_idx) {
             this->current_costume_idx = size_t(actual_idx);

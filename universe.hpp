@@ -51,7 +51,7 @@ namespace Plteen {
         void set_window_title(const char* fmt, ...);
         void set_window_size(int width, int height, bool centerize = true);
         void feed_window_size(int* width, int* height, bool logical = true);
-        void set_window_fullscreen(bool yes);
+        void toggle_window_fullscreen() override;
         uint32_t frame_rate() override { return this->_fps; }
         Plteen::RGBA get_background_color() { return this->_bgc; }
         Plteen::RGBA get_foreground_color() { return this->_fgc; }
@@ -125,12 +125,12 @@ namespace Plteen {
         void popback_input_text();
 
     private:
-        Plteen::RGBA _fgc;                     // 窗体前景色
-        Plteen::RGBA _bgc;                     // 窗体背景色
+        Plteen::RGBA _fgc;                   // 窗体前景色
+        Plteen::RGBA _bgc;                   // 窗体背景色
         int window_width;                    // 窗体宽度
         int window_height;                   // 窗体高度
         SDL_Window* window = nullptr;        // 窗体对象
-        Plteen::dc_t* device = nullptr;        // 渲染器对象
+        Plteen::dc_t* device = nullptr;      // 渲染器对象
         SDL_Texture* texture = nullptr;      // 纹理对象
 
     private:
@@ -143,11 +143,11 @@ namespace Plteen {
         std::string usrin;                   // 用户输入
         bool in_editing = false;             // 是否在输入期间
         SDL_Rect echo;                       // 输入回显区域
-        Plteen::RGBA _ifgc;                    // 回显区前景色
-        Plteen::RGBA _ibgc;                    // 回显区背景色
+        Plteen::RGBA _ifgc;                  // 回显区前景色
+        Plteen::RGBA _ibgc;                  // 回显区背景色
         shared_font_t echo_font;             // 回显字体
         std::string message;                 // 回显区消息
-        Plteen::RGBA _mfgc;                    // 消息颜色
+        Plteen::RGBA _mfgc;                  // 消息颜色
         bool needs_termio_if_no_echo;        // 消息是否需要输出
 
     private:

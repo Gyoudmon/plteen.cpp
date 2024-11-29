@@ -1200,9 +1200,17 @@ bool Plteen::Plane::on_pointer_released(uint8_t button, float x, float y, uint8_
                     this->on_tap(self_matter, local_x, local_y);
                     handled = info->selected;
                 }
-            } else {
-                if ((clicks == 2) && (this->can_select(self_matter))) {
-                    this->on_double_tap_sentry_sprite(this->sentry);
+            } else if (this->can_select(this->sentry)) {
+                if (clicks == 2) {
+                    if (!is_cmd_pressed()) {
+                        this->on_double_tap_sentry_sprite(this->sentry);
+                    } else {
+                        IScreen* screen = this->master();
+
+                        if (screen != nullptr) {
+                            screen->toggle_window_fullscreen();
+                        }
+                    }
                 }
             }
         }

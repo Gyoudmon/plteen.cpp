@@ -61,6 +61,7 @@ namespace Plteen {
         Plteen::TextMetrics get_text_metrics(const char* unicode);
 
         bool is_suitable(const std::string& text);
+        float line_height(float multiple = 1.0F);
         int width(const std::string& unicode) { return this->width(unicode.c_str()); }
         int width(const char* unicode);
         int width(uint16_t ch, int* offset = nullptr);

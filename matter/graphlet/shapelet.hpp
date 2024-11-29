@@ -169,9 +169,15 @@ namespace Plteen {
         float _radius;
 	};
 
+    /*********************************************************************************************/
     class __lambda__ Trianglet : public Plteen::RegularPolygonlet {
     public:
 	    Trianglet(float side_length, const Plteen::RGBA& color, const Plteen::RGBA& border_color = transparent);
 	    Trianglet(float side_length, float rotation, const Plteen::RGBA& color, const Plteen::RGBA& border_color = transparent);
+    };
+
+    class __lambda__ HexagonTilelet : public Plteen::Polygonlet {
+    public:
+	    HexagonTilelet(float width, float height, const Plteen::RGBA& color, const Plteen::RGBA& border_color = transparent);
     };
 }
