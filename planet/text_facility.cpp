@@ -3,58 +3,36 @@
 using namespace Plteen;
 
 /*************************************************************************************************/
-Plteen::TextFacilityPlane::TextFacilityPlane(const shared_font_t& font, const char keys[], const char* descs[], size_t n, bool default_state
+Plteen::TextFacilityPlane::TextFacilityPlane(const shared_font_t& font, const char keys[], const char* descs[], size_t n, const bool* default_states
         , const char* name, const RGBA& title_color) : TheBigBang(name, title_color) {
     if (n > 0) {
         this->facility_font = font;
         this->initialize_facilities(n);
 
-        for (size_t idx = 0; idx < n; idx ++) {
-            this->_fkeys[idx]  = keys[idx];
-            this->_fdescs[idx] = descs[idx];
-            this->_fokay[idx] = default_state;
+        for (size_t row = 0; row < n; row ++) {
+            this->_fkeys[row]  = keys[row];
+            this->_fdescs[row] = descs[row];
+
+            for (size_t col = 0; col < n; col ++) {
+                this->_fokay[row][col] = default_states[row];
+            }
         }
     }
 }
 
-Plteen::TextFacilityPlane::TextFacilityPlane(const shared_font_t& font, const char keys[], const char* descs[], size_t n, bool default_states[]
+Plteen::TextFacilityPlane::TextFacilityPlane(const shared_font_t& font, const facility_item_t keys[], size_t n, const bool* default_states
         , const char* name, const RGBA& title_color) : TheBigBang(name, title_color) {
     if (n > 0) {
         this->facility_font = font;
         this->initialize_facilities(n);
 
-        for (size_t idx = 0; idx < n; idx ++) {
-            this->_fkeys[idx]  = keys[idx];
-            this->_fdescs[idx] = descs[idx];
-            this->_fokay[idx] = default_states[idx];
-        }
-    }
-}
+        for (size_t row = 0; row < n; row ++) {
+            this->_fkeys[row]  = keys[row].first;
+            this->_fdescs[row] = keys[row].second;
 
-Plteen::TextFacilityPlane::TextFacilityPlane(const shared_font_t& font, const facility_item_t keys[], size_t n, bool default_state
-        , const char* name, const RGBA& title_color) : TheBigBang(name, title_color) {
-    if (n > 0) {
-        this->facility_font = font;
-        this->initialize_facilities(n);
-
-        for (size_t idx = 0; idx < n; idx ++) {
-            this->_fkeys[idx]  = keys[idx].first;
-            this->_fdescs[idx] = keys[idx].second;
-            this->_fokay[idx] = default_state;
-        }
-    }
-}
-
-Plteen::TextFacilityPlane::TextFacilityPlane(const shared_font_t& font, const facility_item_t keys[], size_t n, bool default_states[]
-        , const char* name, const RGBA& title_color) : TheBigBang(name, title_color) {
-    if (n > 0) {
-        this->facility_font = font;
-        this->initialize_facilities(n);
-
-        for (size_t idx = 0; idx < n; idx ++) {
-            this->_fkeys[idx]  = keys[idx].first;
-            this->_fdescs[idx] = keys[idx].second;
-            this->_fokay[idx] = default_states[idx];
+            for (size_t col = 0; col < n; col ++) {
+                this->_fokay[row][col] = *((default_states + row * n) + col);
+            }
         }
     }
 }
@@ -66,15 +44,24 @@ void Plteen::TextFacilityPlane::initialize_facilities(size_t n) {
     this->facilities = new Labellet*[n];
     this->_fkeys = new char[n];
     this->_fdescs = new std::string[n];
-    this->_fokay = new bool[n];
+    this->_fokay = new bool*[n];
+
+    for (size_t idx = 0; idx < n; idx ++) {
+        this->_fokay[idx] = new bool[n];
+    }
 }
 
 Plteen::TextFacilityPlane::~TextFacilityPlane() noexcept {
     if (this->n > 0) {
         delete [] this->_fkeys;
         delete [] this->_fdescs;
-        delete [] this->_fokay;
         delete [] this->facilities;
+
+        for (size_t col = 0; col < this->n; col ++) {
+            delete [] this->_fokay[col];
+        }
+
+        delete [] this->_fokay;
     }
 }
 
@@ -112,26 +99,8 @@ void Plteen::TextFacilityPlane::reflow_facility(Labellet* facility, Labellet* pr
     }
 }
 
-void Plteen::TextFacilityPlane::update_facilities(bool state) {
-    this->begin_update_sequence();
-    for (size_t idx = 0; idx < this->n; idx ++) {
-        if (this->_fokay[idx] != state) {
-            this->_fokay[idx] = state;
-            this->notify_updated(this->facilities[idx]);
-        }
-    }
-    this->end_update_sequence();
-}
-
-void Plteen::TextFacilityPlane::update_facilities(bool states[]) {
-    this->begin_update_sequence();
-    for (size_t idx = 0; idx < this->n; idx ++) {
-        if (this->_fokay[idx] != states[idx]) {
-            this->_fokay[idx] = states[idx];
-            this->notify_updated(this->facilities[idx]);
-        }
-    }
-    this->end_update_sequence();
+Plteen::Labellet* Plteen::TextFacilityPlane::facility_ref(int idx) {
+    return (this->n > 0) ? this->facilities[wrap_index(idx, int(this->n))] : nullptr;
 }
 
 /*************************************************************************************************/
@@ -160,6 +129,12 @@ void Plteen::TextFacilityPlane::on_tap(Plteen::IMatter* m, float local_x, float 
 }
 
 void Plteen::TextFacilityPlane::on_char(char key, uint16_t modifiers, uint8_t repeats, bool pressed) {
+    if (!this->trigger_facility(key)) {
+        TheBigBang::on_char(key, modifiers, repeats, pressed);
+    }
+}
+
+bool Plteen::TextFacilityPlane::trigger_facility(char key) {
     bool handled = false;
 
     if (this->n > 0) {
@@ -174,19 +149,19 @@ void Plteen::TextFacilityPlane::on_char(char key, uint16_t modifiers, uint8_t re
         this->end_update_sequence();
     }
 
-    if (!handled) {
-        TheBigBang::on_char(key, modifiers, repeats, pressed);
-    }
+    return handled;
 }
 
 /*************************************************************************************************/
 void Plteen::TextFacilityPlane::deal_with_facility_at(size_t idx) {
     Labellet* working_facility = (this->working_idx >= this->n) ? nullptr : this->facilities[this->working_idx];
                 
-    if (this->_fokay[idx]) {                
+    if ((working_facility == nullptr) || (this->_fokay[this->working_idx][idx])) {                
         if (working_facility != this->facilities[idx]) {
+            IScreen* master = this->master();
+
             if (working_facility != nullptr) {
-                if (this->_fokay[this->working_idx]) {
+                if (this->_fokay[this->working_idx][idx]) {
                     working_facility->set_foreground_color(this->enabled_facility_color);
                 } else {
                     working_facility->set_foreground_color(this->disabled_facility_color);
@@ -195,9 +170,17 @@ void Plteen::TextFacilityPlane::deal_with_facility_at(size_t idx) {
             
             this->working_idx = idx;
             this->facilities[idx]->set_foreground_color(this->working_facility_color);
-            this->on_facility_command(this->_fkeys[idx]);
+
+            if (master != nullptr) {
+                float width, height;
+
+                master->feed_client_extent(&width, &height);
+                this->on_facility_command(idx, this->_fkeys[idx], width, height);
+            } else {
+                this->on_facility_command(idx, this->_fkeys[idx], 0.0F, 0.0F);
+            }
         }
-    } else {
+    } else if (this->working_idx != idx) {
         this->facilities[idx]->set_foreground_color(this->hi_disabled_facility_color);
     }
 }

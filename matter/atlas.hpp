@@ -112,10 +112,10 @@ namespace Plteen {
         void move_to_map_tile(IMatter* m, int row, int col, const Port& tp, const Port& p, const cVector& vec = Plteen::cO);
         void glide_to_map_tile(double sec, IMatter* m, int idx, const Port& tp, const Port& p, const cVector& vec = Plteen::cO);
         void glide_to_map_tile(double sec, IMatter* m, int row, int col, const Port& tp, const Port& p, const cVector& vec = Plteen::cO);
-
+        
     protected:
         virtual Plteen::Margin get_original_map_overlay() { return this->get_original_margin(); }
-
+        
     protected:
         void create_map_grid(int row, int col, float tile_width = 0.0F, float tile_height = 0.0F, float xgap = 0.0F, float ygap = 0.0F);
         

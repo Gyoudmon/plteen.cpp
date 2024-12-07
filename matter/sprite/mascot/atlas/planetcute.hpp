@@ -19,15 +19,20 @@ namespace Plteen {
 
     public:
         Plteen::Margin get_original_margin() override;
+        void reset_map_tiles();
 
     public:
-        void set_tile_type(int r, int c, GroundBlockType type);
         GroundBlockType get_tile_type(int r, int c) { return this->tiles[r][c]; }
+        void set_tile_type(int r, int c, GroundBlockType type);
+        void set_tile_type(int r, int c) { this->set_tile_type(r, c, this->default_type); }
 
     protected:
         void on_tilemap_load(Plteen::shared_texture_t atlas) override;
         int get_atlas_tile_index(size_t map_idx, int& xoff, int& yoff) override;
         Plteen::Margin get_original_map_overlay() override;
+
+    protected:
+        virtual void alter_map_tile(size_t r, size_t c) {}
 
     private:
         GroundBlockType** tiles = nullptr;

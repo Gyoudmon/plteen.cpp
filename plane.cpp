@@ -1202,14 +1202,14 @@ bool Plteen::Plane::on_pointer_released(uint8_t button, float x, float y, uint8_
                 }
             } else if (this->can_select(this->sentry)) {
                 if (clicks == 2) {
-                    if (!is_cmd_pressed()) {
-                        this->on_double_tap_sentry_sprite(this->sentry);
-                    } else {
+                    if (is_cmd_pressed()) {
                         IScreen* screen = this->master();
 
                         if (screen != nullptr) {
                             screen->toggle_window_fullscreen();
                         }
+                    } else {
+                        this->on_double_tap_sentry_sprite(this->sentry);
                     }
                 }
             }
@@ -1263,6 +1263,18 @@ void Plteen::Plane::mission_complete() {
     if (this->sentry != nullptr) {
         this->sentry->play_goodbye(1);
         this->sentry->stop(1);
+    }
+
+    if (this->head_matter != nullptr) {
+        IMatter* child = this->head_matter;
+        
+        do {
+            MatterInfo* info = MATTER_INFO(child);
+            
+            child->motion_stop();
+            this->clear_motion_actions(child);
+            child = info->next;
+        } while (child != this->head_matter);
     }
 
     this->on_mission_complete();
@@ -2358,17 +2370,8 @@ cPoint Plteen::IPlane::get_grid_cell_location(int row, int col, const Port& a) {
     /** NOTE
      * Both `row` and `col` are just hints,
      *   and they are therefore allowed to be outside the grid,
-     *   since the grid itself might be just a small port of the whole plane.
+     *   since the grid itself might be just a small portion of the whole plane.
      */
-
-    if (row < 0) {
-        row += this->row;
-    }
-
-    if (col < 0) {
-        col += this->column;
-    }
-    
     return { this->grid_x + this->cell_width  * (float(col) + a.fx),
              this->grid_y + this->cell_height * (float(row) + a.fy) };
 }

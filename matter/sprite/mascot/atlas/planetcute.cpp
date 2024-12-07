@@ -55,9 +55,21 @@ void Plteen::PlanetCuteAtlas::on_tilemap_load(shared_texture_t atlas) {
         this->tiles[r] = new GroundBlockType[this->map_col];
 
         for (int c = 0; c < this->map_col; c ++) {
-            this->tiles[r][c] = default_type;   
+            this->tiles[r][c] = default_type;
+            this->alter_map_tile(r, c);   
         }
     }
+}
+
+void Plteen::PlanetCuteAtlas::reset_map_tiles() {
+    for (int r = 0; r < this->map_row; r ++) {
+        for (int c = 0; c < this->map_col; c ++) {
+            this->tiles[r][c] = default_type;
+            this->alter_map_tile(r, c);
+        }
+    }
+
+    this->notify_updated();
 }
 
 int Plteen::PlanetCuteAtlas::get_atlas_tile_index(size_t map_idx, int& xoff, int& yoff) {

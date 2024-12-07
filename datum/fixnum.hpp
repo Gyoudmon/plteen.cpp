@@ -37,6 +37,12 @@ namespace Plteen {
     long long inline fxceiling(long long fx, double precision) { return (long long)(std::ceil(double(fx) * precision)); }
 
     static inline size_t integer_length(unsigned long long n) { size_t s = 0;  while (n) { n >>= 1; s++; } return s; }
+    
+    static inline size_t binary_digit(unsigned long long n) { size_t s = 0;  while (n) { n >>= 1; s++; } return s; }
+    static inline size_t octal_digit(unsigned long long n) { size_t s = 0;  while (n) { n >>= 3; s++; } return s; }
+    static inline size_t hexadecimal_digit(unsigned long long n) { size_t s = 0;  while (n) { n >>= 4; s++; } return s; }
+    static inline size_t ubyte_digit(unsigned long long n) { size_t s = 0;  while (n) { n >>= 8; s++; } return s; }
+    static inline size_t decimal_digit(unsigned long long n) { size_t s = 0;  while (n) { n /= 10; s++; } return s; }
 
     template<typename I>
     I inline wrap_index(I idx, I size) {
