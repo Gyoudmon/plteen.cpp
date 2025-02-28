@@ -51,11 +51,11 @@ void Plteen::IMatter::attach_metadata(IMatterMetadata* metadata) {
     this->_metatdata = metadata;
 }
 
-bool Plteen::IMatter::is_colliding(const cPoint& local_pt) {
+bool Plteen::IMatter::is_colliding(const Dot& local_pt) {
     Box box = this->get_bounding_box();
     Margin margin = this->get_margin();
 
-    return margin.is_point_inside(_X(local_pt), _Y(local_pt), box.width(), box.height());
+    return margin.is_point_inside(local_pt.x, local_pt.y, box.width(), box.height());
 }
 
 void Plteen::IMatter::scale(float x_ratio, float y_ratio, const Port& port) {
@@ -131,7 +131,7 @@ void Plteen::IMatter::resize(float nwidth, float nheight, const Port& port) {
 void Plteen::IMatter::notify_updated() {
     if (this->info != nullptr) {
         if (!this->port.is_zero()) {
-            cPoint dot = this->info->master->get_matter_location(this, this->port);
+            Dot dot = this->info->master->get_matter_location(this, this->port);
 
             /** NOTE
              * Gliding dramatically increasing the complexity of moving as glidings might be queued,
@@ -186,8 +186,8 @@ void Plteen::IMatter::show(bool yes_no) {
     }
 }
 
-cPoint Plteen::IMatter::get_location(const Port& p) {
-    cPoint dot(flnan_f, flnan_f);
+Dot Plteen::IMatter::get_location(const Port& p) {
+    Dot dot(flnan_f, flnan_f);
 
     if (this->info != nullptr) {
         dot = this->info->master->get_matter_location(this, p);

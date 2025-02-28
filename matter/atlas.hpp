@@ -2,6 +2,7 @@
 
 #include "../matter.hpp"
 #include "../physics/color/rgba.hpp"
+#include "../physics/algebra/point.hpp"
 #include "../physics/algebra/vector.hpp"
 #include "../physics/geometry/port.hpp"
 #include "../physics/geometry/aabox.hpp"
@@ -40,15 +41,15 @@ namespace Plteen {
         Plteen::Box get_logic_tile_region();
         Plteen::Port get_logic_tile_fraction(int idx, const Port& a = 0.5F);
         Plteen::Port get_logic_tile_fraction(int row, int col, const Port& a = 0.5F);
-        Plteen::cPoint get_logic_tile_location(int idx, const Port& a = 0.5F, bool local = true);
-        Plteen::cPoint get_logic_tile_location(int row, int col, const Port& a = 0.5F, bool local = true);
+        Plteen::Dot get_logic_tile_location(int idx, const Port& a = 0.5F, bool local = true);
+        Plteen::Dot get_logic_tile_location(int row, int col, const Port& a = 0.5F, bool local = true);
         void set_logic_grid_color(const Plteen::RGBA& color) { this->logic_grid_color = color; }
 
     public:
-        void move_to_logic_tile(IMatter* m, int idx, const Port& tp, const Port& p, const cVector& vec = Plteen::cO);
-        void move_to_logic_tile(IMatter* m, int row, int col, const Port& tp, const Port& p, const cVector& vec = Plteen::cO);
-        void glide_to_logic_tile(double sec, IMatter* m, int idx, const Port& tp, const Port& p, const cVector& vec = Plteen::cO);
-        void glide_to_logic_tile(double sec, IMatter* m, int row, int col, const Port& tp, const Port& p, const cVector& vec = Plteen::cO);
+        void move_to_logic_tile(IMatter* m, int idx, const Port& tp, const Port& p, const Plteen::Vector& vec = Plteen::Vector::O);
+        void move_to_logic_tile(IMatter* m, int row, int col, const Port& tp, const Port& p, const Plteen::Vector& vec = Plteen::Vector::O);
+        void glide_to_logic_tile(double sec, IMatter* m, int idx, const Port& tp, const Port& p, const Plteen::Vector& vec = Plteen::Vector::O);
+        void glide_to_logic_tile(double sec, IMatter* m, int row, int col, const Port& tp, const Port& p, const Plteen::Vector& vec = Plteen::Vector::O);
         
     protected:
         virtual int get_atlas_tile_index(size_t map_idx, int& xoff, int& yoff) { return int(map_idx); }
@@ -103,15 +104,15 @@ namespace Plteen {
         int map_tile_index(float x, float y, int* r = nullptr, int* c = nullptr, bool local = true);
         Plteen::Port get_map_tile_fraction(int idx, const Port& a = 0.5F);
         Plteen::Port get_map_tile_fraction(int row, int col, const Port& a = 0.5F);
-        Plteen::cPoint get_map_tile_location(int idx, const Port& a = 0.5F, bool local = true);
-        Plteen::cPoint get_map_tile_location(int row, int col, const Port& a = 0.5F, bool local = true);
+        Plteen::Dot get_map_tile_location(int idx, const Port& a = 0.5F, bool local = true);
+        Plteen::Dot get_map_tile_location(int row, int col, const Port& a = 0.5F, bool local = true);
         Plteen::Margin get_map_overlay();
         
     public:
-        void move_to_map_tile(IMatter* m, int idx, const Port& tp, const Port& p, const cVector& vec = Plteen::cO);
-        void move_to_map_tile(IMatter* m, int row, int col, const Port& tp, const Port& p, const cVector& vec = Plteen::cO);
-        void glide_to_map_tile(double sec, IMatter* m, int idx, const Port& tp, const Port& p, const cVector& vec = Plteen::cO);
-        void glide_to_map_tile(double sec, IMatter* m, int row, int col, const Port& tp, const Port& p, const cVector& vec = Plteen::cO);
+        void move_to_map_tile(IMatter* m, int idx, const Port& tp, const Port& p, const Vector& vec = Plteen::Vector::O);
+        void move_to_map_tile(IMatter* m, int row, int col, const Port& tp, const Port& p, const Vector& vec = Plteen::Vector::O);
+        void glide_to_map_tile(double sec, IMatter* m, int idx, const Port& tp, const Port& p, const Vector& vec = Plteen::Vector::O);
+        void glide_to_map_tile(double sec, IMatter* m, int row, int col, const Port& tp, const Port& p, const Vector& vec = Plteen::Vector::O);
         
     protected:
         virtual Plteen::Margin get_original_map_overlay() { return this->get_original_margin(); }

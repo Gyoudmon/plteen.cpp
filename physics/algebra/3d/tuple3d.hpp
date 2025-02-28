@@ -7,11 +7,11 @@
 
 namespace Plteen {
     template<template<typename> class Child, typename T>
-    class __lambda__ Tuple {
+    class __lambda__ Tuple3D {
     public:
-        Tuple() noexcept : Tuple(T(), T()) {}
-        Tuple(T x, T y, T z) noexcept : x(x), y(y), z(z) {}
-        Tuple(const Child<T>& c) noexcept : x(c.x), y(c.y), z(c.z) {}
+        Tuple3D() noexcept : Tuple3D(T(), T(), T()) {}
+        Tuple3D(T x, T y, T z) noexcept : x(x), y(y), z(z) {}
+        Tuple3D(const Child<T>& c) noexcept : x(c.x), y(c.y), z(c.z) {}
 
         Child<T>& operator=(const Child<T>& c) noexcept {
             this->x = c.x;
@@ -21,7 +21,7 @@ namespace Plteen {
             return static_cast<Child<T>&>(*this);
         }
 
-        ~Tuple() noexcept {}
+        ~Tuple3D() noexcept {}
 
     public:
         bool is_zero() const noexcept { return (this->x == T(0)) && (this->y == T(0) && (this->z == T(0)); }
@@ -40,7 +40,7 @@ namespace Plteen {
             case 0: return this->x;
             case 1: return this->y;
             case 2: return this->z;
-            default: raise_range_error("index too large for a 2D Tuple");
+            default: raise_range_error("index too large for a 3D Tuple");
             }
         }
        
@@ -49,7 +49,7 @@ namespace Plteen {
             case 0: return this->x;
             case 1: return this->y;
             case 2: return this->z;
-            default: raise_range_error("index too large for a 2D Tuple");
+            default: raise_range_error("index too large for a 3D Tuple");
             }
         }
 

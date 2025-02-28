@@ -1,18 +1,39 @@
 #pragma once
 
+#include "tuple.hpp"
+#include "point.hpp"
+
 #include <complex>
 
 namespace Plteen {
-    #define _X(c) c.real()
-    #define _Y(c) c.imag()
-    #define set_X(c, v) c.real(v)
-    #define set_Y(c, v) c.imag(v)
+    template<typename T>
+    class __lambda__ EuclideanVector : public Plteen::Tuple<Plteen::EuclideanVector, T> {
+    public:
+        static const Plteen::EuclideanVector<T> O;
 
-    template<class T> using Point  = std::complex<T>;
-    template<class T> using Vector = std::complex<T>;
+    public:
+        EuclideanVector() = default;
+        EuclideanVector(T x, T y) noexcept : Tuple<Plteen::EuclideanVector, T>(x, y) {}
+        EuclideanVector(const std::complex<T>& c) noexcept : Plteen::Tuple<Plteen::EuclideanVector, T>(T(c.real()), T(c.imag())) {}
+        EuclideanVector(const Plteen::Point<T>& pt) noexcept : Tuple<Plteen::EuclideanVector, T>(pt.x, pt.y) {}
+        EuclideanVector(const Plteen::Point<T>& sp, const Plteen::Point<T>& ep) noexcept
+            : Tuple<Plteen::EuclideanVector, T>(ep.x - sp.x, ep.y - sp.y) {}
 
-    typedef Plteen::Point<float>  cPoint;
-    typedef Plteen::Vector<float> cVector;
+        template <typename U>
+        explicit EuclideanVector(const std::complex<U>& c) noexcept
+            : Plteen::Tuple<Plteen::EuclideanVector, T>(T(c.real()), T(c.imag())) {}
 
-    static const std::complex<float> cO(0.0F, 0.0F);
+        template <typename U>
+        explicit EuclideanVector(const Plteen::EuclideanVector<U>& v) noexcept
+            : Plteen::Tuple<Plteen::EuclideanVector, T>(T(v.x), T(v.y)) {}
+
+        template<typename U>
+        explicit EuclideanVector(const Plteen::EuclideanVector<U>& v, T sx, T sy) noexcept
+            : Plteen::Tuple<Plteen::EuclideanVector, T>(T(v.x * sx), T(v.y * sy)) {}
+
+        ~EuclideanVector() noexcept {}
+    };
+
+    typedef Plteen::EuclideanVector<float> Vector;
+    template<typename T> const Plteen::EuclideanVector<T> Plteen::EuclideanVector<T>::O = {};
 }

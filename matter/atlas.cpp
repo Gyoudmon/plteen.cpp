@@ -167,10 +167,10 @@ int Plteen::IAtlas::logic_tile_index(float x, float y, int* r, int* c, bool loca
         auto master = this->master();
 
         if (master != nullptr) {
-            cPoint dot = master->get_matter_location(this, MatterPort::LT);
+            Dot dot = master->get_matter_location(this, MatterPort::LT);
 
-            x -= _X(dot);
-            y -= _Y(dot);
+            x -= dot.x;
+            y -= dot.y;
         }
     }
     
@@ -187,9 +187,9 @@ int Plteen::IAtlas::logic_tile_index(float x, float y, int* r, int* c, bool loca
     return idx;
 }
 
-cPoint Plteen::IAtlas::get_logic_tile_location(int idx, const Port& p, bool local) {
+Dot Plteen::IAtlas::get_logic_tile_location(int idx, const Port& p, bool local) {
     int total = this->logic_col * this->logic_row;
-    cPoint dot;
+    Dot dot;
     
     if (total > 0) {
         idx = wrap_index(idx, total);
@@ -199,8 +199,8 @@ cPoint Plteen::IAtlas::get_logic_tile_location(int idx, const Port& p, bool loca
     return dot;
 }
 
-cPoint Plteen::IAtlas::get_logic_tile_location(int row, int col, const Port& p, bool local) {
-    cPoint dot;
+Dot Plteen::IAtlas::get_logic_tile_location(int row, int col, const Port& p, bool local) {
+    Dot dot;
     
     if (this->logic_row > 0) {
         row = wrap_index(row, this->logic_row);
@@ -218,7 +218,7 @@ cPoint Plteen::IAtlas::get_logic_tile_location(int row, int col, const Port& p, 
         }
     }
     
-    return dot + cPoint((this->logic_tile_width * (float(col) + p.fx) + this->logic_margin.left) * flabs(this->xscale),
+    return dot + Dot((this->logic_tile_width * (float(col) + p.fx) + this->logic_margin.left) * flabs(this->xscale),
                      (this->logic_tile_height * (float(row) + p.fy) + this->logic_margin.top) * flabs(this->yscale));
 }
 
@@ -236,12 +236,12 @@ Port Plteen::IAtlas::get_logic_tile_fraction(int idx, const Port& a) {
 
 Port Plteen::IAtlas::get_logic_tile_fraction(int row, int col, const Port& p) {
     Box box = this->get_bounding_box();
-    cPoint dot = this->get_logic_tile_location(row, col, p, true);
+    Dot dot = this->get_logic_tile_location(row, col, p, true);
     
-    return { _X(dot) / box.width(), _Y(dot) / box.height() };
+    return { dot.x / box.width(), dot.y / box.height() };
 }
 
-void Plteen::IAtlas::move_to_logic_tile(IMatter* m, int idx, const Port& tp, const Port& p, const cVector& vec) {
+void Plteen::IAtlas::move_to_logic_tile(IMatter* m, int idx, const Port& tp, const Port& p, const Vector& vec) {
     int total = this->logic_col * this->logic_row;
     
     if (total > 0) {
@@ -250,7 +250,7 @@ void Plteen::IAtlas::move_to_logic_tile(IMatter* m, int idx, const Port& tp, con
     }
 }
 
-void Plteen::IAtlas::move_to_logic_tile(IMatter* m, int row, int col, const Port& tp, const Port& p, const cVector& vec) {
+void Plteen::IAtlas::move_to_logic_tile(IMatter* m, int row, int col, const Port& tp, const Port& p, const Vector& vec) {
     auto master = this->master();
     
     if (master != nullptr) {
@@ -258,7 +258,7 @@ void Plteen::IAtlas::move_to_logic_tile(IMatter* m, int row, int col, const Port
     }
 }
 
-void Plteen::IAtlas::glide_to_logic_tile(double sec, IMatter* m, int idx, const Port& tp, const Port& p, const cVector& vec) {
+void Plteen::IAtlas::glide_to_logic_tile(double sec, IMatter* m, int idx, const Port& tp, const Port& p, const Vector& vec) {
     int total = this->logic_col * this->logic_row;
     
     if (total > 0) {
@@ -267,7 +267,7 @@ void Plteen::IAtlas::glide_to_logic_tile(double sec, IMatter* m, int idx, const 
     }
 }
 
-void Plteen::IAtlas::glide_to_logic_tile(double sec, IMatter* m, int row, int col, const Port& tp, const Port& p, const cVector& vec) {
+void Plteen::IAtlas::glide_to_logic_tile(double sec, IMatter* m, int row, int col, const Port& tp, const Port& p, const Vector& vec) {
     auto master = this->master();
     
     if (master != nullptr) {
@@ -427,10 +427,10 @@ int Plteen::GridAtlas::map_tile_index(float x, float y, int* r, int* c, bool loc
         auto master = this->master();
 
         if (master != nullptr) {
-            cPoint dot = master->get_matter_location(this, MatterPort::LT);
+            Dot dot = master->get_matter_location(this, MatterPort::LT);
 
-            x -= _X(dot);
-            y -= _Y(dot);
+            x -= dot.x;
+            y -= dot.y;
         }
     }
     
@@ -447,9 +447,9 @@ int Plteen::GridAtlas::map_tile_index(float x, float y, int* r, int* c, bool loc
 
 Port Plteen::GridAtlas::get_map_tile_fraction(int idx, const Port& p) {
     Box box = this->get_bounding_box();
-    cPoint dot = this->get_map_tile_location(idx, p, true);
+    Dot dot = this->get_map_tile_location(idx, p, true);
 
-    return { _X(dot) / box.width(), _Y(dot) / box.height() };
+    return { dot.x / box.width(), dot.y / box.height() };
 }
 
 Port Plteen::GridAtlas::get_map_tile_fraction(int row, int col, const Port& a) {
@@ -459,10 +459,10 @@ Port Plteen::GridAtlas::get_map_tile_fraction(int row, int col, const Port& a) {
     return this->get_map_tile_fraction(row * this->map_col + col, a);
 }
 
-cPoint Plteen::GridAtlas::get_map_tile_location(int idx, const Port& p, bool local) {
+Dot Plteen::GridAtlas::get_map_tile_location(int idx, const Port& p, bool local) {
     int total = this->map_col * this->map_row;
     Box region;
-    cPoint dot;
+    Dot dot;
     
     idx = wrap_index(idx, total);
     region = this->get_map_tile_region(idx);
@@ -475,18 +475,18 @@ cPoint Plteen::GridAtlas::get_map_tile_location(int idx, const Port& p, bool loc
         }
     }
     
-    return { (region.x() + region.width()  * p.fx + _X(dot)) * flabs(this->xscale),
-             (region.y() + region.height() * p.fy + _Y(dot)) * flabs(this->yscale) };
+    return { (region.x() + region.width()  * p.fx + dot.x) * flabs(this->xscale),
+             (region.y() + region.height() * p.fy + dot.y) * flabs(this->yscale) };
 }
 
-cPoint Plteen::GridAtlas::get_map_tile_location(int row, int col, const Port& p, bool local) {
+Dot Plteen::GridAtlas::get_map_tile_location(int row, int col, const Port& p, bool local) {
     row = wrap_index(row, this->map_row);
     col = wrap_index(col, this->map_col);
 
     return this->get_map_tile_location(row * this->map_col + col, p, local);
 }
 
-void Plteen::GridAtlas::move_to_map_tile(IMatter* m, int idx, const Port& tp, const Port& p, const cVector& vec) {
+void Plteen::GridAtlas::move_to_map_tile(IMatter* m, int idx, const Port& tp, const Port& p, const Vector& vec) {
     auto master = this->master();
 
     if (master != nullptr) {
@@ -494,13 +494,13 @@ void Plteen::GridAtlas::move_to_map_tile(IMatter* m, int idx, const Port& tp, co
     }
 }
 
-void Plteen::GridAtlas::move_to_map_tile(IMatter* m, int row, int col, const Port& tp, const Port& p, const cVector& vec) {
+void Plteen::GridAtlas::move_to_map_tile(IMatter* m, int row, int col, const Port& tp, const Port& p, const Vector& vec) {
     row = wrap_index(row, this->map_row);
     col = wrap_index(col, this->map_col);
     this->move_to_map_tile(m, row * this->map_col + col, tp, p, vec);
 }
 
-void Plteen::GridAtlas::glide_to_map_tile(double sec, IMatter* m, int idx, const Port& tp, const Port& p, const cVector& vec) {
+void Plteen::GridAtlas::glide_to_map_tile(double sec, IMatter* m, int idx, const Port& tp, const Port& p, const Vector& vec) {
     auto master = this->master();
 
     if (master != nullptr) {
@@ -508,7 +508,7 @@ void Plteen::GridAtlas::glide_to_map_tile(double sec, IMatter* m, int idx, const
     }
 }
 
-void Plteen::GridAtlas::glide_to_map_tile(double sec, IMatter* m, int row, int col, const Port& tp, const Port& p, const cVector& vec) {
+void Plteen::GridAtlas::glide_to_map_tile(double sec, IMatter* m, int row, int col, const Port& tp, const Port& p, const Vector& vec) {
     row = wrap_index(row, this->map_row);
     col = wrap_index(col, this->map_col);
     this->glide_to_map_tile(sec, m, row * this->map_col + col, tp, p, vec);

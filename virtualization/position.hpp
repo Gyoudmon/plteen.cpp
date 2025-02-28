@@ -1,16 +1,16 @@
 #pragma once
 
 #include "../forward.hpp"
+#include "../physics/algebra/point.hpp"
 #include "../physics/geometry/port.hpp"
-
-#include <complex>
 
 namespace Plteen {
     class __lambda__ Position {
     public:
         Position() : Position(0.0F, 0.0F) {}
         Position(float x, float y) : dot(x, y) {}
-        Position(const std::complex<float>& dot) : Position(dot.real(), dot.imag()) {}
+        Position(const Plteen::Dot& dot) : Position(dot.x, dot.y) {}
+        Position(const Plteen::Vector& dot) : Position(dot.x, dot.y) {}
 
         template<typename T>
         Position(T x, T y) : Position(float(x), float(y)) {}
@@ -30,9 +30,9 @@ namespace Plteen {
         Plteen::Position& operator=(const Plteen::Position& c);
 
     public:
-        std::complex<float> calculate_point() const;
-        std::complex<float> get_offset() const { return this->offset; }
-        void set_offset(const std::complex<float>& vec) { this->offset = vec; }
+        Plteen::Dot calculate_point() const;
+        Plteen::Vector get_offset() const { return this->offset; }
+        void set_offset(const Plteen::Vector& vec) { this->offset = vec; }
 
     public:
         std::string desc() const;
@@ -41,6 +41,6 @@ namespace Plteen {
         Plteen::Port dot; // also serves as an absolute location
         const Plteen::IMatter* xtarget = nullptr;
         const Plteen::IMatter* ytarget = nullptr;
-        std::complex<float> offset;
+        Plteen::Vector offset;
     };
 }

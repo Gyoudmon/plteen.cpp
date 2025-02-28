@@ -82,7 +82,7 @@ void Plteen::TextFacilityPlane::reflow(float width, float height) {
     TheBigBang::reflow(width, height);
 
     if (this->n > 0) {
-        cVector offset = { float(this->facility_font->height()), 0.0F };
+        Vector offset = { float(this->facility_font->height()), 0.0F };
 
         this->reflow_facility(this->facilities[0], nullptr, width, height);
         for (size_t idx = 1; idx < this->n; idx ++) {

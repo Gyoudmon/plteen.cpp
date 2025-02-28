@@ -21,12 +21,12 @@ Position& Plteen::Position::operator=(const Plteen::Position& pos) {
 }
 
 /*************************************************************************************************/
-std::complex<float> Plteen::Position::calculate_point() const {
-    std::complex<float> pos;
+Dot Plteen::Position::calculate_point() const {
+    Dot pos;
 
     if (this->xtarget == nullptr) {
-        pos.real(this->dot.fx);
-        pos.imag(this->dot.fy);
+        pos.x = this->dot.fx;
+        pos.y = this->dot.fy;
     } else if (this->ytarget == nullptr) {
         IPlane* master = this->xtarget->master();
 
@@ -36,7 +36,7 @@ std::complex<float> Plteen::Position::calculate_point() const {
     } else {
         IPlane* xmaster = this->xtarget->master();
         IPlane* ymaster = this->ytarget->master();
-        std::complex<float> xdot, ydot;
+        Dot xdot, ydot;
 
         if (xmaster != nullptr) {
             xdot = xmaster->get_matter_location(const_cast<IMatter*>(this->xtarget), this->dot);
@@ -46,11 +46,12 @@ std::complex<float> Plteen::Position::calculate_point() const {
             ydot = ymaster->get_matter_location(const_cast<IMatter*>(this->ytarget), this->dot);
         }
 
-        pos.real(xdot.real());
-        pos.imag(ydot.imag());
+        pos.x = xdot.x;
+        pos.y = ydot.y;
     }
 
-    pos += this->offset;
+    pos.x += this->offset.x;
+    pos.y += this->offset.y;
 
     return pos;
 }

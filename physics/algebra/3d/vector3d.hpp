@@ -1,11 +1,14 @@
 #pragma once
 
-#include "tuple.hpp"
-#include "point.hpp"
+#include "tuple3d.hpp"
+#include "point3d.hpp"
 
 namespace Plteen {
     template<typename T>
-    class __lambda__ Vector3D : public Plteen::Tuple<Plteen::Vector3D, T> {
+    class __lambda__ Vector3D : public Plteen::Tuple3D<Plteen::Vector3D, T> {
+    public:
+        static const Plteen::Vector3D<T> O;
+    
     public:
         Vector3D() = default;
         Vector3D(T x, T y, T z) noexcept : Tuple<Plteen::Vector3D, T>(x, y, z) {}
@@ -23,4 +26,6 @@ namespace Plteen {
 
         ~Vector3D() noexcept {}
     };
+
+    template<typename T> const Plteen::Vector3D<T> Plteen::Vector3D<T>::O = {};
 }

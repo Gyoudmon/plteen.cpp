@@ -4,7 +4,6 @@
 #include "../datum/flonum.hpp"
 
 #include <type_traits>
-#include <complex>
 
 namespace Plteen {
     /*********************************************************************************************/
@@ -112,16 +111,6 @@ namespace Plteen {
     template<typename Fl>
     inline bool rectangle_contain(Fl tlx, Fl tly, Fl brx, Fl bry, Fl x, Fl y) {
         return flin(tlx, x, brx) && flin(tly, y, bry);
-    }
-
-    template<typename Fl>
-    inline bool rectangle_overlay(const std::complex<Fl>& tl1, const std::complex<Fl>& br1, const std::complex<Fl>& tl2, const std::complex<Fl>& br2) {
-        return !((br1.real() < tl2.real()) || (tl1.real() > br2.real()) || (br1.imag() < tl2.imag()) || (tl1.imag() > br2.imag()));
-    }
-
-    template<typename Fl>
-    inline bool rectangle_contain(const std::complex<Fl>& tl, const std::complex<Fl>& br, const std::complex<Fl>& pt) {
-        return flin(tl.real(), pt.real(), br.real()) && flin(tl.imag(), pt.imag(), br.imag());
     }
 
     /*********************************************************************************************/
