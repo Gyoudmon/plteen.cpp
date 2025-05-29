@@ -7,11 +7,17 @@ using namespace Plteen;
 
 /*************************************************************************************************/
 static inline double color_gamma_encode(double c) {
-    return (c <= 0.0031308) ? c * 12.92 : flexpt(c, 1.0 / 2.4 ) * 1.055 - 0.055;
+    double sgn = (c < 0.0) ? -1.0 : 1.0;
+    double abs = flabs(c);
+
+    return (abs <= 0.0031308) ? c * 12.92 : sgn * (flexpt(c, 1.0 / 2.4 ) * 1.055 - 0.055);
 }
 
 static inline double color_gamma_decode(double c) {
-    return (c <= 0.04045) ? c / 12.92 : flexpt((c + 0.055) / 1.055, 2.4);
+    double sgn = (c < 0.0) ? -1.0 : 1.0;
+    double abs = flabs(c);
+
+    return (abs <= 0.04045) ? c / 12.92 : sgn * flexpt((abs + 0.055) / 1.055, 2.4);
 }
 
 static inline void cie_rgb_normalize(double* R, double* G, double* B) {
@@ -40,9 +46,9 @@ void Plteen::CIE_XYZ_to_RGB(CIE_Standard type, double X, double Y, double Z, dou
     cie_rgb_normalize(R, G, B);
     
     if (gamma) {
-        if ((*R) >= 0.0) (*R) = color_gamma_encode(*R);
-        if ((*G) >= 0.0) (*G) = color_gamma_encode(*G);
-        if ((*B) >= 0.0) (*B) = color_gamma_encode(*B);
+        (*R) = color_gamma_encode(*R);
+        (*G) = color_gamma_encode(*G);
+        (*B) = color_gamma_encode(*B);
     }
 }
 
