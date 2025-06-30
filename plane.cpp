@@ -576,6 +576,10 @@ void Plteen::Plane::remove(IMatter* m, bool needs_delete) {
         if (this->hovering_matter == m) {
             this->hovering_matter = nullptr;
         }
+
+        if (this->focused_matter == m) {
+            this->focused_matter = nullptr;
+        }
         
         if (needs_delete) {
             this->delete_matter(m);
