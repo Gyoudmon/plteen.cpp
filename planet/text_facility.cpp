@@ -3,23 +3,6 @@
 using namespace Plteen;
 
 /*************************************************************************************************/
-Plteen::TextFacilityPlane::TextFacilityPlane(const shared_font_t& font, const char keys[], const char* descs[], size_t n, const bool* default_states
-        , const char* name, const RGBA& title_color) : TheBigBang(name, title_color) {
-    if (n > 0) {
-        this->facility_font = font;
-        this->initialize_facilities(n);
-
-        for (size_t row = 0; row < n; row ++) {
-            this->_fkeys[row]  = keys[row];
-            this->_fdescs[row] = descs[row];
-
-            for (size_t col = 0; col < n; col ++) {
-                this->_fokay[row][col] = default_states[row];
-            }
-        }
-    }
-}
-
 Plteen::TextFacilityPlane::TextFacilityPlane(const shared_font_t& font, const facility_item_t keys[], size_t n, const bool* default_states
         , const char* name, const RGBA& title_color) : TheBigBang(name, title_color) {
     if (n > 0) {

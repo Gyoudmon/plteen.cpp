@@ -7,6 +7,24 @@
 namespace Plteen {
     typedef std::pair<char, const char*> facility_item_t;
 
+    template<size_t N>
+    struct __lambda__ TextFacilityConfig {
+        struct Keys { facility_item_t self[N]; } keys;
+        struct States { bool self[N][N]; } states;
+    
+        constexpr TextFacilityConfig(
+            std::initializer_list<facility_item_t> ordered_keys,
+            std::initializer_list<std::initializer_list<bool>> states_init
+        ) {
+            size_t i = 0;
+            
+            std::copy(ordered_keys.begin(), ordered_keys.end(), keys.self);
+            for (const auto& row : states_init) {
+                std::copy(row.begin(), row.end(), states.self[i++]);
+            }
+        }
+    };
+
     /*********************************************************************************************/
     class __lambda__ TextFacilityPlane : public virtual Plteen::TheBigBang {
     public:
@@ -17,35 +35,17 @@ namespace Plteen {
         TextFacilityPlane(const Plteen::shared_font_t& font, const facility_item_t ordered_keys[], size_t n, const bool* default_states
             , const char* name = unknown_plane_name, const Plteen::RGBA& title_color = BLACK);
 
-        TextFacilityPlane(const char ordered_keys[], const char* descs[], size_t n, const bool* default_states
-            , const char* name = unknown_plane_name, const Plteen::RGBA& title_color = BLACK)
-            : TextFacilityPlane(Plteen::GameFont::monospace(), ordered_keys, descs, n, default_states, name, title_color) {}
-
-        TextFacilityPlane(const Plteen::shared_font_t& font, const char ordered_keys[], const char* descs[], size_t n, const bool* default_states
-            , const char* name = unknown_plane_name, const Plteen::RGBA& title_color = BLACK);
-
         virtual ~TextFacilityPlane() noexcept;
 
     public:
         template<size_t N>
-        TextFacilityPlane(const facility_item_t (&ordered_keys)[N], const bool default_states[N][N]
-            , const char* name = unknown_plane_name, const Plteen::RGBA& title_color = BLACK)
-            : TextFacilityPlane(ordered_keys, N, reinterpret_cast<const bool*>(default_states), name, title_color) {}
+        TextFacilityPlane(const TextFacilityConfig<N>& c, const char* name = unknown_plane_name, const Plteen::RGBA& title_color = BLACK)
+            : TextFacilityPlane(c.keys.self, N, reinterpret_cast<const bool*>(c.states.self), name, title_color) {}
 
         template<size_t N>
-        TextFacilityPlane(const Plteen::shared_font_t& font, const facility_item_t (&ordered_keys)[N], const bool default_states[N][N]
+        TextFacilityPlane(const Plteen::shared_font_t& font, const TextFacilityConfig<N>& c
             , const char* name = unknown_plane_name, const Plteen::RGBA& title_color = BLACK)
-            : TextFacilityPlane(font, ordered_keys, N, reinterpret_cast<const bool*>(default_states), name, title_color) {}
-
-        template<size_t N>
-        TextFacilityPlane(const char (&ordered_keys)[N], const char* descs[], const bool default_states[N][N]
-            , const char* name = unknown_plane_name, const Plteen::RGBA& title_color = BLACK)
-            : TextFacilityPlane(ordered_keys, descs, N, reinterpret_cast<const bool*>(default_states), name, title_color) {}
-
-        template<size_t N>
-        TextFacilityPlane(const Plteen::shared_font_t& font, const char (&ordered_keys)[N], const char* descs[], const bool default_states[N][N]
-            , const char* name = unknown_plane_name, const Plteen::RGBA& title_color = BLACK)
-            : TextFacilityPlane(font, ordered_keys, descs, N, reinterpret_cast<const bool*>(default_states), name, title_color) {}
+            : TextFacilityPlane(font, c.keys.self, N, reinterpret_cast<const bool*>(c.states.self), name, title_color) {}
 
     public:
         void load(float width, float height) override;
