@@ -731,11 +731,28 @@ void Plteen::Plane::glide_to(double sec, IMatter* m, const Position& pos, const 
     }
 }
 
-void Plteen::Plane::clear_motion_actions(IMatter* m) {
-    MatterInfo* info = plane_matter_info(this, m);
+void Plteen::Plane::clear_motion_actions(IMatter* m, bool stop_current_motion) {
+    if (m == nullptr) {
+        if (this->head_matter != nullptr) {
+            IMatter* child = this->head_matter;
+        
+            do {
+                MatterInfo* info = MATTER_INFO(child);
+            
+                this->clear_motion_actions(child, stop_current_motion);
+                child = info->next;
+            } while (child != this->head_matter);
+        }
+    } else {
+        MatterInfo* info = plane_matter_info(this, m);
 
-    if (info != nullptr) {
-        info->motion_actions.clear();
+        if (stop_current_motion) {
+            m->motion_stop();
+        }
+
+        if (info != nullptr) {
+            info->motion_actions.clear();
+        }
     }
 }
 
@@ -1261,22 +1278,14 @@ void Plteen::Plane::on_enter(IPlane* from) {
     IPlane::on_enter(from);
 }
 
+void Plteen::Plane::on_leave(IPlane* to) {
+    this->clear_motion_actions(nullptr, true);
+}
+
 void Plteen::Plane::mission_complete() {
     if (this->sentry != nullptr) {
         this->sentry->play_goodbye(1);
         this->sentry->stop(1);
-    }
-
-    if (this->head_matter != nullptr) {
-        IMatter* child = this->head_matter;
-        
-        do {
-            MatterInfo* info = MATTER_INFO(child);
-            
-            child->motion_stop();
-            this->clear_motion_actions(child);
-            child = info->next;
-        } while (child != this->head_matter);
     }
 
     this->on_mission_complete();
@@ -1379,6 +1388,7 @@ void Plteen::Plane::on_elapse(uint64_t count, uint32_t interval, uint64_t uptime
             if (is_matter_bubble_showing(child, info)) {
                 if (current_milliseconds() >= info->bubble_expiration_time) {
                     bubble_expire(child, info);
+                    this->on_bubble_expired(child, info->bubble_type);
                     this->notify_updated(child);
                 }
             }
@@ -2047,6 +2057,7 @@ void Plteen::Plane::set_bubble_color(const RGBA& border, const RGBA& background)
 
 void Plteen::Plane::delete_matter(IMatter* m) {
     // m's destructor will delete the associated info object
+    this->clear_motion_actions(m, true);
     delete m;
 }
 
@@ -2334,6 +2345,21 @@ void Plteen::IPlane::create_grid(float cell_width, float cell_height, float x, f
     }
 }
 
+void Plteen::IPlane::create_centered_grid(int row, int col, float cell_width, float cell_height) {
+    IScreen* master = this->master();
+
+    if (master != nullptr) {
+        float width, height;
+
+        master->feed_client_extent(&width, &height);
+        
+        this->create_grid(cell_width, cell_height,
+            (width  - float(col * cell_width))  * 0.5F,
+            (height - float(row * cell_height)) * 0.5F,
+            row, col);
+    }
+}
+
 int Plteen::IPlane::grid_cell_index(float x, float y, int* r, int* c) {
     int row = int(flfloor((y - this->grid_y) / this->cell_height));
     int col = int(flfloor((x - this->grid_x) / this->cell_width));
@@ -2354,7 +2380,7 @@ Plteen::Box Plteen::IPlane::get_grid_cell_bounding_box() {
 }
 
 Dot Plteen::IPlane::get_grid_cell_location(int idx, const Port& a) {
-    if (idx < 0) {
+    while (idx < 0) {
         idx += this->column * this->row;
     }
 

@@ -28,24 +28,21 @@ namespace Plteen {
     /*********************************************************************************************/
     class __lambda__ TextFacilityPlane : public virtual Plteen::TheBigBang {
     public:
-        TextFacilityPlane(const facility_item_t ordered_keys[], size_t n, const bool* default_states
-            , const char* name = unknown_plane_name, const Plteen::RGBA& title_color = BLACK)
-            : TextFacilityPlane(Plteen::GameFont::monospace(), ordered_keys, n, default_states, name, title_color) {}
+        TextFacilityPlane(const facility_item_t ordered_keys[], size_t n, const bool* default_states)
+            : TextFacilityPlane(Plteen::GameFont::monospace(), ordered_keys, n, default_states) {}
 
-        TextFacilityPlane(const Plteen::shared_font_t& font, const facility_item_t ordered_keys[], size_t n, const bool* default_states
-            , const char* name = unknown_plane_name, const Plteen::RGBA& title_color = BLACK);
+        TextFacilityPlane(const Plteen::shared_font_t& font, const facility_item_t ordered_keys[], size_t n, const bool* default_states);
 
         virtual ~TextFacilityPlane() noexcept;
 
     public:
         template<size_t N>
-        TextFacilityPlane(const TextFacilityConfig<N>& c, const char* name = unknown_plane_name, const Plteen::RGBA& title_color = BLACK)
-            : TextFacilityPlane(c.keys.self, N, reinterpret_cast<const bool*>(c.states.self), name, title_color) {}
+        TextFacilityPlane(const TextFacilityConfig<N>& c)
+            : TextFacilityPlane(c.keys.self, N, reinterpret_cast<const bool*>(c.states.self)) {}
 
         template<size_t N>
-        TextFacilityPlane(const Plteen::shared_font_t& font, const TextFacilityConfig<N>& c
-            , const char* name = unknown_plane_name, const Plteen::RGBA& title_color = BLACK)
-            : TextFacilityPlane(font, c.keys.self, N, reinterpret_cast<const bool*>(c.states.self), name, title_color) {}
+        TextFacilityPlane(const Plteen::shared_font_t& font, const TextFacilityConfig<N>& c)
+            : TextFacilityPlane(font, c.keys.self, N, reinterpret_cast<const bool*>(c.states.self)) {}
 
     public:
         void load(float width, float height) override;
@@ -62,8 +59,11 @@ namespace Plteen {
         void set_disabled_facility_color(const Plteen::RGBA& color) { this->set_disabled_facility_color(color, color); }
 
     protected:
-        size_t facility_count() { return this->n; }
+        size_t facility_count() { return this->N; }
         Plteen::Labellet* facility_ref(int idx);
+        void clear_working_facility();
+        bool is_processing_facility_command() { return (this->working_idx < this->N); }
+        bool is_facility_key(char key);
         bool trigger_facility(char key);
 
     protected:
@@ -87,6 +87,6 @@ namespace Plteen {
         char* _fkeys = nullptr;
         bool** _fokay = nullptr;
         std::string* _fdescs = nullptr;
-        size_t n = 0;
+        size_t N = 0;
     };
 }

@@ -114,6 +114,26 @@ void Plteen::ITextlet::set_text(MatterPort port, const char* fmt, ...) {
     this->set_text(content, port);
 }
 
+size_t Plteen::ITextlet::content_utf8_size() {
+    return string_utf8_length(this->raw);
+}
+
+int Plteen::ITextlet::display_width(const char* unicode) {
+    if (this->text_font != nullptr) {
+        return this->text_font->width(unicode);
+    } else {
+        return GameFont::Default()->width(unicode);
+    }
+}
+
+int Plteen::ITextlet::display_height(const char* unicode) {
+    if (this->text_font == nullptr) {
+        return GameFont::Default()->height(unicode);
+    } else {
+        return this->text_font->height(unicode);
+    }
+}
+
 Box Plteen::ITextlet::get_bounding_box() {
     Box box;
 

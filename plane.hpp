@@ -126,6 +126,7 @@ namespace Plteen {
         void create_grid(int row, int col, IMatter* m);
         void create_grid(float cell_width, float x = 0.0F, float y = 0.0F, int col = 0);
         void create_grid(float cell_width, float cell_height, float x = 0.0F, float y = 0.0F, int row = 0, int col = 0);
+        void create_centered_grid(int row, int col, float cell_width, float cell_height);
         int grid_cell_index(float x, float y, int* r = nullptr, int* c = nullptr);
         int grid_cell_index(IMatter* m, int* r = nullptr, int* c = nullptr, const Plteen::Port& p = 0.5F);
         Plteen::Box get_grid_cell_bounding_box();
@@ -197,6 +198,7 @@ namespace Plteen {
         virtual IMatter* make_bubble_text(const std::string& message, const Plteen::RGBA& color) = 0;
         virtual bool merge_bubble_text(IMatter* bubble, const std::string& message, const Plteen::RGBA& color) = 0;
         virtual bool is_bubble_showing(IMatter* m, SpeechBubble* type) = 0;
+        virtual void on_bubble_expired(IMatter* m, SpeechBubble type) {}
 
     public:
         template<class M>
@@ -290,7 +292,7 @@ namespace Plteen {
         void remove(IMatter* m, bool needs_delete = true) override;
         void erase() override;
         void size_cache_invalid();
-        void clear_motion_actions(IMatter* m);
+        void clear_motion_actions(IMatter* m = nullptr, bool stop_current_motion = true);
 
     public:
         void bind_canvas(IMatter* m, Plteen::Tracklet* canvas, const Plteen::Port& anchor = 0.5F, bool shared = false);
@@ -357,6 +359,7 @@ namespace Plteen {
 
     protected:
         void on_enter(Plteen::IPlane* from) override;
+        void on_leave(Plteen::IPlane* to) override;
         void mission_complete() override;
 
     protected:

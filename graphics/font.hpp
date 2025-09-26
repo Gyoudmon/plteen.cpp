@@ -65,6 +65,8 @@ namespace Plteen {
         int width(const std::string& unicode) { return this->width(unicode.c_str()); }
         int width(const char* unicode);
         int width(uint16_t ch, int* offset = nullptr);
+        int height(const std::string& unicode) { return this->height(unicode.c_str()); }
+        int height(const char* unicode);
         int height();
         int ascent();
         int descent();

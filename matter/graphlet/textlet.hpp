@@ -46,7 +46,14 @@ namespace Plteen {
 
     public:
         size_t content_size() { return this->raw.size(); }
+        size_t content_utf8_size();
         const char* c_str() const { return this->raw.c_str(); }
+        int display_width() { return this->display_width(this->raw.c_str()); }
+        int display_width(const std::string& unicode) { return this->display_width(unicode.c_str()); }
+        int display_width(const char* unicode);
+        int display_height() { return this->display_height(this->raw.c_str()); }
+        int display_height(const std::string& unicode) { return this->display_height(unicode.c_str()); }
+        int display_height(const char* unicode);
 
     protected:
         virtual void on_font_changed() {}

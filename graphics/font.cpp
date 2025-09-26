@@ -429,6 +429,16 @@ int Plteen::GameFont::width(uint16_t ch, int* offset) {
     return advance;
 }
 
+int Plteen::GameFont::height(const char* unicode) {
+    int height = 0;
+
+    if (this->okay()) {
+        this->feed_text_extent(unicode, nullptr, &height);
+    }
+
+    return height;
+}
+
 int Plteen::GameFont::height() {
     return this->okay() ? TTF_FontHeight(this->font) : 0;
 }
