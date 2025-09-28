@@ -27,7 +27,7 @@
 #include "graphics/misc.hpp"
 
 #include "matter/atlas.hpp"
-#include "matter/continent.hpp"
+#include "matter/planet.hpp"
 #include "matter/sprite.hpp"
 #include "matter/sprite/folder.hpp"
 #include "matter/sprite/sheet.hpp"

@@ -6,7 +6,7 @@ namespace Plteen {
     class ISprite;
     class Tracklet;
     class Cosmos;
-    class Continent;
+    class Planelet;
     class RGBA;
 
     enum class SpeechBubble { Default, Thought };

@@ -114,6 +114,26 @@ void Plteen::ITextlet::set_text(MatterPort port, const char* fmt, ...) {
     this->set_text(content, port);
 }
 
+void Plteen::ITextlet::append_text(const std::string& content, MatterPort port) {
+    this->set_text(this->raw + content, port);
+}
+
+void Plteen::ITextlet::append_text(const char* fmt, ...) {
+    VSNPRINT(content, fmt);
+    this->append_text(content);
+}
+
+void Plteen::ITextlet::append_text(const RGBA& color, const char* fmt, ...) {
+    VSNPRINT(content, fmt);
+    this->append_text(content);
+    this->set_text_color(color);
+}
+
+void Plteen::ITextlet::append_text(MatterPort port, const char* fmt, ...) {
+    VSNPRINT(content, fmt);
+    this->append_text(content, port);
+}
+
 size_t Plteen::ITextlet::content_utf8_size() {
     return string_utf8_length(this->raw);
 }
@@ -135,15 +155,13 @@ int Plteen::ITextlet::display_height(const char* unicode) {
 }
 
 Box Plteen::ITextlet::get_bounding_box() {
-    Box box;
+    Box box(0.0F, 0.0F);
 
     if ((this->texture.use_count() > 0) && (this->texture->okay())) {
         float w, h;
 
         this->texture->feed_extent(&w, &h);
         box = { w, h };
-    } else {
-        box = IGraphlet::get_bounding_box();
     }
 
     return box;

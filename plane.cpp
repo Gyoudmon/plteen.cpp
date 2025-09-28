@@ -1420,6 +1420,8 @@ void Plteen::Plane::draw(dc_t* dc, float X, float Y, float Width, float Height) 
         dc->fill_rect(dsX, dsY, dsWidth, dsHeight, this->background);
     }
 
+    this->draw_background(dc, dsX, dsY, dsWidth, dsHeight);
+
     if (this->grid_color.is_opacity()
             && (this->column > 0) && (this->row > 0)
             && (this->cell_width > 0.0F) && (this->cell_height > 0.0F)) {
@@ -1469,6 +1471,8 @@ void Plteen::Plane::draw(dc_t* dc, float X, float Y, float Width, float Height) 
 
         dc->clear_clipping_region();
     }
+
+    this->draw_foreground(dc, dsX, dsY, dsWidth, dsHeight);
 }
 
 void Plteen::Plane::draw_visible_selection(dc_t* dc, float x, float y, float width, float height) {
@@ -2345,7 +2349,7 @@ void Plteen::IPlane::create_grid(float cell_width, float cell_height, float x, f
     }
 }
 
-void Plteen::IPlane::create_centered_grid(int row, int col, float cell_width, float cell_height) {
+void Plteen::IPlane::create_centered_grid(int row, int col, float cell_width, float cell_height, const Plteen::Vector& vec) {
     IScreen* master = this->master();
 
     if (master != nullptr) {
@@ -2354,8 +2358,8 @@ void Plteen::IPlane::create_centered_grid(int row, int col, float cell_width, fl
         master->feed_client_extent(&width, &height);
         
         this->create_grid(cell_width, cell_height,
-            (width  - float(col * cell_width))  * 0.5F,
-            (height - float(row * cell_height)) * 0.5F,
+            (width  - float(col * cell_width))  * 0.5F + vec.x,
+            (height - float(row * cell_height)) * 0.5F + vec.y,
             row, col);
     }
 }

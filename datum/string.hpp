@@ -5,6 +5,8 @@
 #include <cstdarg>
 
 namespace Plteen {
+
+// WARNING: the `fmt` must not be a nullptr.
 #define VSNPRINT(retval, fmt) \
     const int DEFAULT_POOL_SIZE = 1024; \
     char chpool[DEFAULT_POOL_SIZE]; \
@@ -12,7 +14,7 @@ namespace Plteen {
     char* pool; \
     va_list argl; \
     do { \
-	pool = (bigSize < DEFAULT_POOL_SIZE) ? chpool : (new char[bigSize + 1]); \
+	    pool = (bigSize < DEFAULT_POOL_SIZE) ? chpool : (new char[bigSize + 1]); \
     	va_start(argl, fmt); \
     	int status = vsnprintf(pool, bigSize + 1, fmt, argl); \
 	va_end(argl); \

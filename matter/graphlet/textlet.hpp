@@ -22,10 +22,15 @@ namespace Plteen {
         const char* name() override { return this->c_str(); }
 
     public:
+        void clear_text() { this->set_text(""); }
         void set_text(const char* fmt, ...);
         void set_text(const Plteen::RGBA& color, const char* fmt, ...);
         void set_text(Plteen::MatterPort port, const char* fmt, ...);
         void set_text(const std::string& content, Plteen::MatterPort port = MatterPort::LT);
+        void append_text(const char* fmt, ...);
+        void append_text(const Plteen::RGBA& color, const char* fmt, ...);
+        void append_text(Plteen::MatterPort port, const char* fmt, ...);
+        void append_text(const std::string& content, Plteen::MatterPort port = MatterPort::LT);
         
     public:
         void set_font(shared_font_t font, Plteen::MatterPort port = MatterPort::LT);
@@ -75,6 +80,13 @@ namespace Plteen {
 
     class __lambda__ Labellet : public virtual Plteen::ITextlet {
     public:
+        Labellet() {}
+        Labellet(shared_font_t font) { this->set_font(font); }
+        Labellet(uint32_t hex) { this->set_text_color(hex); }
+        Labellet(const Plteen::RGBA& rgb) { this->set_text_color(rgb); }
+        Labellet(shared_font_t font, uint32_t hex) { this->set_font(font); this->set_text_color(hex); }
+        Labellet(shared_font_t font, const Plteen::RGBA& rgb) { this->set_font(font); this->set_text_color(rgb); }
+
         Labellet(const char* fmt, ...);
         Labellet(shared_font_t font, const char* fmt, ...);
         Labellet(uint32_t hex, const char* fmt, ...);

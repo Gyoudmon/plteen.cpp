@@ -1,52 +1,60 @@
-#include "text_facility.hpp"
+#include "cmdlet.hpp"
 
 using namespace Plteen;
 
 /*************************************************************************************************/
-Plteen::TextFacilityPlane::TextFacilityPlane(const shared_font_t& font, const facility_item_t keys[], size_t n, const bool* default_states)
+Plteen::CmdletPlane::CmdletPlane(const shared_font_t& font, const cmdlet_item_t keys[], size_t n, const bool* default_states)
         : TheBigBang("Ignored Arguments because of the Virtual Inheritance", 0) {
     if (n > 0) {
-        this->facility_font = font;
+        this->cmdlet_font = font;
         this->initialize_facilities(n);
 
         for (size_t row = 0; row < n; row ++) {
             this->_fkeys[row]  = keys[row].first;
             this->_fdescs[row] = keys[row].second;
 
-            for (size_t col = 0; col < n; col ++) {
-                this->_fokay[row][col] = *((default_states + row * n) + col);
+            if (default_states != nullptr) {
+                for (size_t col = 0; col < n; col ++) {
+                    this->_fokay[row][col] = *((default_states + row * n) + col);
+                }
+            } else {
+                for (size_t col = 0; col < n; col ++) {
+                    this->_fokay[row][col] = false;
+                }
             }
         }
     }
 }
 
-void Plteen::TextFacilityPlane::initialize_facilities(size_t n) {
+void Plteen::CmdletPlane::initialize_facilities(size_t n) {
     this->N = n;
     this->working_idx = n;
 
     this->facilities = new Labellet*[n];
-    this->_fkeys = new char[n];
-    this->_fdescs = new std::string[n];
+    this->_fkeys = new char[n + 1];
+    this->_fdescs = new std::string[n + 1];
     this->_fokay = new bool*[n];
 
     for (size_t idx = 0; idx < n; idx ++) {
         this->_fokay[idx] = new bool[n];
     }
 
-    this->clear_working_facility();
+    this->_fkeys[n] = '\0';
+    this->_fdescs[n] = "";
+    this->cmdlet_job_done();
 }
 
-void Plteen::TextFacilityPlane::clear_working_facility() {
+void Plteen::CmdletPlane::cmdlet_job_done() {
     if (this->working_idx < this->N) {
         for (int i = 0; i < this->N; i ++) {
-            this->facilities[i]->set_foreground_color(this->enabled_facility_color);
+            this->facilities[i]->set_foreground_color(this->enabled_cmdlet_color);
         }
         
         this->working_idx = this->N;
     }
 }
 
-bool Plteen::TextFacilityPlane::is_facility_key(char key) {
+bool Plteen::CmdletPlane::is_cmdlet_key(char key) {
     bool handled = false;
 
     if (this->N > 0) {
@@ -61,7 +69,7 @@ bool Plteen::TextFacilityPlane::is_facility_key(char key) {
     return handled;
 }
 
-Plteen::TextFacilityPlane::~TextFacilityPlane() noexcept {
+Plteen::CmdletPlane::~CmdletPlane() noexcept {
     if (this->N > 0) {
         delete [] this->_fkeys;
         delete [] this->_fdescs;
@@ -76,45 +84,45 @@ Plteen::TextFacilityPlane::~TextFacilityPlane() noexcept {
 }
 
 /*************************************************************************************************/
-void Plteen::TextFacilityPlane::load(float width, float height) {
+void Plteen::CmdletPlane::load(float width, float height) {
     TheBigBang::load(width, height);
 
     if (this->N > 0) {
         for (size_t idx = 0; idx < this->N; idx ++) {
-            this->facilities[idx] = this->insert(new Labellet(this->facility_font,
-                (this->_fokay[idx]) ? this->enabled_facility_color : this->disabled_facility_color,
+            this->facilities[idx] = this->insert(new Labellet(this->cmdlet_font,
+                (this->_fokay[idx]) ? this->enabled_cmdlet_color : this->disabled_cmdlet_color,
                 "%c. %s", this->_fkeys[idx], this->_fdescs[idx].c_str()));
         }
     }
 }
 
-void Plteen::TextFacilityPlane::reflow(float width, float height) {
+void Plteen::CmdletPlane::reflow(float width, float height) {
     TheBigBang::reflow(width, height);
 
     if (this->N > 0) {
-        Vector offset = { float(this->facility_font->height()), 0.0F };
+        Vector offset = { float(this->cmdlet_font->height()), 0.0F };
 
-        this->reflow_facility(this->facilities[0], nullptr, width, height);
+        this->reflow_cmdlet(this->facilities[0], nullptr, width, height);
         for (size_t idx = 1; idx < this->N; idx ++) {
-            this->reflow_facility(this->facilities[idx], this->facilities[idx - 1], width, height);
+            this->reflow_cmdlet(this->facilities[idx], this->facilities[idx - 1], width, height);
         }
     }
 }
 
-void Plteen::TextFacilityPlane::reflow_facility(Labellet* facility, Labellet* prev, float width, float height) {
+void Plteen::CmdletPlane::reflow_cmdlet(Labellet* cmdlet, Labellet* prev, float width, float height) {
     if (prev == nullptr) {
-        this->move_to(facility, { 0.0F, height }, MatterPort::LB);
+        this->move_to(cmdlet, { 0.0F, height }, MatterPort::LB);
     } else {
-        this->move_to(facility, { prev, MatterPort::RB }, MatterPort::LB, { this->facility_font->line_height(), 0.0F });
+        this->move_to(cmdlet, { prev, MatterPort::RB }, MatterPort::LB, { this->cmdlet_font->line_height(), 0.0F });
     }
 }
 
-Plteen::Labellet* Plteen::TextFacilityPlane::facility_ref(int idx) {
+Plteen::Labellet* Plteen::CmdletPlane::cmdlet_ref(int idx) {
     return (this->N > 0) ? this->facilities[wrap_index(idx, int(this->N))] : nullptr;
 }
 
 /*************************************************************************************************/
-void Plteen::TextFacilityPlane::on_tap(Plteen::IMatter* m, float local_x, float local_y) {
+void Plteen::CmdletPlane::on_tap(Plteen::IMatter* m, float local_x, float local_y) {
     bool handled = false;
 
     if (this->N > 0) {
@@ -124,7 +132,7 @@ void Plteen::TextFacilityPlane::on_tap(Plteen::IMatter* m, float local_x, float 
             this->begin_update_sequence();
             for (size_t idx = 0; idx < this->N; idx ++) {
                 if (this->facilities[idx] == f) {
-                    this->deal_with_facility_at(idx);
+                    this->deal_with_cmdlet_at(idx);
                     handled = true;
                     break;
                 }
@@ -138,20 +146,20 @@ void Plteen::TextFacilityPlane::on_tap(Plteen::IMatter* m, float local_x, float 
     }
 }
 
-void Plteen::TextFacilityPlane::on_char(char key, uint16_t modifiers, uint8_t repeats, bool pressed) {
-    if (!this->trigger_facility(key)) {
+void Plteen::CmdletPlane::on_char(char key, uint16_t modifiers, uint8_t repeats, bool pressed) {
+    if (!this->trigger_cmdlet(key)) {
         TheBigBang::on_char(key, modifiers, repeats, pressed);
     }
 }
 
-bool Plteen::TextFacilityPlane::trigger_facility(char key) {
+bool Plteen::CmdletPlane::trigger_cmdlet(char key) {
     bool handled = false;
 
     if (this->N > 0) {
         this->begin_update_sequence();
         for (size_t idx = 0; idx < this->N; idx ++) {
             if (this->_fkeys[idx] == key) {
-                this->deal_with_facility_at(idx);
+                this->deal_with_cmdlet_at(idx);
                 handled = true;
                 break;
             }
@@ -163,63 +171,64 @@ bool Plteen::TextFacilityPlane::trigger_facility(char key) {
 }
 
 /*************************************************************************************************/
-void Plteen::TextFacilityPlane::deal_with_facility_at(size_t idx) {
-    Labellet* working_facility = (this->working_idx >= this->N) ? nullptr : this->facilities[this->working_idx];
+void Plteen::CmdletPlane::deal_with_cmdlet_at(size_t idx) {
+    Labellet* working_cmdlet = (this->working_idx >= this->N) ? nullptr : this->facilities[this->working_idx];
                 
-    if ((working_facility == nullptr) || (this->_fokay[this->working_idx][idx])) {                
-        if (working_facility != this->facilities[idx]) {
+    if ((working_cmdlet == nullptr) || (this->_fokay[this->working_idx][idx])) {                
+        if (working_cmdlet != this->facilities[idx]) {
             IScreen* master = this->master();
 
-            if (working_facility != nullptr) {
+            if (working_cmdlet != nullptr) {
                 if (this->_fokay[this->working_idx][idx]) {
-                    working_facility->set_foreground_color(this->enabled_facility_color);
+                    working_cmdlet->set_foreground_color(this->enabled_cmdlet_color);
                 } else {
-                    working_facility->set_foreground_color(this->disabled_facility_color);
+                    working_cmdlet->set_foreground_color(this->disabled_cmdlet_color);
                 }
             }
             
             this->working_idx = idx;
-            this->facilities[idx]->set_foreground_color(this->working_facility_color);
+            this->facilities[idx]->set_foreground_color(this->working_cmdlet_color);
 
+            
             if (master != nullptr) {
                 float width, height;
 
                 master->feed_client_extent(&width, &height);
-                this->on_facility_command(idx, this->_fkeys[idx], width, height);
+                this->on_cmdlet(idx, this->_fkeys[idx], this->_fdescs[idx], width, height);
             } else {
-                this->on_facility_command(idx, this->_fkeys[idx], 0.0F, 0.0F);
+                this->on_cmdlet(idx, this->_fkeys[idx], this->_fdescs[idx], 0.0F, 0.0F);
             }
         }
     } else if (this->working_idx != idx) {
-        this->facilities[idx]->set_foreground_color(this->hi_disabled_facility_color);
+        this->facilities[idx]->set_foreground_color(this->hi_disabled_cmdlet_color);
     }
 }
 
 /*************************************************************************************************/
-void Plteen::TextFacilityPlane::set_working_facility_color(const RGBA& color) {
-    if (this->working_facility_color != color) {
-        this->working_facility_color = color;
+void Plteen::CmdletPlane::set_processing_cmdlet_color(const RGBA& color) {
+    if (this->working_cmdlet_color != color) {
+        this->working_cmdlet_color = color;
         this->notify_updated();
     }
 }
 
-void Plteen::TextFacilityPlane::set_enabled_facility_color(const RGBA& color) {
-    if (this->enabled_facility_color != color) {
-        this->enabled_facility_color = color;
+void Plteen::CmdletPlane::set_enabled_cmdlet_color(const RGBA& color) {
+    if (this->enabled_cmdlet_color != color) {
+        this->enabled_cmdlet_color = color;
         this->notify_updated();
     }
 }
 
-void Plteen::TextFacilityPlane::set_disabled_facility_color(const RGBA& color, const RGBA& hi_color) {
+void Plteen::CmdletPlane::set_disabled_cmdlet_color(const RGBA& color, const RGBA& hi_color) {
     this->begin_update_sequence();
     
-    if (this->disabled_facility_color != color) {
-        this->disabled_facility_color = color;
+    if (this->disabled_cmdlet_color != color) {
+        this->disabled_cmdlet_color = color;
         this->notify_updated();
     }
 
-    if (this->hi_disabled_facility_color != color) {
-        this->hi_disabled_facility_color = color;
+    if (this->hi_disabled_cmdlet_color != color) {
+        this->hi_disabled_cmdlet_color = color;
         this->notify_updated();
     }
     

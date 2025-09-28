@@ -33,7 +33,7 @@ namespace Plteen {
      */
     class __lambda__ IPlane {
     friend class Plteen::Cosmos;
-    friend class Plteen::Continent;
+    friend class Plteen::Planelet;
     public:
         virtual ~IPlane();
         IPlane(const std::string& name);
@@ -53,6 +53,8 @@ namespace Plteen {
         virtual void reflow(float width, float height) {}
         virtual void update(uint64_t count, uint32_t interval, uint64_t uptime) {}
         virtual void draw(Plteen::dc_t* dc, float X, float Y, float Width, float Height) {}
+        virtual void draw_foreground(Plteen::dc_t* dc, float X, float Y, float Width, float Height) {}
+        virtual void draw_background(Plteen::dc_t* dc, float X, float Y, float Width, float Height) {}
     
     public:
         virtual Plteen::IMatter* find_matter(const Position& pos, Plteen::IMatter* after) = 0;
@@ -126,7 +128,9 @@ namespace Plteen {
         void create_grid(int row, int col, IMatter* m);
         void create_grid(float cell_width, float x = 0.0F, float y = 0.0F, int col = 0);
         void create_grid(float cell_width, float cell_height, float x = 0.0F, float y = 0.0F, int row = 0, int col = 0);
-        void create_centered_grid(int row, int col, float cell_width, float cell_height);
+        void create_centered_grid(int row, int col, float cell_width, float cell_height, const Plteen::Vector& vec = Plteen::Vector::O);
+        void create_centered_grid(int row, int col, float cell_size, const Plteen::Vector& vec = Plteen::Vector::O) { this->create_centered_grid(row, col, cell_size, cell_size, vec); }
+        void create_centered_grid(int n, float cell_size, const Plteen::Vector& vec = Plteen::Vector::O) { this->create_centered_grid(n, n, cell_size, cell_size, vec); }
         int grid_cell_index(float x, float y, int* r = nullptr, int* c = nullptr);
         int grid_cell_index(IMatter* m, int* r = nullptr, int* c = nullptr, const Plteen::Port& p = 0.5F);
         Plteen::Box get_grid_cell_bounding_box();
@@ -422,7 +426,7 @@ namespace Plteen {
     private:
         Plteen::RGBA bubble_border = GAINSBORO;
         Plteen::RGBA bubble_color = GHOSTWHITE;
-        Plteen::Margin bubble_margin;
+        Plteen::Margin bubble_margin = { 4.0F, 8.0F };
         double bubble_second = 0.0;
         shared_font_t bubble_font;
     };

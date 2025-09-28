@@ -38,7 +38,7 @@ static void pen_draw_circle(SDL_Renderer* renderer, int cx, int cy, int radius) 
     } while (x < 0);
 }
 
-static void pen_draw_filled_circle(SDL_Renderer* renderer, int cx, int cy, int radius) {
+static void pen_fill_circle(SDL_Renderer* renderer, int cx, int cy, int radius) {
     int err = 2 - 2 * radius;
     int x = -radius;
     int y = 0;
@@ -88,7 +88,7 @@ static void pen_draw_ellipse(SDL_Renderer* renderer, int cx, int cy, int ar, int
     }
 }
 
-static void pen_draw_filled_ellipse(SDL_Renderer* renderer, int cx, int cy, int ar, int br) {
+static void pen_fill_ellipse(SDL_Renderer* renderer, int cx, int cy, int ar, int br) {
     /* Q II. from bottom left to top right */
     long x = -ar;
     long y = 0;

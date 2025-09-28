@@ -43,7 +43,7 @@ namespace Plteen {
 
     public:
         virtual void construct(Plteen::dc_t* renderer) {}
-        virtual Plteen::Box get_bounding_box() { return Plteen::Box(); }
+        virtual Plteen::Box get_bounding_box() { return Plteen::Box(/* keep it invalid */); }
         virtual Plteen::Box get_original_bounding_box() { return this->get_bounding_box(); }
         virtual Plteen::Margin get_margin() { return this->get_original_margin(); }
         virtual Plteen::Margin get_original_margin() { return Plteen::Margin(); }

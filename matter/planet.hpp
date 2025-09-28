@@ -7,12 +7,12 @@
 #include "../forward.hpp"
 
 namespace Plteen {
-	class __lambda__ Continent : public Plteen::IMatter {
+	class __lambda__ Planelet : public Plteen::IMatter {
 	public:
-		virtual ~Continent() noexcept;
+		virtual ~Planelet() noexcept;
 		
-		Continent(Plteen::IPlane* planet, const Plteen::RGBA& background = transparent);
-		Continent(Plteen::IPlane* planet, float width, float height = 0.0F, const Plteen::RGBA& background = transparent);
+		Planelet(Plteen::IPlane* planet, const Plteen::RGBA& background = transparent);
+		Planelet(Plteen::IPlane* planet, float width, float height = 0.0F, const Plteen::RGBA& background = transparent);
 
 		const char* name() override;
 
